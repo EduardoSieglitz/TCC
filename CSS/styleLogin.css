@@ -1,0 +1,153 @@
+  body{
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-shadow: 0;
+    background-color: #EEF4ED;
+    border: solid #EEF4ED;
+    border-radius: 15px;
+  }
+  h1{
+    color: #00cccc;
+    font-size: 40px;
+    width: 400px;
+  }
+  .Intro{
+    font-size: 25px;
+    width: 420px;
+    color: #1C1E21;
+  }
+  .Control{
+    height: 75vh;
+    width: 400px;
+    position: absolute;
+    right: 25vh;
+    top: 20vh;
+  }
+  .alinhar{
+    position: absolute;
+    left: 25vh;
+    top: 20vh;
+    width: 420px;
+    height: 50vh;
+    display: inline;
+  }
+  .ControlLogin{
+    background-color: #ffffff;
+    border: solid #ffffff;
+    width: 400px;
+    padding: 15px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);
+  }
+  .inputentrar{
+    outline-color: #CAD1C7;
+    height: 20px;
+    width: 350px;
+    margin-bottom: 3px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    border: solid 2px;
+    border-color:#EEF4ED;
+    padding: 20px;
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+  }
+    .inputentrar:hover {
+      border-color: #CAD1C7;
+    }
+  .inputbutton{
+    width: 350px;
+    height: 60px;
+    background-color: #00cccc;
+    border-radius: 15px;
+    border: solid 2px;
+    border-color:#EEF4ED;
+    margin-bottom: 12px;
+    padding: 5px;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+  }
+    .inputbutton:hover{
+      opacity: 0.8;
+    }
+  .aentrar{
+    font-size: 15px;
+    color: rgb(43, 107, 131);
+    margin-bottom: 20px;
+    text-decoration: none;
+    transition: 0.3s;
+  }
+  .linhaentrar{
+    width: 400px;
+    border-bottom: 2px solid  #EEF4ED;
+  }
+  .inputbutton2{
+    width: 210px;
+    height: 60px;
+    background-color: rgb(43, 107, 131);
+    border-radius: 15px;
+    border: solid 2px;
+    border-color:#EEF4ED;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    padding: 5px;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+    transition: opacity 0.3s ease;
+  }
+    .inputbutton2:hover{
+      opacity: 0.9;
+    }
+  /*---------------------------------------------JAVASCRIPT TUDO A BAIXO---------------------------------------------*/
+  .emailerro small{
+    visibility: hidden;
+  }
+  .emailerro.erro small{
+    visibility: visible;
+    display: flex;
+    color: #FF6C6C;
+    font-size: 11px;
+    margin: 1px 0px 10px 15px;
+  }
+  .senhaerro small{
+    visibility: hidden;
+  }
+  .senhaerro.erro small{
+    visibility: visible;
+    display: flex;
+    color: #FF6C6C;
+    font-size: 11px;
+    margin: 1px 0px 10px 15px;
+  }
+  .emailerro.erro input{
+    border: 2px solid #FF6C6C;
+    outline: #FF6C6C;
+  }
+  .emailsuce.suce input{
+    display: none;
+    border: 2px solid #757575;
+    transition: border-color 0.3s ease;
+  }
+  .inputentrar1:hover {
+    border-color: #CAD1C7;
+  }
+  .senhaerro.erro input{
+    border: 2px solid #FF6C6C;
+    outline: #FF6C6C;
+  }
+  .senhasuce.suce input{
+    display: none;
+    border: 2px solid #757575;
+    transition: border-color 0.3s ease;
+  }
+  .inputentrar1:hover {
+    border-color: #CAD1C7;
+  }
