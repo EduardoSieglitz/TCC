@@ -1,15 +1,50 @@
-   /* Estilos CSS */
-   
-h1 {
-    font-size: 28px;
-    margin-bottom: 10px;
-}
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-p {
-    font-size: 16px;
-    line-height: 1.5;
-}
+    .Container{
+        width: 100vw;
+        height: 86vh;
+        display: grid;
+        grid-template-areas: "l r" "f f";
+        grid-template-columns: 2fr 1fr;
+        grid-template-rows: 4fr 1fr;
+    }
+    .Left{
+       background-color: aliceblue;
+       grid-area: l;
+       display: flex;
+       justify-content: right;
+       align-items: center;
+    }
+    .Left h1{
+        color: #1C1E21;
+        font-size: 25px;
+        line-height: 2;
+        
+    }
+    .Left p, h2{
+        color: #1C1E21;
+        font-size: 20px;
+        line-height: 1.5;
+    }
+    .LeftTx{
+        height: 60vh;
+        width: 50vw;
+        
+    }
+    .Right{
+        background-color: rgb(0, 0, 0);
+        grid-area: r;
+    }
+    .Footer{
+        background-color: blue;
+        grid-area: f;
+    }
+    @media only screen and (max-width: 820px){
+        .Container{
+            grid-template-areas: "l" "r" "f";
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+    @media only screen and (max-width: 480px){
+        .Right{
+            display: none;
+        }
+    }
