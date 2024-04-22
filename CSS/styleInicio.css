@@ -3,8 +3,8 @@
         height: 86vh;
         display: grid;
         grid-template-areas: "l r" "f f";
-        grid-template-columns: 2fr 1fr;
-        grid-template-rows: 4fr 1fr;
+        grid-template-columns: 1.5fr 1fr;
+        grid-template-rows: 3fr 2fr;
     }
     .Left{
        background-color: aliceblue;
@@ -15,27 +15,50 @@
     }
     .Left h1{
         color: #1C1E21;
-        font-size: 25px;
+        font-size: 30px;
         line-height: 2;
         
     }
     .Left p, h2{
         color: #1C1E21;
-        font-size: 20px;
+        font-size: 25px;
         line-height: 1.5;
     }
     .LeftTx{
-        height: 60vh;
-        width: 50vw;
+        background-color: aliceblue;
+        height: 40vh;
+        width: 52vw;
         
     }
     .Right{
-        background-color: rgb(0, 0, 0);
+        background-color: aliceblue;
         grid-area: r;
+        display: flex;
+        justify-content: right;
+        align-items: center;
+    }
+    .RightTx{
+        background-color: aliceblue;
+        height: 40vh;
+        width: 39vw; 
+    }
+    .Right img{
+        height: 40vh;
+        width: 30vw;
     }
     .Footer{
-        background-color: blue;
+        background-color: aliceblue;
         grid-area: f;
+        display: flex;
+        justify-content: left;
+        align-items: center;
+    }
+    .FooterTX{
+        display: flex;
+        justify-content: right;
+        background-color: aliceblue;
+        height: 30vh;
+        width: 33.5vw;
     }
     @media only screen and (max-width: 820px){
         .Container{

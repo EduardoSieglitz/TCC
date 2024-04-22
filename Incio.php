@@ -16,10 +16,14 @@
             </div>
         </div>
         <div class="Right">
-            <img src="./img/OIP.png" alt="">
+        <div class="RightTx">
+            <img src="./img/10-dicas-vida-saudavel-1-1024x683.png" alt="">
+        </div>
         </div>
         <div class="Footer">
-           <h1>Bem estar total @2024</h1>
+        <div class="FooterTX">
+           <h1>Bem estar total para 2024</h1>
+        </div>
         </div>
         
     </div>
