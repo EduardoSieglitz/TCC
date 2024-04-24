@@ -1,7 +1,9 @@
 <?php
     include "index.html";
     session_start();
-    $_SESSION['email'];
+    if(isset($_SESSION['email'])){
+        $_SESSION['email'];
+    }
 ?>
     <head>
     <link rel="stylesheet" href="./CSS/styleInicio.css">

@@ -4,6 +4,7 @@
     border: solid #EEF4ED;
     border-radius: 15px;
     padding: 0;
+    overflow: hidden;
   }
   .Control{
     width: 100%;
