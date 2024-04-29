@@ -5,78 +5,83 @@
         width: 100vw;
         height: 86vh;
         display: grid;
-        grid-template-areas: "l r" "f f";
-        grid-template-columns: 1.5fr 1fr;
-        grid-template-rows: 3fr 2fr;
+        grid-template-areas: "l r" ;
+        grid-template-rows: 2fr 0.5fr;
     }
     .Left{
-       background-color: #EEF4ED;
-       grid-area: l;
-       display: flex;
-       justify-content: right;
-       align-items: center;
+        width: 60vw;
+        background-color: #EEF4ED;
+        grid-area: l;
+        align-content: center;
     }
     .Left h1{
-        color: #1C1E21;
-        font-size: 35px;
+        font-size: 2.3vw;
         line-height: 2;
-        
+        margin-left: 8vw;
     }
     .Left p{
         color: #1C1E21;
-        font-size: 25px;
+        font-size: 1.7vw;
         line-height: 1.5;
         text-align: justify;
+        margin-left: 8vw;
     }
     .Left h2{
         color: #1C1E21;
-        font-size: 30px;
-        line-height: 1.5;
-    }
-    .LeftTx{
-        background-color: #EEF4ED;
-        height: 40vh;
-        width: 52vw;
-        
+        font-size: 2vw;
+        line-height: 2;
+        margin-left: 8vw;
     }
     .Right{
+        width: 40vw;
         background-color: #EEF4ED;
         grid-area: r;
-        display: flex;
-        justify-content: right;
-        align-items: center;
-    }
-    .RightTx{
-        background-color: #EEF4ED;
-        height: 40vh;
-        width: 38vw; 
+        align-content: center;
     }
     .Right img{
-        height: 40vh;
+        height: 65%;
         width: 30vw;
+        margin-left: 3vw;
     }
-    .Footer{
-        background-color: #EEF4ED;
-        grid-area: f;
-        display: flex;
-        justify-content: left;
-        align-items: center;
-    }
-    .FooterTX{
-        display: flex;
-        justify-content: right;
-        background-color: #EEF4ED;
-        height: 30vh;
-        width: 33.5vw;
-    }
-    @media only screen and (max-width: 820px){
-        .Container{
-            grid-template-areas: "l" "r" "f";
-            grid-template-columns: 1fr 1fr;
+    @media only screen and (max-width: 1200px){
+        .Right img{
+            height: 60%;
+            width: 30vw;
+            
         }
     }
-    @media only screen and (max-width: 480px){
-        .Right{
-            display: none;
-        }
+    @media only screen and (max-width: 1100px){
+            .Right img{
+                height: 55%;
+                width: 30vw;
+                
+            }
     }
+    @media only screen and (max-width: 1000px){
+        .Right img{
+            height: 50%;
+            width: 30vw;
+            
+        }
+}
+@media only screen and (max-height: 1200px){
+    .Right img{
+        height: 60%;
+        width: 30vw;
+        
+    }
+}
+@media only screen and (max-width: 1100px){
+        .Right img{
+            height: 55%;
+            width: 30vw;
+            
+        }
+}
+@media only screen and (max-width: 1000px){
+    .Right img{
+        height: 50%;
+        width: 30vw;
+        
+    }
+}
