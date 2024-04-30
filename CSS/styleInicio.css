@@ -15,20 +15,20 @@
         align-content: center;
     }
     .Left h1{
-        font-size: 2.3vw;
+        font-size: clamp(1.5rem, 2.3vw, 3rem);
         line-height: 2;
         margin-left: 8vw;
     }
     .Left p{
         color: #1C1E21;
-        font-size: 1.7vw;
+        font-size: clamp(1rem, 1.7vw, 2rem);
         line-height: 1.5;
         text-align: justify;
         margin-left: 8vw;
     }
     .Left h2{
         color: #1C1E21;
-        font-size: 2vw;
+        font-size: clamp(1.3rem, 2vw, 2.5rem);
         line-height: 2;
         margin-left: 8vw;
     }
@@ -39,49 +39,7 @@
         align-content: center;
     }
     .Right img{
-        height: 65%;
-        width: 30vw;
-        margin-left: 3vw;
+        height: max(65%, 200px);
+        width: max(65%, 300px);
+        margin-left: 8vw;
     }
-    @media only screen and (max-width: 1200px){
-        .Right img{
-            height: 60%;
-            width: 30vw;
-            
-        }
-    }
-    @media only screen and (max-width: 1100px){
-            .Right img{
-                height: 55%;
-                width: 30vw;
-                
-            }
-    }
-    @media only screen and (max-width: 1000px){
-        .Right img{
-            height: 50%;
-            width: 30vw;
-            
-        }
-}
-@media only screen and (max-height: 1200px){
-    .Right img{
-        height: 60%;
-        width: 30vw;
-        
-    }
-}
-@media only screen and (max-width: 1100px){
-        .Right img{
-            height: 55%;
-            width: 30vw;
-            
-        }
-}
-@media only screen and (max-width: 1000px){
-    .Right img{
-        height: 50%;
-        width: 30vw;
-        
-    }
-}
