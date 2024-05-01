@@ -10,25 +10,65 @@
     }
     .ControlIndex{
         display: grid;
-        display: flex;
-        grid-template-areas: "n" ;
-        grid-template-columns: 1fr;
-        align-items: center;
-        justify-content: center;
+        grid-template-areas: "l i s t a o";
         background:  #EEF4ED;
         height: 15vh;
         width: 100vw;
     }
     .ControlIndex a{
-        background-color: aqua;
-        grid-area: n;
         text-decoration: none;
         font-size: 1.7vw;
         color: #1C1E21;
-    
+    }
+    .flex{
+        display: flex;
+        justify-content: center;
+        width: 100vw;
+        height: 15vh;
+    }
+    .Inicio{
+        grid-area: i;
+        width: 15vw;
+        align-content: center;
+        text-align: center;
+    }
+    .Saudemental{
+        grid-area: s;
+        width: 15vw;
+        align-content: center;
+        text-align: center;
+    }
+    .Treino{
+        grid-area: t;
+        width: 15vw;
+        align-content: center;
+        text-align: center;
+    }
+    .Alimentacao{
+        grid-area: a;
+        width: 15vw;
+        align-content: center;
+        text-align: center;
+    }
+    .Outros{
+        grid-area: o;
+        width: 15vw;
+        align-content: center;
+        text-align: center;
+    }
+    .Logo{
+        grid-area: l;
+        width: 20vw;
+        align-content: center;
+        text-align: center;
+    }
+    .Logo img{
+        width: 18vw;
+        height: 15vh;
+        z-index: 2;
     }
     .Linha{
         height: 0.1vh;
-        width: 90%;
+        width: 100%;
         background-color: #1C1E21;
     }
