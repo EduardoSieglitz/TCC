@@ -12,34 +12,39 @@
         width: 60vw;
         background-color: #EEF4ED;
         grid-area: l;
-        align-content: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .Left h1{
         font-size: clamp(1.5rem, 2.3vw, 3rem);
         line-height: 2;
-        margin-left: 8vw;
     }
     .Left p{
         color: #1C1E21;
         font-size: clamp(1rem, 1.7vw, 2rem);
         line-height: 1.5;
         text-align: justify;
-        margin-left: 8vw;
     }
     .Left h2{
         color: #1C1E21;
         font-size: clamp(1.3rem, 2vw, 2.5rem);
         line-height: 2;
-        margin-left: 8vw;
     }
     .Right{
         width: 40vw;
         background-color: #EEF4ED;
         grid-area: r;
-        align-content: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .Right img{
-        height: max(65%, 200px);
-        width: max(65%, 300px);
-        margin-left: 8vw;
+        height: max(60%, 200px);
+        width: max(70%, 300px);
     }
+
+    .Control{
+        width: 45vw;
+    }
+    
