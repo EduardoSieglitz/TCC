@@ -26,33 +26,37 @@
                 }
             }
         ?>
-        <thead>
-            <div class="alinhar">
-                <h1>Bem Estar Total</h1>
-                <p class="Intro">Muito mais do que um site, é um convite para uma vida mais saudável e plena. Se junte a nós enquanto embarcamos
-                nesta jornada para uma vitalidade completa.</p>
-            </div>
-        </thead>   
-        <div class="Control"> 
-            <div class="ControlLogin">
-                <form id="form" method="POST">
-                    <div class="emailerro">
-                        <div class="emailsuce">
-                            <input class="inputentrar" type="text" id="email" name="email" placeholder="Email" style="margin-top: 5px;">
-                            <small>Erro menssage</small>
-                        </div>
+        <div class="Container"> 
+            <thead>
+                <div class="Left">
+                    <div class="Texto">
+                        <h1 class="h1">Bem Estar Total</h1>
+                        <p class="p">Muito mais do que um site, é um convite para uma vida mais saudável e plena. Se junte a nós enquanto embarcamos
+                        nesta jornada para uma vitalidade completa.</p>
                     </div>
-                    <div class="senhaerro">
-                        <div class="senhasuce">
-                            <input class="inputentrar" type="password" id="senha" name="senha" placeholder="Senha">
-                            <small>Erro menssage</small>
+                </div>
+            </thead>   
+            <div class="Right">
+                <div class="Login">
+                    <form id="form" method="POST">
+                        <div class="emailerro">
+                            <div class="emailsuce">
+                                <input class="inputLogin" type="text" id="email" name="email" placeholder="Email" style="margin-top: 5px;">
+                                <small>Erro menssage</small>
+                            </div>
                         </div>
-                    </div>
-                    <button class="inputbutton" id="Enviar" name='Enviar' onClick="enviar()">Entrar</button>
-                </form>
-                <a class="aentrar" href="Cadastrar.php">Esqueceu a senha?</a>
-                <div class="linhaentrar"><br></div>
-                <a href="Cadastrar.php"><button class="inputbutton2">Criar conta</button></a>
+                        <div class="senhaerro">
+                            <div class="senhasuce">
+                                <input class="inputLogin" type="password" id="senha" name="senha" placeholder="Senha">
+                                <small>Erro menssage</small>
+                            </div>
+                        </div>
+                        <button class="inputButton" id="Enviar" name='Enviar' onClick="enviar()">Entrar</button>
+                    </form>
+                    <a class="hrefLogin" href="Cadastrar.php">Esqueceu a senha?</a>
+                    <div class="linhaLogin"><br></div>
+                    <a href="Cadastrar.php"><button class="inputButton2">Criar conta</button></a>
+                </div>
             </div>
         </div>
         <script src="./Script/scriptEmail.js"></script>

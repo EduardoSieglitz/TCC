@@ -4,35 +4,44 @@
     padding: 0;
     overflow: hidden;
     background-color: #EEF4ED;
-    border: solid #EEF4ED;
-    border-radius: 15px;
   }
-  h1{
+  .Container{
+    width: 100vw;
+    height: 86vh;
+    display: grid;
+    grid-template-areas: "l r" ;
+    grid-template-rows: 3fr ;
+    grid-template-columns: 1fr 1fr;
+  }
+  .Texto{
+    width: 30vw;
+    height: 40vh;
+  }
+  .Left{
+    grid-area: l;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: justify;
+  }
+  .h1{
     color: #00cccc;
     font-size: 40px;
     width: 400px;
   }
-  .Intro{
+  .p{
     font-size: 25px;
-    width: 420px;
+    width: 500px;
     color: #1C1E21;
   }
-  .Control{
-    height: 75vh;
-    width: 400px;
-    position: absolute;
-    right: 25vh;
-    top: 20vh;
+  .Right{
+    grid-area: r;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   
   }
-  .alinhar{
-    position: absolute;
-    left: 25vh;
-    top: 20vh;
-    width: 420px;
-    height: 50vh;
-    display: inline;
-  }
-  .ControlLogin{
+  .Login{
     background-color: #ffffff;
     border: solid #ffffff;
     width: 400px;
@@ -41,7 +50,7 @@
     text-align: center;
     box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);
   }
-  .inputentrar{
+  .inputLogin{
     outline-color: #CAD1C7;
     height: 20px;
     width: 350px;
@@ -57,7 +66,7 @@
     .inputentrar:hover {
       border-color: #CAD1C7;
     }
-  .inputbutton{
+  .inputButton{
     width: 350px;
     height: 60px;
     background-color: #00cccc;
@@ -76,18 +85,18 @@
     .inputbutton:hover{
       opacity: 0.8;
     }
-  .aentrar{
+  .hrefLogin{
     font-size: 15px;
     color: rgb(43, 107, 131);
     margin-bottom: 20px;
     text-decoration: none;
     transition: 0.3s;
   }
-  .linhaentrar{
+  .linhaLogin{
     width: 400px;
     border-bottom: 2px solid  #EEF4ED;
   }
-  .inputbutton2{
+  .inputButton2{
     width: 210px;
     height: 60px;
     background-color: rgb(43, 107, 131);
