@@ -40,11 +40,41 @@
         justify-content: center;
     }
     .Right img{
-        height: max(60%, 200px);
+        height: max(50%, 200px);
         width: max(70%, 300px);
     }
-
     .Control{
         width: 45vw;
+    }
+    @media (max-width: 996px){
+        .Container{
+            width: 100vw;
+            height: 86vh;
+        }
+        .Left{
+            width: 100vw;
+            height: 50vh;
+        }
+        .Right{
+            display: none;
+        }
+        .Left h1{
+            font-size: clamp(1.5rem, 2.8vw, 3.5rem);
+            line-height: 2;
+        }
+        .Left p{
+            color: #1C1E21;
+            font-size: clamp(1rem, 2.3vw, 2.5rem);
+            line-height: 1.5;
+            text-align: justify;
+        }
+        .Left h2{
+            color: #1C1E21;
+            font-size: clamp(1.3rem, 2.5vw, 3rem);
+            line-height: 2;
+        }
+        .Control{
+            width: 55vw;
+        }
     }
     

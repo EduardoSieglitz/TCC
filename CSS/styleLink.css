@@ -12,12 +12,12 @@
         display: grid;
         grid-template-areas: "l i s t a o";
         background:  #EEF4ED;
-        height: 15vh;
+        height: 14vh;
         width: 100vw;
     }
     .ControlIndex a{
         text-decoration: none;
-        font-size: 1.7vw;
+        font-size: clamp(1.3rem, 1.5vw, 2rem );;
         color: #1C1E21;
     }
     .flex{
@@ -71,4 +71,13 @@
         height: 0.1vh;
         width: 100%;
         background-color: #1C1E21;
+    }
+    @media (max-width: 930px){
+        .ControlIndex{
+            display: grid;
+            grid-template-areas: "l i s t a o";
+            background:  #EEF4ED;
+            height: 14vh;
+            width: 100vw;
+        }
     }
