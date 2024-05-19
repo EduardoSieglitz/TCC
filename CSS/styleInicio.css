@@ -17,12 +17,12 @@
         justify-content: center;
     }
     .Left h1{
-        font-size: clamp(1.5rem, 2.3vw, 3rem);
+        font-size: clamp(1.6rem, 2.3vw, 3rem);
         line-height: 2;
     }
     .Left p{
         color: #1C1E21;
-        font-size: clamp(1rem, 1.7vw, 2rem);
+        font-size: clamp(1.2rem, 1.7vw, 2rem);
         line-height: 1.5;
         text-align: justify;
     }
@@ -44,37 +44,42 @@
         width: max(70%, 300px);
     }
     .Control{
-        width: 45vw;
+        width: 50vw;
     }
     @media (max-width: 996px){
         .Container{
             width: 100vw;
             height: 86vh;
+            
         }
         .Left{
             width: 100vw;
-            height: 50vh;
+            height: 65vh;
         }
         .Right{
             display: none;
         }
         .Left h1{
-            font-size: clamp(1.5rem, 2.8vw, 3.5rem);
+            font-size: clamp(1.5rem, 2.6vw, 3.3rem);
             line-height: 2;
         }
         .Left p{
             color: #1C1E21;
-            font-size: clamp(1rem, 2.3vw, 2.5rem);
+            font-size: clamp(1.3rem, 2.1vw, 2.3rem);
             line-height: 1.5;
             text-align: justify;
         }
         .Left h2{
             color: #1C1E21;
-            font-size: clamp(1.3rem, 2.5vw, 3rem);
+            font-size: clamp(1.4rem, 2.1vw, 2.8rem);
             line-height: 2;
         }
         .Control{
-            width: 55vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 60vw;
+            height: 65vh;
         }
     }
     
