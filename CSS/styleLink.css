@@ -73,10 +73,19 @@
         width: 100%;
         background-color: #1C1E21;
     }
-    @media (max-width: 960px){
+    .LinhaMedia{
+        height: 0.1vh;
+        width: 100%;
+        background-color: #1C1E21;
+        display: none;
+    }
+    .H2Media{
+        display: none;
+    }
+    @media (max-width: 966px){
         .ControlIndex{
-            background:  #EEF4ED;
-            height: 50vh;
+            background-color: #00cccc;
+            height: 43vh;
             width: 100vw;
         }
         .flex{
@@ -89,43 +98,38 @@
             flex-direction: column;
         }
         .Inicio{
-            height: 20%;
+            height: 16.6777%;
             width: 90%;
             align-content: center;
             text-align: left;
-            background-color: aqua;
             margin: 0 auto;
         }
         .Saudemental{
-            height: 20%;
+            height: 16.6777%;
             width: 90%;
             align-content: center;
             text-align: left;
-            background-color: #808895;
             margin: 0 auto;
         }
         .Treino{
-            height: 20%;
+            height: 16.6777%;
             width: 90%;
             align-content: center;
             text-align: left;
-            background-color: blue;
             margin: 0 auto;
         }
         .Alimentacao{
-            height: 20%;
+            height: 16.6777%;
             width: 90%;
             align-content: center;
             text-align: left;
-            background-color: aquamarine;
             margin: 0 auto;
         }
         .Outros{
             width: 90%;
-            height: 20%;
+            height: 16.6777%;
             align-content: center;
             text-align: left;
-            background-color: rgb(0, 91, 61);
             margin: 0 auto;
         }
         .Logo{
@@ -133,8 +137,30 @@
         }
         .ControlIndex a{
             text-decoration: none;
-            font-size: clamp(1.4rem, 1.7vw, 2.0rem );;
+            font-size: clamp(1.3rem, 2.2vw, 2.5rem);
             color: #1C1E21;
             font-weight: bold;
+        }
+        .Linha{
+          display: none;
+        }
+        .LinhaMedia{
+            height: 0.1vh;
+            width: 100%;
+            background-color: #1C1E21;
+            display: inline;
+        }
+        .H2Media{
+            height: 16.6777%;
+            width: 90%;
+            display: flex;
+            align-content: center;
+            text-align: left;
+            margin: 0 auto;
+        }
+        .H2Media h2{
+            color: #1C1E21;
+            font-size: clamp(1.5rem, 2.2vw, 2.5rem);
+            line-height: 2;
         }
     }
