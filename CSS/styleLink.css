@@ -110,12 +110,19 @@
     .ControleaAba{
         display: none;
     }
+    @media (max-height: 750px){
+        .Linha{
+            height: 0.2vh;
+            width: 100%;
+            background-color: #1C1E21;
+        }
+    }
     @media (max-width: 966px){
         .ControlIndex{
             background-color: #00cccc;
             height: 43vh;
             width: 100vw;
-            display: none;
+            transform: translate(100%);
         }
         .flex{
             display: flex;
@@ -217,6 +224,7 @@
             height: 15vh;
             width: 100vw;
             display: flex;
+            transform: translate(0%);
         }
         .flex{
             display: flex;
