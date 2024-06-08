@@ -89,9 +89,10 @@
         text-align: center;
     }
     .Logo img{
-        width: 14vw;
-        height: 15vh;
+        width: 150px;
+        height: 115px;
         z-index: 2;
+      
     }
     .Linha{
         height: 0.1vh;
@@ -110,6 +111,7 @@
     .ControleaAba{
         display: none;
     }
+   
     @media (max-height: 750px){
         .Linha{
             height: 0.2vh;
@@ -122,7 +124,7 @@
             background-color: #00cccc;
             height: 43vh;
             width: 100vw;
-            transform: translate(100%);
+            transform: translate(0%);
         }
         .flex{
             display: flex;
