@@ -7,14 +7,24 @@
     <title>BemEstarTotal.com</title>
   </head>
   <body>
-    <nav>
+    <nav id="nav">
+      <div class="flexMenu">
+        <div class="ControleaAbaMenu">
+          <div class="abaLeftMenu">
+            <h2>Paginas:</h2>
+          </div>
+            <div class="abaRightMenu" id="abaRightMenu">
+              <div class="Aba"></div><div class="Aba"></div><div class="Aba"></div>
+            </div>
+          </div>
+      </div>
       <div class="ControlIndex">
         <div class="flex">
-          <div class="ControleaAba">
+          <div class="ControleAba">
             <div class="abaLeft">
               <h2>Paginas:</h2>
             </div>
-              <div class="abaRight" onclick="navbar()">
+              <div class="abaRight" id="abaRight">
                 <div class="Aba"></div><div class="Aba"></div><div class="Aba"></div>
               </div>
           </div>
@@ -47,7 +57,7 @@
       <center>
         <div class="Linha"></div>
       </center>
+      <script src="./Script/scriptInicio.js"></script>
     </nav>
-    <script src="Script/scriptInicio.js"></script>
   </body>
 </html>

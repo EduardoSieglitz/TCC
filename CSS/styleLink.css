@@ -108,25 +108,72 @@
     .H2Media{
         display: none;
     }
-    .ControleaAba{
+    .ControleAba{
         display: none;
     }
-   
+   .flexMenu{
+    display: none;
+   }
     @media (max-height: 750px){
-        .Linha{
+        .Linha {
             height: 0.2vh;
             width: 100%;
             background-color: #1C1E21;
         }
     }
     @media (max-width: 966px){
+        #nav{
+            height: 15vh;
+        }
+        #nav.active{
+            height: 50vh;
+        }
+        .abaRightMenu{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 10%;
+        }
         .ControlIndex{
             background-color: #00cccc;
-            height: 43vh;
+            height: 50vh;
             width: 100vw;
+            transform: translate(100%);
+        }
+        #nav.active .ControlIndex{
             transform: translate(0%);
         }
-        .flex{
+       #nav.active .flexMenu{
+        transform: translate(100%);
+        height: 0;
+       }
+        .ControleaAbaMenu{
+            height: 100%;
+            display: flex;
+            background-color: #00cccc;
+        }
+        .ControleaAbaMenu h2{
+            color: #1C1E21;
+            font-size: clamp(1.5rem, 2.2vw, 2.5rem);
+            line-height: 2;
+        }
+        .abaLeftMenu{
+            width: 80%;
+            align-content: center;
+            text-align: left;
+            margin: 0 auto;
+        }
+        .flexMenu{
+            display: flex;
+            justify-content: center;
+            text-align: center;
+            width: 100vw;
+            height: 15vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #nav.active .flex{
             display: flex;
             justify-content: center;
             text-align: center;
@@ -188,12 +235,12 @@
             background-color: #1C1E21;
             display: inline;
         }
-        .ControleaAba{
+        .ControleAba{
             height: 16.6777%;
             display: flex;
            
         }
-        .ControleaAba h2{
+        .ControleAba h2{
             color: #1C1E21;
             font-size: clamp(1.5rem, 2.2vw, 2.5rem);
             line-height: 2;
@@ -219,79 +266,4 @@
             margin-bottom: 1px;
             
         } 
-    }
-    @media (max-width: 966px){
-        .ControlIndex{
-            background-color: #00cccc;
-            height: 15vh;
-            width: 100vw;
-            display: flex;
-            transform: translate(0%);
-        }
-        .flex{
-            display: flex;
-            justify-content: center;
-            text-align: center;
-            width: 100vw;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-        .Logo{
-            display: none;
-        }
-        .ControlIndex a{
-            display: none;
-        }
-        .Linha{
-          display: none;
-        }
-        .ControleaAba{
-            height: 100%;
-            display: flex;
-        }
-        .ControleaAba h2{
-            color: #1C1E21;
-            font-size: clamp(1.5rem, 2.2vw, 2.5rem);
-            line-height: 2;
-        }
-        .abaRight{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            width: 10%;
-        }
-        .abaLeft{
-            width: 80%;
-            align-content: center;
-            text-align: left;
-            margin: 0 auto;
-        }
-        .Aba{
-            width: 22px;
-            height: 6px;
-            background-color: #1C1E21;
-            border-radius: 20px;
-            margin-bottom: 1px;
-            
-        } 
-        .Inicio{
-            display: none;
-        }
-        .Saudemental{
-            display: none;
-        }
-        .Treino{
-            display: none;
-        }
-        .Alimentacao{
-            display: none;
-        }
-        .Outros{
-            display: none;
-        }
-        .LinhaMedia{
-           display: none;
-        }
     }
