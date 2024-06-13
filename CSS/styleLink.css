@@ -105,13 +105,7 @@
         background-color: #1C1E21;
         display: none;
     }
-    .H2Media{
-        display: none;
-    }
-    .ControleAba{
-        display: none;
-    }
-   .flexMenu{
+   .ControleMenu{
     display: none;
    }
     @media (max-height: 750px){
@@ -128,50 +122,37 @@
         #nav.active{
             height: 50vh;
         }
-        .abaRightMenu{
+        .ControleMenu{
+            display: flex;
+            height: 15vh;
+            width: 100vw;
+            background-color: #00cccc;
+        }
+       .MenuLeft{
+            width: 75%;
+            align-content: center;
+            text-align: left;
+            margin: 0 auto; 
+        }
+        .MenuRight{
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            width: 10%;
+            width: 15%;
         }
-        .ControlIndex{
-            background-color: #00cccc;
-            height: 50vh;
-            width: 100vw;
-            transform: translate(100%);
-        }
+        .Menu{
+            width: 22px;
+            height: 6px;
+            background-color: #1C1E21;
+            border-radius: 20px;
+            margin-bottom: 1px;
+        } 
         #nav.active .ControlIndex{
-            transform: translate(0%);
-        }
-       #nav.active .flexMenu{
-        transform: translate(100%);
-        height: 0;
-       }
-        .ControleaAbaMenu{
-            height: 100%;
-            display: flex;
-            background-color: #00cccc;
-        }
-        .ControleaAbaMenu h2{
-            color: #1C1E21;
-            font-size: clamp(1.5rem, 2.2vw, 2.5rem);
-            line-height: 2;
-        }
-        .abaLeftMenu{
-            width: 80%;
-            align-content: center;
-            text-align: left;
-            margin: 0 auto;
-        }
-        .flexMenu{
-            display: flex;
-            justify-content: center;
-            text-align: center;
-            width: 100vw;
-            height: 15vh;
             display: flex;
             flex-direction: column;
+            height: 50vh;
+            width: 100vw;
         }
         #nav.active .flex{
             display: flex;
@@ -179,40 +160,45 @@
             text-align: center;
             width: 100vw;
             height: 100%;
-            display: flex;
             flex-direction: column;
+            background-color: #00cccc;
         }
-        .Inicio{
-            height: 16.6777%;
+        #nav.active .Inicio{
+            transform: 0%;
+            height: 20%;
             width: 90%;
             align-content: center;
             text-align: left;
             margin: 0 auto;
         }
-        .Saudemental{
-            height: 16.6777%;
+        #nav.active .Saudemental{
+            transform: 0%;
+            height: 20%;
             width: 90%;
             align-content: center;
             text-align: left;
             margin: 0 auto;
         }
-        .Treino{
-            height: 16.6777%;
+        #nav.active .Treino{
+            transform: 0%;
+            height: 20%;
             width: 90%;
             align-content: center;
             text-align: left;
             margin: 0 auto;
         }
-        .Alimentacao{
-            height: 16.6777%;
+        #nav.active .Alimentacao{
+            transform: 0%;
+            height: 20%;
             width: 90%;
             align-content: center;
             text-align: left;
             margin: 0 auto;
         }
-        .Outros{
+        #nav.active .Outros{
+            transform: 0%;
             width: 90%;
-            height: 16.6777%;
+            height: 20%;
             align-content: center;
             text-align: left;
             margin: 0 auto;
@@ -226,44 +212,36 @@
             color: #1C1E21;
             font-weight: bold;
         }
-        .Linha{
-          display: none;
-        }
-        .LinhaMedia{
+        #nav.active .LinhaMedia{
             height: 0.1vh;
             width: 100%;
             background-color: #1C1E21;
             display: inline;
         }
-        .ControleAba{
-            height: 16.6777%;
-            display: flex;
-           
-        }
-        .ControleAba h2{
+        #nav.active .ControleMenu h2{
             color: #1C1E21;
             font-size: clamp(1.5rem, 2.2vw, 2.5rem);
             line-height: 2;
         }
-        .abaRight{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            width: 10%;
+        .flex{
+            display: none;
         }
-        .abaLeft{
-            width: 80%;
-            align-content: center;
-            text-align: left;
-            margin: 0 auto;
+        .Inicio{
+          transform: 100%;
         }
-        .Aba{
-            width: 22px;
-            height: 6px;
-            background-color: #1C1E21;
-            border-radius: 20px;
-            margin-bottom: 1px;
-            
-        } 
+        .Treino{
+            transform: 100%;
+        }
+        .Outros{
+            transform: 100%;
+        }
+        .Saudemental{
+            transform: 100%;
+        }
+        .Alimentacao{
+            transform: 100%;
+        }
+        .Linha{
+            transform: 100%;
+          }
     }
