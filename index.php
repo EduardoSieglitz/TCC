@@ -1,26 +1,56 @@
-<?php
-    include "Navbar.html";
-    session_start();
-    if(isset($_SESSION['email'])){
-        $_SESSION['email'];
-        $email = $_SESSION['email'];
-    }
-?>
-    <head>
-    <link rel="stylesheet" href="./CSS/styleInicio.css">
-    </head>
-        <div class="Container">
-            <div class="Left">
-                <div class="Control">
-                    <h1>Bem-vindo à Plataforma Bem Estar Total </h1>
-                    <h2>Acompanhe sua Saúde de Forma Inteligente</h2>
-                    <p>Na Plataforma Bem Estar Total, estamos comprometidos em ajudar você a cuidar do seu bem-estar físico e mental.
-                    Nossa abordagem integrada permite que você rastreie vários aspectos da sua saúde de maneira eficiente e eficaz.</p>
-                </div>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./Css/styleLink.css">
+    <title>BemEstarTotal.com</title>
+  </head>
+  <body>
+    <nav id="nav">
+      <div class="ControlIndex">
+          <div class="ControleMenu">
+            <div class="MenuLeft">
+              <h2>Paginas:</h2>
             </div>
-            <div class="Right">
-                <img src="./img/10-dicas-vida-saudavel-1-1024x683.png" alt="">
+              <div class="MenuRight" id="MenuRight">
+                <div class="Menu"></div><div class="Menu"></div><div class="Menu"></div>
+              </div>
+          </div>
+          <div class="flex">
+              <div class="LinhaMedia"></div>
+            <div class="Logo">
+              <img src="./img/Logo.png" alt="">
             </div>
-        </div>
-       
-       
+            <div class="Inicio">
+              <a href="./index.php">Início</a>
+            </div>
+              <div class="LinhaMedia"></div>
+            <div class="Saudemental">
+              <a href="./Saudemental.php">Saúde Mental</a>
+            </div>
+              <div class="LinhaMedia"></div>
+            <div class="Treino">
+              <a href="./Treino">Treino</a>
+            </div>
+              <div class="LinhaMedia"></div>
+            <div class="Alimentacao">
+              <a href="./Alimentacao.php">Alimentação</a>
+            </div>
+              <div class="LinhaMedia"></div>
+            <div class="Outros">
+              <a href="./Outros.php">Outros</a>
+            </div>
+               <div class="LinhaMedia"></div>
+          </div>
+      </div>
+      <center>
+        <div class="Linha"></div>
+      </center>
+      <?php
+        include "Inicio.php";
+      ?>
+    </nav>
+    <script src="./Script/scriptLink.js"></script>
+  </body>
+</html>

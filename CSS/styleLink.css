@@ -17,7 +17,7 @@
     }
     .ControlIndex a{
         text-decoration: none;
-        font-size: clamp(1.3rem, 1.5vw, 2rem );;
+        font-size: clamp(0.3rem, 1.5vw, 18rem);
         color: #1C1E21;
         font-weight: bold;
     }
@@ -89,10 +89,9 @@
         text-align: center;
     }
     .Logo img{
-        width: 150px;
-        height: 115px;
+        height: max(30%, 14vh);
+        width: max(55%, 10vw);
         z-index: 2;
-      
     }
     .Linha{
         height: 0.1vh;
@@ -114,13 +113,15 @@
             width: 100%;
             background-color: #1C1E21;
         }
+        .Logo img{
+            height: max(40%, 90px);
+            width: max(50%, 90px);
+            z-index: 2;
+        }
     }
     @media (max-width: 966px){
         #nav{
-            height: 15vh;
-        }
-        #nav.active{
-            height: 50vh;
+            height: 100vh;
         }
         .ControleMenu{
             display: flex;
@@ -142,11 +143,11 @@
             width: 15%;
         }
         .Menu{
-            width: 22px;
-            height: 6px;
+            width: 2.3vw;
+            height: 1vh;
             background-color: #1C1E21;
             border-radius: 20px;
-            margin-bottom: 1px;
+            margin-bottom: 0.5vh;
         } 
         #nav.active .ControlIndex{
             display: flex;
@@ -167,48 +168,176 @@
             transform: 0%;
             height: 20%;
             width: 90%;
-            align-content: center;
-            text-align: left;
-            margin: 0 auto;
+            display: flex;
+            justify-content: left;
+            align-items: center;
         }
         #nav.active .Saudemental{
             transform: 0%;
             height: 20%;
             width: 90%;
-            align-content: center;
-            text-align: left;
-            margin: 0 auto;
+            display: flex;
+            justify-content: left;
+            align-items: center;
         }
         #nav.active .Treino{
             transform: 0%;
             height: 20%;
             width: 90%;
-            align-content: center;
-            text-align: left;
-            margin: 0 auto;
+            display: flex;
+            justify-content: left;
+            align-items: center;
         }
         #nav.active .Alimentacao{
             transform: 0%;
             height: 20%;
             width: 90%;
-            align-content: center;
-            text-align: left;
-            margin: 0 auto;
+            display: flex;
+            justify-content: left;
+            align-items: center;
         }
         #nav.active .Outros{
             transform: 0%;
             width: 90%;
             height: 20%;
-            align-content: center;
-            text-align: left;
-            margin: 0 auto;
+            display: flex;
+            justify-content: left;
+            align-items: center;
         }
         .Logo{
             display: none;
         }
-        .ControlIndex a{
+        #nav.active .ControlIndex a{
+            margin: 5vw;
             text-decoration: none;
-            font-size: clamp(1.3rem, 2.2vw, 2.5rem);
+            font-size: clamp(0.3rem, 2.2vw, 2.5rem);
+            color: #1C1E21;
+            font-weight: bold;
+        }
+        #nav.active .LinhaMedia{
+            height: 0.1vh;
+            width: 100%;
+            background-color: #1C1E21;
+            display: inline;
+        }
+        .ControleMenu h2{
+            color: #1C1E21;
+            font-size: clamp(0.4rem, 2.2vw, 2.5rem);
+            line-height: 2;
+        }
+        .flex{
+            display: none;
+        }
+        .Inicio{
+          transform: 100%;
+        }
+        .Treino{
+            transform: 100%;
+        }
+        .Outros{
+            transform: 100%;
+        }
+        .Saudemental{
+            transform: 100%;
+        }
+        .Alimentacao{
+            transform: 100%;
+        }
+        .Linha{
+            transform: 100%;
+          }
+    }
+    @media (max-height: 610px){
+        #nav{
+            height: 100vh;
+        }
+        .ControleMenu{
+            display: flex;
+            height: 15vh;
+            width: 100vw;
+            background-color: #00cccc;
+        }
+       .MenuLeft{
+            width: 75%;
+            align-content: center;
+            text-align: left;
+            margin: 0 auto; 
+        }
+        .MenuRight{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 15%;
+        }
+        .Menu{
+            width: 2.3vw;
+            height: 1vh;
+            background-color: #1C1E21;
+            border-radius: 20px;
+            margin-bottom: 0.5vh;
+        } 
+        #nav.active .ControlIndex{
+            display: flex;
+            flex-direction: column;
+            height: 50vh;
+            width: 100vw;
+        }
+        #nav.active .flex{
+            display: flex;
+            width: 100vw;
+            height: 100%;
+            flex-direction: column;
+            background-color: #00cccc;
+        }
+        #nav.active .Inicio{
+            transform: 0%;
+            height: 20%;
+            width: 90%;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+        }
+        #nav.active .Saudemental{
+            transform: 0%;
+            height: 20%;
+            width: 90%;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+        }
+        #nav.active .Treino{
+            transform: 0%;
+            height: 20%;
+            width: 90%;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            
+        }
+        #nav.active .Alimentacao{
+            transform: 0%;
+            height: 20%;
+            width: 90%;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+        }
+        #nav.active .Outros{
+            transform: 0%;
+            width: 90%;
+            height: 20%;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+        }
+        .Logo{
+            display: none;
+        }
+        #nav.active .ControlIndex a{
+            margin: 5vw;
+            text-decoration: none;
+            font-size: clamp(0.3rem, 1.5vw, 2.5rem);
             color: #1C1E21;
             font-weight: bold;
         }
@@ -220,7 +349,7 @@
         }
         #nav.active .ControleMenu h2{
             color: #1C1E21;
-            font-size: clamp(1.5rem, 2.2vw, 2.5rem);
+            font-size: clamp(0.4rem, 2.2vw, 2.5rem);
             line-height: 2;
         }
         .flex{

@@ -22,7 +22,7 @@
                 $consulta->bindParam(':senha', $dados['senha']);
                 $consulta->execute();
                 if($row = $consulta->fetch()){ 
-                    header("Location: Incio.php");
+                    header("Location: index.php");
                 }
             }
         ?>
