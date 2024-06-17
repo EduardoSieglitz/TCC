@@ -64,18 +64,18 @@
             display: none;
         }
         .Left h1{
-            font-size: clamp(0.8rem, 1.5rem, 3.3rem);
+            font-size: clamp(0.7rem, 1.5rem, 3.3rem);
             line-height: 2;
         }
         .Left p{
             color: #1C1E21;
-            font-size: clamp(0.5rem, 1.2rem, 3.1rem);
+            font-size: clamp(0.4rem, 1.2rem, 3.1rem);
             line-height: 1.5;
             text-align: justify;
         }
         .Left h2{
             color: #1C1E21;
-            font-size: clamp(0.6rem, 1.3rem, 2.9rem);
+            font-size: clamp(0.5rem, 1.3rem, 2.9rem);
             line-height: 2;
         }
         .Control{
@@ -86,7 +86,7 @@
             height: 50vh;
         }
     }
-    @media (max-width: 690px){
+    @media (max-width: 675px){
         .Container{
             width: 100vw;
             height: 86vh;
@@ -103,18 +103,18 @@
             display: none;
         }
         .Left h1{
-            font-size: clamp(0.7rem, 1.3rem, 2.5rem);
+            font-size: clamp(1rem, 1.3rem, 2.5rem);
             line-height: 2;
         }
         .Left p{
             color: #1C1E21;
-            font-size: clamp(0.5rem, 1rem, 2.2rem);
+            font-size: clamp(0.7rem, 1rem, 2.2rem);
             line-height: 1.5;
             text-align: justify;
         }
         .Left h2{
             color: #1C1E21;
-            font-size: clamp(0.6rem, 1.1rem, 2.3rem);
+            font-size: clamp(0.8rem, 1.1rem, 2.3rem);
             line-height: 2;
         }
         .Control{
@@ -125,5 +125,8 @@
             height: 45vh;
         }
     }
+    @media (max-height: 700px){
+       
+}
    
     

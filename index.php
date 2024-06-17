@@ -18,34 +18,36 @@
               </div>
           </div>
           <div class="flex">
-              <div class="LinhaMedia"></div>
+             <hr>
             <div class="Logo">
               <img src="./img/Logo.png" alt="">
             </div>
             <div class="Inicio">
               <a href="./index.php">Início</a>
             </div>
-              <div class="LinhaMedia"></div>
+              <hr>
             <div class="Saudemental">
               <a href="./Saudemental.php">Saúde Mental</a>
             </div>
-              <div class="LinhaMedia"></div>
+             <hr>
             <div class="Treino">
               <a href="./Treino">Treino</a>
             </div>
-              <div class="LinhaMedia"></div>
+              <hr>
             <div class="Alimentacao">
               <a href="./Alimentacao.php">Alimentação</a>
             </div>
-              <div class="LinhaMedia"></div>
+              <hr>
             <div class="Outros">
               <a href="./Outros.php">Outros</a>
             </div>
-               <div class="LinhaMedia"></div>
+               <hr>
           </div>
       </div>
       <center>
-        <div class="Linha"></div>
+        <div class="Linha">
+          <hr>
+        </div>
       </center>
       <?php
         include "Inicio.php";
