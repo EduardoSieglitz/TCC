@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>BemEstarTotalCadastro.com</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <link rel="stylesheet" href="styleCadastro.css">
+</head>
+
+<body>
+
+  <div class="Control">
+    <div class="ControlCadastro">
+      <thead class="ControlThead">
+        <p class="ph1">Criar uma conta</p>
+        <div class="linhaentrar"><br></div>
+      </thead>
+      <form id="form" method="POST">
+        <div class="nomeerro">
+          <div class="nomesuce">
+            <input class="inputentrar1" type="text" id="nome" name="nome" placeholder="Nome" style="margin-top: 25px;">
+            <small>Erro menssage</small>
+          </div>
+        </div>
+        <div class="sobreerro">
+          <div class="sobresuce">
+            <input class="inputentrar1" type="text" id="sobrenome" name="sobrenome" placeholder="Sobrenome">
+            <small>Erro menssage</small>
+          </div>
+        </div>
+        <div class="emailerro">
+          <div class="emailsuce">
+            <input class="inputentrar1" type="text" id="email" name="email" placeholder="Email">
+            <small>Erro menssage</small>
+          </div>
+        </div>
+        <div class="senhaerro">
+          <div class="senhasuce">
+            <input class="inputentrar1" type="password" id="senha" name="senha" placeholder="Senha">
+            <small>Erro menssage</small>
+          </div>
+        </div>
+        <div class="data">
+          <p>Data de nascimento</p>
+          <br>
+          <select class="inputentrar2" id="dianascimento" name="dianascimento">
+
+          </select>
+          <select class="inputentrar2" id="mesnascimento" name="mesnascimento">
+
+          </select>
+          <select class="inputentrar2" id="anonascimento" name="anonascimento">
+
+          </select><br><br>
+        </div>
+        <a><button class="inputbutton" id="Enviar" name='Enviar' onClick="enviar()">Criar Conta</button></a><br>
+        <a class="aentrar" href="Entrar.php">Já tem uma conta?</a>
+      </form>
+    </div>
+  </div>
+  <script src="./Script/scriptCadastro.js"></script>
+</body>
+
+</html>
