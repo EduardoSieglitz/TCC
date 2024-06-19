@@ -45,17 +45,29 @@
           <p>Data de nascimento</p>
           <br>
           <select class="inputentrar2" id="dianascimento" name="dianascimento">
-
+            <script>
+              for (var d = 1; d <= 31; d++) {
+                document.write("<option value=" + d + " +>" + d + "</option>")
+              }
+            </script>
           </select>
           <select class="inputentrar2" id="mesnascimento" name="mesnascimento">
-
+            <script>
+              for (var m = 1; m <= 12; m++) {
+                document.write("<option value='m'>" + m + "</option>")
+              }
+            </script>
           </select>
           <select class="inputentrar2" id="anonascimento" name="anonascimento">
-
+            <script>
+              for (var a = 2024; a >= 1900; a--) {
+                document.write("<option value=" + a + ">" + a + "</option>");
+              }
+            </script>
           </select><br><br>
         </div>
         <a><button class="inputbutton" id="Enviar" name='Enviar' onClick="enviar()">Criar Conta</button></a><br>
-        <a class="aentrar" href="Entrar.php">Já tem uma conta?</a>
+        <a class="aentrar" href="Login">Já tem uma conta?</a>
       </form>
     </div>
   </div>
