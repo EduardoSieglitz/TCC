@@ -8,6 +8,7 @@ const dia = document.getElementById('dianascimento');
 const mes = document.getElementById('mesnascimento');
 const ano = document.getElementById('anonascimento');
 const nascimento = ano + '-'  +  mes  + '-' + dia;
+console.log("www")
 form.addEventListener('submit', (e) =>{
   e.preventDefault()
   validainputnome()
