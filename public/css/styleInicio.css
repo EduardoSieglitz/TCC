@@ -1,0 +1,169 @@
+    *{
+        overflow: hidden;
+    }
+    .Container{
+        width: 100vw;
+        height: 86vh;
+        display: grid;
+        grid-template-areas: "l r" ;
+        grid-template-rows: 2fr 0.5fr;
+    }
+    .Left{
+        width: 60vw;
+        background-color: #EEF4ED;
+        grid-area: l;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .Left h1{
+        font-size: clamp(1.6rem, 2.3vw, 20rem);
+        line-height: 2;
+    }
+    .Left p{
+        color: #1C1E21;
+        font-size: clamp(1.3rem, 1.7vw, 16rem);
+        line-height: 1.5;
+        text-align: justify;
+    }
+    .Left h2{
+        color: #1C1E21;
+        font-size: clamp(1.4rem, 2vw, 18rem);
+        line-height: 2;
+    }
+    .Right{
+        width: 40vw;
+        background-color: #EEF4ED;
+        grid-area: r;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .Right img{
+        height: max(50%, 180px);
+        width: max(70%, 300px);
+    }
+    .Control{
+        width: 50vw;
+    }
+    @media (max-width: 966px){
+        .Container{
+            width: 100vw;
+            height: 86vh;
+            
+        }
+        .Left{
+            width: 100vw;
+            height: 70vh;
+        }
+        #nav.active .Left{
+            width: 100vw;
+            height: 40vh;
+        }
+        .Right{
+            display: none;
+        }
+        .Left h1{
+            font-size: clamp(0.7rem, 1.5rem, 3.3rem);
+            line-height: 2;
+        }
+        .Left p{
+            color: #1C1E21;
+            font-size: clamp(0.4rem, 1.2rem, 3.1rem);
+            line-height: 1.5;
+            text-align: justify;
+        }
+        .Left h2{
+            color: #1C1E21;
+            font-size: clamp(0.5rem, 1.3rem, 2.9rem);
+            line-height: 2;
+        }
+        .Control{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 65vw;
+            height: 50vh;
+        }
+    }
+    @media (max-width: 675px){
+        .Container{
+            width: 100vw;
+            height: 86vh;
+        }
+        .Left{
+            width: 100vw;
+            height: 70vh;
+        }
+        #nav.active .Left{
+            width: 100vw;
+            height: 45vh;
+        }
+        .Right{
+            display: none;
+        }
+        .Left h1{
+            font-size: clamp(1rem, 1.3rem, 2.5rem);
+            line-height: 2;
+        }
+        .Left p{
+            color: #1C1E21;
+            font-size: clamp(0.7rem, 1rem, 2.2rem);
+            line-height: 1.5;
+            text-align: justify;
+        }
+        .Left h2{
+            color: #1C1E21;
+            font-size: clamp(0.8rem, 1.1rem, 2.3rem);
+            line-height: 2;
+        }
+        .Control{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 65vw;
+            height: 45vh;
+        }
+    }
+    @media (max-height: 700px){
+        .Container{
+            width: 100vw;
+            height: 86vh;
+        }
+        .Left{
+            width: 100vw;
+            height: 70vh;
+          
+        }
+        #nav.active .Left{
+            width: 100vw;
+            height: 45vh;
+        }
+        .Right{
+            display: none;
+        }
+        .Left h1{
+            font-size: clamp(1rem, 1.3rem, 2.5rem);
+            line-height: 2;
+        }
+        .Left p{
+            color: #1C1E21;
+            font-size: clamp(0.7rem, 1rem, 2.2rem);
+            line-height: 1.5;
+            text-align: justify;
+        }
+        .Left h2{
+            color: #1C1E21;
+            font-size: clamp(0.8rem, 1.1rem, 2.3rem);
+            line-height: 2;
+        }
+        .Control{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 65vw;
+            height: 45vh;
+        }
+    }
+   
+    

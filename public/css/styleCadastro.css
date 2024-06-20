@@ -1,0 +1,213 @@
+  body{
+    font-family: 'Roboto', sans-serif;
+    background-color: #EEF4ED;
+    border: solid #EEF4ED;
+    border-radius: 15px;
+    padding: 0;
+    overflow: hidden;
+  }
+  .Control{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .ControlCadastro{
+    padding: 5px;
+    background-color: #ffffff;
+    border: solid #ffffff;
+    height: 610px;
+    width: 450px;
+    border-radius: 15px;
+    box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  .inputentrar1{
+    outline-color: #CAD1C7;
+    height: 10px;
+    width: 350px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    border: solid 2px;
+    border-color:#EEF4ED;
+    margin-bottom: 3px;
+    padding: 20px;
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+  }
+  .inputentrar1:hover {
+    border-color: #CAD1C7;
+  }
+    
+  .inputentrar2{
+    outline-color: #CAD1C7;
+    width: 130px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    border: solid 2px;
+    border-color:#EEF4ED;
+    padding: 15px;
+    color: #1C1E21;
+    transition: border-color 0.3s ease;
+  }
+    .inputentrar2:hover {
+      border-color: #CAD1C7;
+    }  
+  .inputbutton{
+    width: 350px;
+    height: 50px;
+    background-color: #00cccc;
+    border-radius: 15px;
+    border: solid 2px;
+    border-color:#EEF4ED;
+    margin-bottom: 12px;
+    padding: 5px;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+  }
+    .inputbutton:hover{
+      opacity: 0.8;
+    }
+  .linhaentrar{
+    width: 400px;
+    margin: 0 auto;
+    border-bottom: 2px solid  #EEF4ED;
+  }
+  .ph1{
+    font-size: 25px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #1C1E21;
+  }
+  .data{
+    width: 400px;
+    margin: 0 auto;
+  }
+  .data input{
+    display: flex;
+  }
+  .data p{
+    margin: 1px 8px -14px 6px;
+    background-color: #ffffff;
+    font-size: 12px;
+    color: #757575;
+    text-align: left;
+    
+  }
+  .aentrar{
+    font-size: 15px;
+    color: rgb(43, 107, 131);
+    margin-bottom: 20px;
+    text-decoration: none;
+  }
+  .nomeerro{
+    margin: 0 auto;
+    width: 393px;
+  }
+  .sobreerro{
+    margin: 0 auto;
+    width: 393px;
+  }
+  .senhaerro{
+    margin: 0 auto;
+    width: 393px;
+  }
+  .emailerro{
+    margin: 0 auto;
+    width: 393px;
+  }
+  /*---------------------------------------------JAVASCRIPT TUDO A BAIXO---------------------------------------------*/
+  .nomeerro.erro input{
+    border: 2px solid #FF6C6C;
+    outline:  #FF6C6C;
+  }
+  .nomesuce.suce input{
+    display: none;
+    border: 2px solid #757575;
+    width: 300px;
+    transition: border-color 0.3s ease;
+  }
+  .inputentrar1:hover {
+    border-color: #CAD1C7;
+  }
+  .sobreerro.erro input{
+    border: 2px solid #FF6C6C;
+    outline: #FF6C6C;
+  }
+  .sobresuce.suce input{
+    display: none;
+    border: 2px solid #757575;
+    transition: border-color 0.3s ease;
+  }
+  .inputentrar1:hover {
+    border-color: #CAD1C7;
+  }
+  .emailerro.erro input{
+    border: 2px solid #FF6C6C;
+    outline: #FF6C6C;
+  }
+  .emailsuce.suce input{
+    display: none;
+    border: 2px solid #757575;
+    transition: border-color 0.3s ease;
+  }
+  .inputentrar1:hover {
+    border-color: #CAD1C7;
+  }
+  .senhaerro.erro input{
+    border: 2px solid #FF6C6C;
+    outline: #FF6C6C;
+  }
+  .senhasuce.suce input{
+    display: none;
+    border: 2px solid #757575;
+    transition: border-color 0.3s ease;
+  }
+  .inputentrar1:hover {
+    border-color: #CAD1C7;
+  }
+  .nomeerro small{
+    visibility: hidden;
+  }
+  .nomeerro.erro small{
+    visibility: visible;
+    display: flex;
+    color: #FF6C6C;
+    font-size: 11px;
+    margin: 1px 0px 7px 15px;
+  }
+  .sobreerro small{
+    visibility: hidden;
+  }
+  .sobreerro.erro small{
+    visibility: visible;
+    display: flex;
+    color: #FF6C6C;
+    font-size: 11px;
+    margin: 1px 0px 10px 15px;
+  }
+  .emailerro small{
+    visibility: hidden;
+  }
+  .emailerro.erro small{
+    visibility: visible;
+    display: flex;
+    color: #FF6C6C;
+    font-size: 11px;
+    margin: 1px 0px 10px 15px;
+  }
+  .senhaerro small{
+    visibility: hidden;
+  }
+  .senhaerro.erro small{
+    visibility: visible;
+    display: flex;
+    color: #FF6C6C;
+    font-size: 11px;
+    margin: 1px 0px 10px 15px;
+  }

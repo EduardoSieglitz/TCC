@@ -1,0 +1,187 @@
+  body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #EEF4ED;
+  }
+
+  .Container {
+    width: 100vw;
+    height: 86vh;
+    display: grid;
+    grid-template-areas: "l r";
+    grid-template-rows: 3fr;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .Texto {
+    width: 30vw;
+    height: 40vh;
+  }
+
+  .Left {
+    grid-area: l;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: justify;
+  }
+
+  .h1 {
+    color: #00cccc;
+    font-size: 40px;
+    width: 400px;
+  }
+
+  .p {
+    font-size: 25px;
+    width: 500px;
+    color: #1C1E21;
+  }
+
+  .Right {
+    grid-area: r;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+  }
+
+  .Login {
+    background-color: #ffffff;
+    border: solid #ffffff;
+    width: 400px;
+    padding: 15px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .inputLogin {
+    outline-color: #CAD1C7;
+    height: 20px;
+    width: 350px;
+    margin-bottom: 3px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    border: solid 2px;
+    border-color: #EEF4ED;
+    padding: 20px;
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+  }
+
+  .inputLogin:hover {
+    border-color: #CAD1C7;
+  }
+
+  .inputButton {
+    width: 350px;
+    height: 60px;
+    background-color: #00cccc;
+    border-radius: 15px;
+    border: solid 2px;
+    border-color: #EEF4ED;
+    margin-bottom: 12px;
+    padding: 5px;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+  }
+
+  .inputButton:hover {
+    opacity: 0.8;
+  }
+
+  .hrefLogin {
+    font-size: 15px;
+    color: rgb(43, 107, 131);
+    margin-bottom: 20px;
+    text-decoration: none;
+    transition: 0.3s;
+  }
+
+  .linhaLogin {
+    width: 400px;
+    border-bottom: 2px solid #EEF4ED;
+  }
+
+  .inputButton2 {
+    width: 210px;
+    height: 60px;
+    background-color: rgb(43, 107, 131);
+    border-radius: 15px;
+    border: solid 2px;
+    border-color: #EEF4ED;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    padding: 5px;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+  }
+
+  .inputButton2:hover {
+    opacity: 0.9;
+  }
+  /*---------------------------------------------JAVASCRIPT TUDO A BAIXO---------------------------------------------*/
+  .emailerro small {
+    visibility: hidden;
+  }
+
+  .emailerro.erro small {
+    visibility: visible;
+    display: flex;
+    color: #FF6C6C;
+    font-size: 11px;
+    margin: 1px 0px 10px 15px;
+  }
+
+  .senhaerro small {
+    visibility: hidden;
+  }
+
+  .senhaerro.erro small {
+    visibility: visible;
+    display: flex;
+    color: #FF6C6C;
+    font-size: 11px;
+    margin: 1px 0px 10px 15px;
+  }
+
+  .emailerro.erro input {
+    border: 2px solid #FF6C6C;
+    outline: #FF6C6C;
+  }
+
+  .emailsuce.suce input {
+    display: none;
+    border: 2px solid #757575;
+    transition: border-color 0.3s ease;
+  }
+
+  .inputentrar1:hover {
+    border-color: #CAD1C7;
+  }
+
+  .senhaerro.erro input {
+    border: 2px solid #FF6C6C;
+    outline: #FF6C6C;
+  }
+
+  .senhasuce.suce input {
+    display: none;
+    border: 2px solid #757575;
+    transition: border-color 0.3s ease;
+  }
+
+  .inputentrar1:hover {
+    border-color: #CAD1C7;
+  }
