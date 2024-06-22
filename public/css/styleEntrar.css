@@ -6,57 +6,64 @@
     background-color: #EEF4ED;
   }
 
-  .Container {
+  .control {
     width: 100vw;
     height: 86vh;
     display: grid;
     grid-template-areas: "l r";
     grid-template-rows: 3fr;
     grid-template-columns: 1fr 1fr;
+
+    .left {
+      grid-area: l;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: justify;
+
+      .conteudo {
+        width: 30vw;
+        height: 40vh;
+      }
+
+      .titulo {
+        color: #00cccc;
+        font-size: 40px;
+        width: 400px;
+      }
+    
+      .texto {
+        font-size: 25px;
+        width: 500px;
+        color: #1C1E21;
+      }
+    }
+
+    .right {
+      grid-area: r;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .container {
+        background-color: #ffffff;
+        border: solid #ffffff;
+        width: 400px;
+        padding: 15px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);
+      }
+    }
   }
 
-  .Texto {
-    width: 30vw;
-    height: 40vh;
-  }
+  
 
-  .Left {
-    grid-area: l;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: justify;
-  }
+  
 
-  .h1 {
-    color: #00cccc;
-    font-size: 40px;
-    width: 400px;
-  }
+  
 
-  .p {
-    font-size: 25px;
-    width: 500px;
-    color: #1C1E21;
-  }
-
-  .Right {
-    grid-area: r;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-  }
-
-  .Login {
-    background-color: #ffffff;
-    border: solid #ffffff;
-    width: 400px;
-    padding: 15px;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);
-  }
+  
 
   .inputLogin {
     outline-color: #CAD1C7;
@@ -74,6 +81,20 @@
 
   .inputLogin:hover {
     border-color: #CAD1C7;
+  }
+
+  .separa {
+    height: 2px;
+    background-color: #EEF4ED;
+    text-align: center;
+    margin: 10px 0;
+  }
+
+  .separa span {
+    background-color: #fff;
+    position: relative;
+    top: -0.5em;
+    padding: 0 10px;
   }
 
   .inputButton {
@@ -131,6 +152,7 @@
   .inputButton2:hover {
     opacity: 0.9;
   }
+
   /*---------------------------------------------JAVASCRIPT TUDO A BAIXO---------------------------------------------*/
   .emailerro small {
     visibility: hidden;

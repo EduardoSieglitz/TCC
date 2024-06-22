@@ -1,6 +1,6 @@
 const Menu = document.getElementById("MenuRight");
 
-function click(){
+function click() {
     const navMenu = document.getElementById("nav");
     navMenu.classList.toggle("active");
 }
