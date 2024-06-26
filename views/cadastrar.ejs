@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <link rel="stylesheet" href="css/styleCadastrar.css">
+  <link rel="stylesheet" href="css/styleCad.css">
   <title>Cadastro</title>
 </head>
 
@@ -14,47 +14,26 @@
     <div class="container">
       <!-- Cabeçalho -->
       <thead>
-        <p class="titulo">Criar conta</p>
+        <label for="titulo" class="titulo">Criar conta</label>
       </thead>
       <div class="linha"></div>
 
-      <!-- Formulário informações cadastro -->
-      <form name="form" method="POST" action="/cadastroCliente">
+      <form id="form" method="POST" action="/cadastroCliente">
 
-        <div class="nomeUserErro">
-          <div class="nomeUserSuce">
-            <input type="text" name="nomeUser" id="nomeUser" class="inputForm" placeholder="Nome de usuário">
-          </div>
-        </div>
-
+        <input type="text" name="nomeUser" id="nomeUser" class="inputForm" placeholder="Nome de usuário">
+        <br>
         <!-- Nome -->
-        <div class="nomeerro">
-          <div class="nomesuce">
-            <input class="inputForm" type="text" id="nome" name="nome" placeholder="Nome">
-            <small>Erro menssage</small>
-          </div>
-        </div>
-
+        <input class="inputForm" type="text" id="nome" name="nome" placeholder="Nome">
+        <br>
         <!-- E-mail -->
-        <div class="emailerro">
-          <div class="emailsuce">
-            <input class="inputForm" type="text" id="email" name="email" placeholder="Email">
-            <small>Erro menssage</small>
-          </div>
-        </div>
-
+        <input class="inputForm" type="text" id="email" name="email" placeholder="Email">
+        <br>
         <!-- Senha -->
-        <div class="senhaerro">
-          <div class="senhasuce">
-            <input class="inputForm" type="password" id="senha" name="senha" placeholder="Senha">
-            <small>Erro menssage</small>
-          </div>
-        </div>
+        <input class="inputForm" type="password" id="senha" name="senha" placeholder="Senha">
 
         <!-- Data de Nascimento-->
         <div class="data">
           <p>Data de nascimento</p>
-          <br>
           <select class="selectData" id="dianascimento" name="dianascimento">
             <script>
               for (var d = 1; d <= 31; d++) {
