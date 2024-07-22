@@ -1,5 +1,0 @@
-Obrigatórios:
-npm i express ejs sequelize mysql2 body-parser slug slugify --save
-
-Opcional:
-npm i nodemon -g
