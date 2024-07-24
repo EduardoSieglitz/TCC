@@ -1,5 +1,5 @@
 const sequelize = require('sequelize'),
-    conexao = require('./bancodados.js'),
+    conexao = require('../database/bancodados.js'),
     cliente = conexao.define("cliente", {
         id_cliente: {
             type: sequelize.INTEGER,

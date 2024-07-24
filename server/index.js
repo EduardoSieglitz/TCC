@@ -1,24 +1,17 @@
-const { json } = require("body-parser");
-
-const express = require("express"),
+const { json } = require("body-parser"),
+  express = require("express"),
   app = express(),
-  mysql = require("mysql2"),
+  db = require("./database/pool"),
   cors = require("cors");
-
-const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "cliente",
-});
 
 app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Tudo, ok")
+  res.send("Oi, como vai.")
 });
 
+//Cadastro de Usuario
 app.post("/registrar", (req, res) => {
   console.log("opa")
   var { nome } = req.body,
@@ -33,6 +26,11 @@ app.post("/registrar", (req, res) => {
     console.log(erro)
   });
 });
+//
+
+//Login de Usuario
+
+//
 
 app.listen(3001, () => {
   console.log("Servidor rodando...");
