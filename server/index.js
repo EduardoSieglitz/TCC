@@ -5,7 +5,7 @@ const { json } = require("body-parser"),
   cors = require("cors");
 
 app.use(cors());
-app.use(express.json());
+app.use(json());
 
 app.get("/", (req, res) => {
   res.send("Oi, como vai.")
@@ -13,7 +13,6 @@ app.get("/", (req, res) => {
 
 //Cadastro de Usuario
 app.post("/registrar", (req, res) => {
-  console.log("opa")
   var { nome } = req.body,
     { email } = req.body,
     { senha } = req.body,
@@ -23,13 +22,24 @@ app.post("/registrar", (req, res) => {
     dataNascimento = ano + "-" + mes + "-" + dia,
     sql = "INSERT INTO tb_cliente (nome, senha, email, datanascimento) VALUES (?,?,?,?);";
   db.query(sql, [nome, senha, email, dataNascimento], (erro, result) => {
-    console.log(erro)
+    console.log(erro);
+  }).then(() => {
+    console.log("Cadastrado");
   });
 });
 //
 
 //Login de Usuario
-
+app.get("login", (req, res) => {
+  var { email } = req.body,
+    { senha } = req.body,
+    sql = "SELECT * FROM tb_cliente WHERE email = ?, senha = ?;";
+  db.query(sql, [email, senha], (erro, result) => {
+    console.log(erro);
+  }).then(() => {
+    console.log("Logado");
+  });
+});
 //
 
 app.listen(3001, () => {

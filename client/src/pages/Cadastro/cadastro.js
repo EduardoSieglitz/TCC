@@ -1,6 +1,7 @@
 import styles from './Cadastro.module.css';
 import { useState } from 'react';
 import Axios from 'axios';
+import React from 'react';
 export default function Cadastro() {
     const [dados, setDados] = useState();
     function Dados(dado) {
@@ -9,9 +10,7 @@ export default function Cadastro() {
             [dado.target.name]: dado.target.value,
         }))
     }
-    console.log(dados);
     function EnviaDados() {
-        console.log("Registrado")
         Axios.post("http://localhost:3001/registrar", {
             nome: dados.name,
             email: dados.email,
@@ -25,10 +24,10 @@ export default function Cadastro() {
     }
 
     return (
-        <body className={styles.body}>
+        <div className={styles.body}>
             <div className={styles.container}>
                 <div className={styles.title}>
-                    <label for="title">Criar nova conta</label>
+                    <label htmlFor="title">Criar nova conta</label>
                 </div>
                 <input type="text" name="name" placeholder="Nome" onChange={Dados} />
                 <input type="text" name="email" id="email" placeholder="Email" onChange={Dados} />
@@ -67,6 +66,6 @@ export default function Cadastro() {
                 <div className={styles.line}></div>
                 <a href="/" className={styles.return}>Voltar</a>
             </div>
-        </body>
+        </div>
     )
 }
