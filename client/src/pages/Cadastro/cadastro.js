@@ -17,7 +17,7 @@ export default function Cadastro() {
             senha: dados.senha,
             dia: dados.dia,
             mes: dados.mes,
-            ano: dados.ano,
+            ano: dados.ano
         }).then((response) => {
             console.log(response);
         });
