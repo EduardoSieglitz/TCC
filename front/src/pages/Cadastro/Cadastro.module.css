@@ -112,6 +112,31 @@
         text-decoration: none;
     }
 
+    /*----------------------Validação-------------------------*/
+    .input_error {
+        width: 80%;
+        border: 1px solid #ce1010;
+        border-radius: 8px;
+        padding: 11px;
+        margin-bottom: 10px;
+    }
+
+    .input_menssage {
+        color: #ce1010;
+        margin: 0;
+        font-size: 15px;
+    }
+
+    .datanascimento .select_error{
+        height: 36px;
+        border-radius: 4px;
+        padding: 0 20px 0 8px;
+        font-size: 15px;
+        border: 1px solid #ce1010;
+    }
+
+
+
     /* a button {
         background-color: #00a400;
         color: #fff;

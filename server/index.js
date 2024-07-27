@@ -24,13 +24,8 @@ app.post("/registrar", (req, res) => {
 //
 
 //Login de Usuario
-app.post("login", (req, res) => {
-  var { email } = req.body,
-    { senha } = req.body,
-    sql = "SELECT * FROM tb_cliente WHERE email = ?, senha = ?;";
-  db.query(sql, [email, senha], (erro, result) => {
-    console.log(erro);
-  });
+app.get("login", (req, res) => {
+  res.send("OK")
 });
 //
 
