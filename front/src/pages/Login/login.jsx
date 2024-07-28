@@ -1,19 +1,42 @@
 import styles from './Login.module.css';
-import React from 'react';
+import { useForm } from 'react-hook-form';
+import validator from 'validator';
 
 function Login() {
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    function dados(event) {
+        console.log({ event });
+    }
     return (
         <>
             <div className={styles.container}>
                 <div className={styles.title}>
                     <label htmlFor="title">Entrar na conta</label>
                 </div>
-                <form>
-                    <input type="email" name="email" id="email" placeholder="Nome ou Email" />
-                    <input type="text" name="senha" id="senha" placeholder="Senha" />
-                    <button>Entrar</button>
+                <div className={styles.form}>
+                    <input type='email'
+                        placeholder="Email"
+                        {...register('email', { required: true, minLength: 6, maxLength: 50, validate: (value) => { return validator.isEmail(value)} })}
+                        className={errors?.email && styles.input_error}
+                    />
+                    {errors?.email?.type == 'required' && <p className={styles.input_menssage}>required</p>}
+                    {errors?.email?.type == 'minLength' && <p className={styles.input_menssage}>minLength</p>}
+                    {errors?.email?.type == 'maxLength' && <p className={styles.input_menssage}>maxLength</p>}
+                    {errors?.email?.type == 'validate' && <p className={styles.input_menssage}>invalid Email</p>}
+
+
+                    <input type="text"
+                        placeholder="Senha"
+                        {...register("senha", { required: true, minLength: 8, maxLength: 50 })}
+                        className={errors?.senha && styles.input_error}
+                    />
+                    {errors?.senha?.type == 'required' && <p className={styles.input_menssage}>required</p>}
+                    {errors?.senha?.type == 'minLength' && <p className={styles.input_menssage}>minLength</p>}
+                    {errors?.senha?.type == 'maxLength' && <p className={styles.input_menssage}>maxLength</p>}
+
+                    <button onClick={() => { handleSubmit(dados)() }}>Entrar</button>
                     <a href="#">Esqueceu a senha?</a>
-                </form>
+                </div>
                 <div className={styles.line}></div>
                 <div className={styles.cad}>
                     <a href="/cadastro"><button>Criar nova conta</button></a>

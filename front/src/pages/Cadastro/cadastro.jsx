@@ -4,9 +4,8 @@ import validator from 'validator';
 
 export default function Cadastro() {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
-    console.log({ errors })
     const dados = (event) => {
-       alert(JSON.stringify(event));
+        alert(JSON.stringify(event));
     }
 
     return (
@@ -25,7 +24,7 @@ export default function Cadastro() {
                 {errors?.nome?.type === 'maxLength' && <p className={styles.input_menssage}>maxLength</p>}
 
                 <input type="text" placeholder="Email"
-                    {...register('email', { required: true, minLength: 5, maxLength: 50, validate: (value) => { return validator.isEmail(value)} })}
+                    {...register('email', { required: true, minLength: 6, maxLength: 50, validate: (value) => { return validator.isEmail(value) } })}
                     className={errors?.email && styles.input_error}
                 />
                 {errors?.email?.type === 'required' && <p className={styles.input_menssage}>Required</p>}

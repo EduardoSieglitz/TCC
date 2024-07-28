@@ -30,7 +30,7 @@ body {
         margin: 15px 0 20px;
     }
 
-    form {
+    .form {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -96,5 +96,20 @@ body {
 
     a:hover {
         text-decoration: underline;
+    }
+
+    /*----------------------Validação-------------------------*/
+    .form .input_error {
+        width: 80%;
+        border: 1px solid #ce1010;
+        border-radius: 8px;
+        padding: 11px;
+        margin-bottom: 10px;
+    }
+
+    .input_menssage {
+        color: #ce1010;
+        margin: 0;
+        font-size: 15px;
     }
 }
