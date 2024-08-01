@@ -1,11 +1,16 @@
 import styles from './Login.module.css';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
+import Axios from "axios";
 
 function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     function dados(event) {
-        console.log({ event });
+        Axios.post("http://localhost:3001/login",{
+            email : event.email,
+            senha : event.senha
+        });
+        alert(JSON.stringify(event));
     }
     return (
         <>

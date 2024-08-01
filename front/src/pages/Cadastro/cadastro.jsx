@@ -1,13 +1,21 @@
 import styles from './Cadastro.module.css';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
+import Axios from 'axios';
 
 export default function Cadastro() {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const dados = (event) => {
+        Axios.post("http://localhost:3001/registrar",{
+            nome : event.nome,
+            email : event.email,
+            senha : event.senha,
+            dia : event.dia,
+            mes : event.mes,
+            ano : event.ano
+        });
         alert(JSON.stringify(event));
     }
-
     return (
         <div className={styles.body}>
             <div className={styles.container}>

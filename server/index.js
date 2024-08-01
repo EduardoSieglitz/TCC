@@ -24,7 +24,7 @@ app.post("/registrar", (req, res) => {
 //
 
 //Login de Usuario
-app.get("login", (req, res) => {
+app.post("login", (req, res) => {
   res.send("OK")
 });
 //
