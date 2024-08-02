@@ -24,8 +24,14 @@ app.post("/registrar", (req, res) => {
 //
 
 //Login de Usuario
-app.post("login", (req, res) => {
-  res.send("OK")
+app.post("/login/auth", (req, res) => {
+  const{ email } = req.body,
+  { senha } = req.body;
+  const auth = {
+    email : email,
+    senha : senha
+  }
+  res.json(auth);
 });
 //
 

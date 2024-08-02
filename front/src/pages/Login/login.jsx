@@ -2,16 +2,19 @@ import styles from './Login.module.css';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import Axios from "axios";
+import { useEffect } from 'react';
 
 function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     function dados(event) {
-        Axios.post("http://localhost:3001/login",{
-            email : event.email,
-            senha : event.senha
+        Axios.post('http://localhost:3001/login/auth', {
+            email: event.email,
+            senha: event.senha,
+        }).then((res)=>{
+            console.log(res.data)
         });
-        alert(JSON.stringify(event));
-    }
+    };
+
     return (
         <>
             <div className={styles.container}>
@@ -21,7 +24,7 @@ function Login() {
                 <div className={styles.form}>
                     <input type='email'
                         placeholder="Email"
-                        {...register('email', { required: true, minLength: 6, maxLength: 50, validate: (value) => { return validator.isEmail(value)} })}
+                        {...register('email', { required: true, minLength: 6, maxLength: 50, validate: (value) => { return validator.isEmail(value) } })}
                         className={errors?.email && styles.input_error}
                     />
                     {errors?.email?.type == 'required' && <p className={styles.input_menssage}>required</p>}
