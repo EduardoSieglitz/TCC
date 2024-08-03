@@ -25,13 +25,20 @@ app.post("/registrar", (req, res) => {
 
 //Login de Usuario
 app.post("/login/auth", (req, res) => {
-  const{ email } = req.body,
-  { senha } = req.body;
+  const { email } = req.body,
+    { senha } = req.body;
   const auth = {
-    email : email,
-    senha : senha
+    email: email,
+    senha: senha,
+    autenticar : true
   }
-  res.json(auth);
+  sql = "select * from tb_cliente where email = ?, senha = ?;";
+  db.query(sql, [senha, email], (erro, result) => {
+    console.log(erro);
+
+  }).then(() => {
+    res.json(auth);
+  });
 });
 //
 
