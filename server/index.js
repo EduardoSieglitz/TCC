@@ -18,7 +18,8 @@ app.post("/registrar", (req, res) => {
     dataNascimento = ano + "-" + mes + "-" + dia,
     sql = "INSERT INTO tb_cliente (nome, senha, email, datanascimento) VALUES (?,?,?,?);";
   db.query(sql, [nome, senha, email, dataNascimento], (erro, result) => {
-    console.log(erro);
+    if (erro){ return res.json({message : "Erro no Cadastro"})};
+    if (result.length > 0) return res.json({message : "Cadastrado"});
   });
 });
 //
@@ -27,17 +28,10 @@ app.post("/registrar", (req, res) => {
 app.post("/login/auth", (req, res) => {
   const { email } = req.body,
     { senha } = req.body;
-  const auth = {
-    email: email,
-    senha: senha,
-    autenticar : true
-  }
-  sql = "select * from tb_cliente where email = ?, senha = ?;";
-  db.query(sql, [senha, email], (erro, result) => {
-    console.log(erro);
-
-  }).then(() => {
-    res.json(auth);
+  sql = "select * from tb_cliente where email = ? and senha = ?;";
+  db.query(sql, [email, senha], (erro, result) => {
+    if (erro){ return res.json({message : "Erro no Login"})};
+    if (result.length > 0) { return res.json({Login : true}); };
   });
 });
 //

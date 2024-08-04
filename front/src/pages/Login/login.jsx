@@ -2,16 +2,19 @@ import styles from './Login.module.css';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import Axios from "axios";
-import { useEffect } from 'react';
-
+import { Navigate, useNavigate } from 'react-router-dom';
 function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const navigate = useNavigate();
+    
     function dados(event) {
         Axios.post('http://localhost:3001/login/auth', {
             email: event.email,
             senha: event.senha,
         }).then((res)=>{
-            console.log(res.data)
+            if(res.data.Login){
+                navigate("/home"); 
+            }
         });
     };
 

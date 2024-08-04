@@ -4,24 +4,27 @@ import { Fragment } from 'react';
 import Login from './pages/Login/login';
 import Cadastro from './pages/Cadastro/cadastro';
 import Home from './pages/Home/home';
+import useHook from "./Autenticação/hook";
 
 const Private = ({ Item }) => {
-  const signed = false;
+  const signed = useHook;
   return signed > 0 ? <Item /> : <Login />;
 }
 
 export default function Web() {
   return (
-    <BrowserRouter>
-      <Fragment>
-        <Routes>
-          <Route exact path="/home" element={<Private Item={Home} />} />
-          <Route path="/" element={<Login />} />
-          <Route path="*" element={<Login />} />
-          <Route exact path="/cadastro" element={<Cadastro />} />
-        </Routes>
-      </Fragment >
-    </BrowserRouter>
+    <useHook>
+      <BrowserRouter>
+        <Fragment>
+          <Routes>
+            <Route exact path="/home" element={<Private Item={Home} />} />
+            <Route path="/" element={<Login />} />
+            <Route path="*" element={<Login />} />
+            <Route exact path="/cadastro" element={<Cadastro />} />
+          </Routes>
+        </Fragment >
+      </BrowserRouter>
+    </useHook>
   )
 }
 

@@ -14,7 +14,6 @@ export default function Cadastro() {
             mes : event.mes,
             ano : event.ano
         });
-        alert(JSON.stringify(event));
     }
     return (
         <div className={styles.body}>
