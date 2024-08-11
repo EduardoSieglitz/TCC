@@ -6,7 +6,6 @@ import Home from './pages/Home/home';
 import Autenticar from "./pages/Autenticação/contexts";
 const Private = ({ Item }) => {
   const signed = Autenticar();
- console.log(signed)
   return signed == true ? <Item /> : <Login />;
 }
 
