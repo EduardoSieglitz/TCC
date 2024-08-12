@@ -2,7 +2,9 @@ const { json } = require("body-parser"),
   express = require("express"),
   app = express(),
   db = require("./database/pool"),
-  cors = require("cors");
+  cors = require("cors"),
+  tabelaCliente = require("./tabelas/tabelaCliente"),~
+  tabelaAdmin = require("./tabelas/tabelaAdmin")
 
 app.use(cors());
 app.use(json());
@@ -16,7 +18,7 @@ app.post("/registrar", (req, res) => {
     { mes } = req.body,
     { ano } = req.body,
     dataNascimento = ano + "-" + mes + "-" + dia,
-    sql = "INSERT INTO tb_cliente (nome, senha, email, datanascimento) VALUES (?,?,?,?);";
+    sql = "INSERT INTO cliente (nome, senha, email, datanascimento) VALUES (?,?,?,?);";
   db.query(sql, [nome, senha, email, dataNascimento], (erro, result) => {
     if (erro){ return res.json({message : "Erro no Cadastro"})};
     if (result.length > 0) return res.json({message : "Cadastrado"});
@@ -28,7 +30,7 @@ app.post("/registrar", (req, res) => {
 app.post("/login/auth", (req, res) => {
   const { email } = req.body,
     { senha } = req.body;
-  sql = "select * from tb_cliente where email = ? and senha = ?;";
+  sql = "select * from cliente where email = ? and senha = ?;";
   db.query(sql, [email, senha], (erro, result) => {
     if (erro){ return res.json({message : "Erro no Login"})};
     if (result.length > 0) { return res.json({Login : true}); };

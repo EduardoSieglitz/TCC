@@ -27,7 +27,7 @@ const sequelize = require('sequelize'),
 
 const tabelaCliente = async () => {
     try {
-        const resul = await conexao.query("SELECT 1 FROM information_schema.tables WHERE table_schema = 'lojacomprastcc' AND table_name = 'cliente';");
+        const resul = await conexao.query("SELECT 1 FROM information_schema.tables WHERE table_schema = 'PCIC' AND table_name = 'cliente';");
 
         if (resul[0].length === 0) {
             await cliente.sync();
