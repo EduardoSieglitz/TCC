@@ -3,8 +3,9 @@ const { json } = require("body-parser"),
   app = express(),
   db = require("./database/pool"),
   cors = require("cors"),
-  tabelaCliente = require("./tabelas/tabelaCliente"),~
-  tabelaAdmin = require("./tabelas/tabelaAdmin")
+  tabelaCliente = require("./tabelas/tabelaCliente"),
+  tabelaAdmin = require("./tabelas/tabelaAdmin"),
+  tabelaCortina = require("./tabelas/tabelaCortina");
 
 app.use(cors());
 app.use(json());

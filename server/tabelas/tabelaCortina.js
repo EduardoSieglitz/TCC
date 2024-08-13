@@ -1,47 +1,43 @@
 const sequelize = require('sequelize'),
     conexao = require('../database/bancodados.js'),
-    admin = conexao.define("admin", {
-        id_admin: {
+    cortinas = conexao.define("cortinas", {
+        id_cortinas: {
             type: sequelize.INTEGER,
             autoIncrement: true,
             allowNull: false,
             primaryKey: true
         },
-        nome: {
+        material: {
             type: sequelize.STRING,
             allowNull: false
         },
-        email: {
+        descrição: {
+            type: sequelize.TEXT,
+            allowNull: false
+        },
+        precos: {
             type: sequelize.STRING,
             allowNull: false
         },
-        senha: {
-            type: sequelize.STRING,
-            allowNull: false
-        },
-        cpf: {
-            type: sequelize.STRING,
-            allowNull: false
-        },
-        datanascimento: {
+        imagens : {
             type: sequelize.STRING,
             allowNull: false
         },
     });
 
-const tabelaAdmin = async () => {
+const tabelaCortinas = async () => {
     try {
-        const resul = await conexao.query("SELECT 1 FROM information_schema.tables WHERE table_schema = 'PCIC' AND table_name = 'admin';");
+        const resul = await conexao.query("SELECT 1 FROM information_schema.tables WHERE table_schema = 'PCIC' AND table_name = 'cortinas';");
 
         if (resul[0].length === 0) {
-            await admin.sync();
-            console.log("Tabela 'admin' criada");
+            await cortinas.sync();
+            console.log("Tabela 'cortinas' criada");
         } else {
-            console.log("Tabela 'admin' já existe");
+            console.log("Tabela 'cortinas' já existe");
         }
     } catch (erro) {
         console.error("Erro ao verificar/criar tabela: ", erro);
     }
 }
-tabelaAdmin();
-module.exports = admin;
+tabelaCortinas();
+module.exports = cortinas;
