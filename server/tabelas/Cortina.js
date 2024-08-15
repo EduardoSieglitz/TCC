@@ -1,5 +1,6 @@
 const sequelize = require('sequelize'),
     conexao = require('../database/bancodados.js'),
+    usuario = require("./Usuario.js"),
     cortinas = conexao.define("cortinas", {
         id_cortinas: {
             type: sequelize.INTEGER,
@@ -19,11 +20,23 @@ const sequelize = require('sequelize'),
             type: sequelize.STRING,
             allowNull: false
         },
-        imagens : {
+        imagens: {
             type: sequelize.STRING,
             allowNull: false
         },
+        id_cortinas: {
+            type: sequelize.INTEGER,
+            allowNull: false
+        }
     });
+    usuario.hasMany(cortinas, {
+        foreignKey: 'id_usuario',
+      });
+      
+      cortinas.belongsTo(usuario, {
+        foreignKey: ' id_usuario',
+        as: 'usuario'
+      });
 
 const tabelaCortinas = async () => {
     try {

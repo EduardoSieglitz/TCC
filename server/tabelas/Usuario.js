@@ -1,7 +1,7 @@
 const sequelize = require('sequelize'),
     conexao = require('../database/bancodados.js'),
-    cliente = conexao.define("cliente", {
-        id_cliente: {
+    usuario = conexao.define("usuario", {
+        id_usuario: {
             type: sequelize.INTEGER,
             autoIncrement: true,
             allowNull: false,
@@ -23,21 +23,25 @@ const sequelize = require('sequelize'),
             type: sequelize.STRING,
             allowNull: false
         },
+        nivel: {
+            type: sequelize.STRING,
+            allowNull: false
+        },
     });
 
-const tabelaCliente = async () => {
+const tabelaUsuario = async () => {
     try {
-        const resul = await conexao.query("SELECT 1 FROM information_schema.tables WHERE table_schema = 'PCIC' AND table_name = 'cliente';");
+        const resul = await conexao.query("SELECT 1 FROM information_schema.tables WHERE table_schema = 'PCIC' AND table_name = 'usuario';");
 
         if (resul[0].length === 0) {
             await cliente.sync();
-            console.log("Tabela 'cliente' criada");
+            console.log("Tabela 'usuario' criada");
         } else {
-            console.log("Tabela 'cliente' já existe");
+            console.log("Tabela 'usuario' já existe");
         }
     } catch (erro) {
         console.error("Erro ao verificar/criar tabela: ", erro);
     }
 }
-tabelaCliente();
-module.exports = cliente;
+tabelaUsuario();
+module.exports = usuario;
