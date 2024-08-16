@@ -24,20 +24,17 @@ const sequelize = require('sequelize'),
             type: sequelize.STRING,
             allowNull: false
         },
-        id_cortinas: {
+        usuario_id: {
             type: sequelize.INTEGER,
             allowNull: false
         }
     });
     usuario.hasMany(cortinas, {
         foreignKey: 'id_usuario',
-      });
-      
-      cortinas.belongsTo(usuario, {
-        foreignKey: ' id_usuario',
         as: 'usuario'
       });
-
+      
+     
 const tabelaCortinas = async () => {
     try {
         const resul = await conexao.query("SELECT 1 FROM information_schema.tables WHERE table_schema = 'PCIC' AND table_name = 'cortinas';");

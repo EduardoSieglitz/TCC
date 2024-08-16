@@ -15,15 +15,11 @@ const sequelize = require('sequelize'),
             type: sequelize.STRING,
             allowNull: false
         },
+        telefone: {
+            type: sequelize.STRING,
+            allowNull: false
+        },
         senha: {
-            type: sequelize.STRING,
-            allowNull: false
-        },
-        datanascimento: {
-            type: sequelize.STRING,
-            allowNull: false
-        },
-        nivel: {
             type: sequelize.STRING,
             allowNull: false
         },
@@ -34,7 +30,7 @@ const tabelaUsuario = async () => {
         const resul = await conexao.query("SELECT 1 FROM information_schema.tables WHERE table_schema = 'PCIC' AND table_name = 'usuario';");
 
         if (resul[0].length === 0) {
-            await cliente.sync();
+            await usuario.sync();
             console.log("Tabela 'usuario' criada");
         } else {
             console.log("Tabela 'usuario' já existe");
