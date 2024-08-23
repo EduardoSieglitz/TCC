@@ -3,8 +3,7 @@ const { json } = require("body-parser"),
   app = express(),
   db = require("./database/pool"),
   cors = require("cors"),
-  tabelaCliente = require("./tabelas/Usuario"),
-  tabelaCortina = require("./tabelas/Cortina");
+  tabelas = require("./tabelas/Tabelas");
 
 app.use(cors());
 app.use(json());
