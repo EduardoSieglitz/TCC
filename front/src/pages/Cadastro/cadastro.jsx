@@ -6,13 +6,11 @@ import Axios from 'axios';
 export default function Cadastro() {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const dados = (event) => {
-        Axios.post("http://localhost:3001/registrar",{
-            nome : event.nome,
-            email : event.email,
-            senha : event.senha,
-            dia : event.dia,
-            mes : event.mes,
-            ano : event.ano
+        Axios.post("http://localhost:3001/registrar", {
+            nome: event.nome,
+            email: event.email,
+            senha: event.senha,
+            telefone : event.telefone,
         });
     }
     return (
@@ -47,46 +45,12 @@ export default function Cadastro() {
                 {errors?.senha?.type === 'minLength' && <p className={styles.input_menssage}>minLength</p>}
                 {errors?.senha?.type === 'maxLength' && <p className={styles.input_menssage}>maxLength</p>}
 
-                <div className={styles.datanascimento}>
-
-                    <select
-                        {...register("dia", { validate: (value) => { return value != "0" } })}
-                        className={errors?.dia && styles.select_error}>
-                        <option value={"0"}>Dia</option>
-                        <option value={"1"}>1</option>
-                        <option value={"2"}>2</option>
-                    </select>
-
-                    <select
-                        {...register("mes", { validate: (value) => { return value != "0" }, })}
-                        className={errors?.mes && styles.select_error}>
-                        <option value="0">Mês</option>
-                        <option value="1">Janeiro</option>
-                        <option value="2">Fevereiro</option>
-                        <option value="3">Março</option>
-                        <option value="4">Abril</option>
-                        <option value="5">Maio</option>
-                        <option value="6">Junho</option>
-                        <option value="7">Julho</option>
-                        <option value="8">Agosto</option>
-                        <option value="9">Setembro</option>
-                        <option value="10">Outubro</option>
-                        <option value="11">Novembro</option>
-                        <option value="12">Dezembro</option>
-                    </select>
-
-                    <select name="ano"
-                        {...register("ano", { validate: (value) => { return value != "0" } })}
-                        className={errors?.ano && styles.select_error}>
-                        <option value={"0"}>Ano</option>
-                        <option value={"2024"}>2024</option>
-                        <option value={"2023"}>2023</option>
-                    </select>
-                </div>
-
-                {errors?.dia?.type === 'validate' && <p className={styles.input_menssage}>dia error</p>}
-                {errors?.mes?.type === 'validate' && <p className={styles.input_menssage}>mês error</p>}
-                {errors?.ano?.type === 'validate' && <p className={styles.input_menssage}>ano error</p>}
+                <input type="text" placeholder="Telefone"
+                    {...register("telefone", { required: true, validate: (value) => /^[1-9]{2}-?[9]{0,1}[0-9]{4}-?[0-9]{4}$/.test(value)})}
+                    className={errors?.telefone && styles.input_error}
+                />
+                {errors?.telefone?.type === 'required' && <p className={styles.input_menssage}>Required</p>}
+                {errors?.telefone?.type === 'validate' && <p className={styles.input_menssage}>Somente numeros, xx-xxxxx-xxxx</p>}
 
                 <button onClick={() => { handleSubmit(dados)() }} >Cadastrar</button>
                 <div className={styles.line}></div>
