@@ -13,14 +13,11 @@ app.post("/registrar", (req, res) => {
   const { nome } = req.body,
     { email } = req.body,
     { senha } = req.body,
-    { dia } = req.body,
-    { mes } = req.body,
-    { ano } = req.body,
-    dataNascimento = ano + "-" + mes + "-" + dia,
-    sql = "INSERT INTO cliente (nome, senha, email, datanascimento) VALUES (?,?,?,?);";
-  db.query(sql, [nome, senha, email, dataNascimento], (erro, result) => {
-    if (erro){ return res.json({message : "Erro no Cadastro"})};
-    if (result.length > 0) return res.json({message : "Cadastrado"});
+    { telefone } = req.body,
+    sql = "INSERT INTO usuario (nome, senha, email, telefone, nivel) VALUES (?, ?, ?, ?, ?, ?);";
+  db.query(sql, [nome, senha, email, telefone, "Client"], (erro, result) => {
+    if (erro) { return res.json({ message: "Erro no Cadastro" }) };
+    if (result.length > 0) return res.json({ message: "Cadastrado" });
   });
 });
 //
@@ -29,10 +26,10 @@ app.post("/registrar", (req, res) => {
 app.post("/login/auth", (req, res) => {
   const { email } = req.body,
     { senha } = req.body;
-  sql = "select * from cliente where email = ? and senha = ?;";
+  sql = "select * from usuario where email = ? and senha = ?;";
   db.query(sql, [email, senha], (erro, result) => {
-    if (erro){ return res.json({message : "Erro no Login"})};
-    if (result.length > 0) { return res.json({Login : true}); };
+    if (erro) { return res.json({ message: "Erro no Login" }) };
+    if (result.length > 0) { return res.json({ Login: true }); };
   });
 });
 //

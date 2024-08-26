@@ -1,20 +1,6 @@
 const sequelize = require('sequelize');
 const conexao = require('../database/bancodados.js');
 
-// Tabela NivelUsuario
-const NivelUsuario = conexao.define('nivel_usuario', {
-    idNivelUsuario: {
-        type: sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
-    nivel: {
-        type: sequelize.ENUM('Func', 'Clien'),
-        allowNull: false
-    }
-});
-
 // Tabela Usuario
 const Usuario = conexao.define('usuario', {
     idUsuario: {
@@ -48,14 +34,11 @@ const Usuario = conexao.define('usuario', {
         type: sequelize.DATE,
         allowNull: true
     },
-    idNivelUsuario: {
-        type: sequelize.INTEGER,
-        references: {
-            model: NivelUsuario,
-            key: 'idNivelUsuario'
-        },
+    nivel: {
+        type: sequelize.ENUM('Func', 'Clien'),
         allowNull: false
     }
+
 });
 
 // Tabela Agendamento
@@ -195,7 +178,7 @@ const ChatAoVivo = conexao.define('chat_aovivo', {
             model: Pagamento,
             key: 'idPagamento'
         },
-        allowNull: false 
+        allowNull: false
     }
 });
 // Tabela Cortina
@@ -278,6 +261,5 @@ module.exports = {
     FormaPagamento,
     Pagamento,
     Cortina,
-    ControleCortina,
-    NivelUsuario
+    ControleCortina
 };
