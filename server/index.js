@@ -14,8 +14,9 @@ app.post("/registrar", (req, res) => {
     { email } = req.body,
     { senha } = req.body,
     { telefone } = req.body,
-    sql = "INSERT INTO usuario (nome, senha, email, telefone, nivel) VALUES (?, ?, ?, ?, ?, ?);";
-  db.query(sql, [nome, senha, email, telefone, "Client"], (erro, result) => {
+    Usuario = "Clien"
+    sql = "INSERT INTO usuario (nome, senha, email, telefone, nivel) VALUES (?, ?, ?, ?, ?);";
+  db.query(sql, [nome, senha, email, telefone, Usuario], (erro, result) => {
     if (erro) { return res.json({ message: "Erro no Cadastro" }) };
     if (result.length > 0) return res.json({ message: "Cadastrado" });
   });

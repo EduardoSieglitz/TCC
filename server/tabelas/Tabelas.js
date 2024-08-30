@@ -16,7 +16,7 @@ const Usuario = conexao.define('usuario', {
     email: {
         type: sequelize.STRING,
         allowNull: false,
-        unique: true // Email deve ser único para garantir a integridade do dado
+        unique: true
     },
     senha: {
         type: sequelize.STRING,
@@ -96,54 +96,6 @@ const Mensagem = conexao.define('mensagem', {
         allowNull: false
     }
 });
-
-// Tabela Forma de Pagamento
-const FormaPagamento = conexao.define('forma_pagamento', {
-    idFormaPagamento: {
-        type: sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
-    valorTotal: {
-        type: sequelize.DECIMAL(10, 2),
-        allowNull: false
-    },
-    tipo: {
-        type: sequelize.ENUM('D', 'C', 'P'),
-        allowNull: false
-    }
-});
-
-// Tabela Pagamento
-const Pagamento = conexao.define('pagamento', {
-    idPagamento: {
-        type: sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
-    valorTotal: {
-        type: sequelize.DECIMAL(10, 2),
-        allowNull: false
-    },
-    idAgendamento: {
-        type: sequelize.INTEGER,
-        references: {
-            model: Agendamento,
-            key: 'idAgendamento'
-        },
-        allowNull: false
-    },
-    idFormaPagamento: {
-        type: sequelize.INTEGER,
-        references: {
-            model: FormaPagamento,
-            key: 'idFormaPagamento'
-        },
-        allowNull: false
-    }
-});
 // Tabela Chat ao Vivo
 const ChatAoVivo = conexao.define('chat_aovivo', {
     idChat: {
@@ -169,14 +121,6 @@ const ChatAoVivo = conexao.define('chat_aovivo', {
         references: {
             model: Mensagem,
             key: 'idMensagem'
-        },
-        allowNull: false
-    },
-    idPagamento: {
-        type: sequelize.INTEGER,
-        references: {
-            model: Pagamento,
-            key: 'idPagamento'
         },
         allowNull: false
     }
@@ -258,8 +202,6 @@ module.exports = {
     Agendamento,
     Mensagem,
     ChatAoVivo,
-    FormaPagamento,
-    Pagamento,
     Cortina,
     ControleCortina
 };

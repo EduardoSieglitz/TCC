@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import Axios from "axios";
 import { Navigate, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from "react";
+import {useState } from "react";
 function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const navigate = useNavigate();
@@ -17,7 +17,7 @@ function Login() {
             navigate("/home")
         }).catch((erro) => {
             setContext(erro.data.Login);
-            navigate("/")
+            navigate("/cadastro")
         });
     };
 
