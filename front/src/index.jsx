@@ -1,21 +1,24 @@
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import Login from './pages/Login/login';
 import Cadastro from './pages/Cadastro/cadastro';
 import Home from './pages/Home/home';
-import context from "./context/AuthProvider";
-import { useContext } from 'react';
+import { AuthProvider } from './context/AuthProvider';
+import { ProtectedLayout } from './pages/ProtectedLayout/index';
 
 export default function Web() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route exact path="/home" element={<Home />} />
-        <Route path="/" element={<Login />} />
-        <Route path="*" element={<Login />} />
-        <Route exact path="/cadastro" element={<Cadastro />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/home" element={<ProtectedLayout><Home /></ProtectedLayout>} />
+          <Route path="/" element={<Login />} />
+          <Route path="*" element={<Login />} />
+          <Route path="/cadastro" element={<Cadastro />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 

@@ -1,12 +1,25 @@
 import styles from './Login.module.css';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
-import {useState } from "react";
+import { useAuth } from '../../context/AuthProvider/useAuth';
+import { useNavigate } from 'react-router-dom';
 function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const navigate = useNavigate();
-    const [context, setContext] = useState(false);
-    function dados(event) {
+    const auth = useAuth();
+    const navigate = useNavigate()
+    async function dados(values) {
+        try{
+            await auth.authenticate(values.email, values.senha)
+            if(auth.authenticate){
+                navigate("/home");
+            }else{
+                console.log("jienfienruf")
+            }
+            
+
+        }catch(error){
+            console.log(error);
+        }
     }
 
     return (

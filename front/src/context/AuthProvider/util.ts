@@ -18,6 +18,7 @@ export function getUserLocalStorage() {
 export async function LoginRequest(email: string, senha: string) {
     try {
         const request = await axios.post("http://localhost:3001/login/auth", { email, senha });
+        console.log(request.data)
         return request.data;
     } catch (error) {
         return null;
