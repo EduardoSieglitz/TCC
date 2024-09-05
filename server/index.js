@@ -15,7 +15,7 @@ app.post("/registrar", (req, res) => {
     { senha } = req.body,
     { telefone } = req.body,
     Usuario = "Clien"
-    sql = "INSERT INTO usuario (nome, senha, email, telefone, nivel) VALUES (?, ?, ?, ?, ?);";
+  sql = "INSERT INTO usuario (nome, senha, email, telefone, nivel) VALUES (?, ?, ?, ?, ?);";
   db.query(sql, [nome, senha, email, telefone, Usuario], (erro, result) => {
     if (erro) { return res.json({ message: "Erro no Cadastro" }) };
     if (result.length > 0) return res.json({ message: "Cadastrado" });
@@ -25,12 +25,21 @@ app.post("/registrar", (req, res) => {
 
 //Login de Usuario
 app.post("/login/auth", (req, res) => {
-  const { email } = req.body,
+  async function usuarios() {
+    try {
+      const response = await tabelas.Usuario.findAll();
+      return response;
+    } catch(error) {
+      console.log(error)
+    }
+  }
+  const usuario = usuarios(),
+    { email } = req.body,
     { senha } = req.body;
   sql = "select * from usuario where email = ? and senha = ?;";
   db.query(sql, [email, senha], (erro, result) => {
-    if (erro) { return res.json({ message: "Erro no Login" }) };
-    if (result.length > 0) { return res.json({ Login: true }); };
+    if (erro) { return res.json({ token: false }) };
+    if (result.length > 0) { return res.json({ token: true }); } else { return res.json({ token: false, usuario: usuario }) };
   });
 });
 //

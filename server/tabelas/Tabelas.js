@@ -16,7 +16,6 @@ const Usuario = conexao.define('usuario', {
     email: {
         type: sequelize.STRING,
         allowNull: false,
-        unique: true
     },
     senha: {
         type: sequelize.STRING,
@@ -24,7 +23,7 @@ const Usuario = conexao.define('usuario', {
     },
     telefone: {
         type: sequelize.STRING,
-        allowNull: false
+        allowNull: false,
     },
     inicioLogin: {
         type: sequelize.DATE,

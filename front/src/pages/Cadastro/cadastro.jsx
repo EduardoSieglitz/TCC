@@ -6,6 +6,7 @@ import Axios from 'axios';
 export default function Cadastro() {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const dados = (event) => {
+        
         Axios.post("http://localhost:3001/registrar", {
             nome: event.nome,
             email: event.email,

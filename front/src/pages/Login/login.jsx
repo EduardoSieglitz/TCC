@@ -7,18 +7,18 @@ function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const auth = useAuth();
     const navigate = useNavigate()
+    if (auth.token == true) {
+        navigate("/home");
+    }
     async function dados(values) {
-        try{
-            await auth.authenticate(values.email, values.senha)
-            if(auth.authenticate){
+        try {
+            await auth.authenticate(values.email, values.senha);
+            if (auth.token == true) {
                 navigate("/home");
-            }else{
-                console.log("jienfienruf")
             }
-            
 
-        }catch(error){
-            console.log(error);
+        } catch (erro) {
+            console.log("Error")
         }
     }
 

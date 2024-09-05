@@ -6,18 +6,17 @@ export const AuthContext = createContext<IContext>({} as IContext)
 
 export const AuthProvider = ({ children }: IAuthProvider) => {
     const [user, setUser] = useState<IUser | null>()
-
-    useEffect(()=>{
+    useEffect(() => {
         const user = getUserLocalStorage()
-        if(user){
+        if (user) {
             setUser(user);
         }
     }, []);
 
     async function authenticate(email: string, senha: string) {
         const response = await LoginRequest(email, senha)
-
-        const payload = { token: response.token, email };
+        const payload = { token: response.token, email, usuarios : [response.usuarios] };
+        console.log(payload)
         setUser(payload);
         setUserLocalStorage(payload);
     }
