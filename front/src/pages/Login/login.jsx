@@ -12,6 +12,7 @@ function Login() {
     }
     async function dados(values) {
         try {
+
             await auth.authenticate(values.email, values.senha);
             if (auth.token == true) {
                 navigate("/home");

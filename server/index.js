@@ -24,22 +24,15 @@ app.post("/registrar", (req, res) => {
 //
 
 //Login de Usuario
-app.post("/login/auth", (req, res) => {
-  async function usuarios() {
-    try {
-      const response = await tabelas.Usuario.findAll();
-      return response;
-    } catch(error) {
-      console.log(error)
-    }
-  }
-  const usuario = usuarios(),
-    { email } = req.body,
+app.post("/login/auth", async (req, res) => {
+  const { email } = req.body,
     { senha } = req.body;
+
   sql = "select * from usuario where email = ? and senha = ?;";
   db.query(sql, [email, senha], (erro, result) => {
+    console.log(result)
     if (erro) { return res.json({ token: false }) };
-    if (result.length > 0) { return res.json({ token: true }); } else { return res.json({ token: false, usuario: usuario }) };
+    if (result.length > 0) { return res.json({ token: true, usuario: result }); } else { return res.json({ token: false }) };
   });
 });
 //
