@@ -7,19 +7,26 @@ function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const auth = useAuth();
     const navigate = useNavigate()
-    if (auth.token == true) {
+    if (auth.email == auth.emailback && auth.senha == auth.senhaback && auth.token == "v") {
         navigate("/home");
+    }
+    function Error() {
+        if (auth.token == undefined) {
+            return <p className={styles.input_menssage}></p>
+        }else if (auth.email != auth.emailback || auth.senha != auth.senhaback) {
+            return <p className={styles.input_menssage}>Email ou Senha estão errados</p>
+        } else {
+            return <p className={styles.input_menssage}></p>
+        }
     }
     async function dados(values) {
         try {
-
             await auth.authenticate(values.email, values.senha);
-            if (auth.token == true) {
+            if (auth.email == auth.emailback && auth.senha == auth.senhaback && auth.token == "v") {
                 navigate("/home");
             }
-
         } catch (erro) {
-            console.log("Error")
+            console.log(erro);
         }
     }
 
@@ -27,6 +34,7 @@ function Login() {
         <>
             <div className={styles.container}>
                 <div className={styles.title}>
+                    <Error></Error>
                     <label htmlFor="title">Entrar na conta</label>
                 </div>
                 <div className={styles.form}>
@@ -61,4 +69,5 @@ function Login() {
         </>
     );
 }
+
 export default Login;

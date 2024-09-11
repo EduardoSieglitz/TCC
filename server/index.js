@@ -28,15 +28,18 @@ app.post("/login/auth", async (req, res) => {
   const { email } = req.body,
     { senha } = req.body;
 
-  sql = "select * from usuario where email = ? and senha = ?;";
+  sql = "select * from usuario where email = ? or senha = ?;";
   db.query(sql, [email, senha], (erro, result) => {
-    console.log(result)
-    if (erro) { return res.json({ token: false }) };
-    if (result.length > 0) { return res.json({ token: true, usuario: result }); } else { return res.json({ token: false }) };
-  });
-});
-//
+    if (erro) { return res.json({ usuario: erro }) };
+    if (result.length > 0) {
+      return res.json({ token: "v", usuario: result });
+    } else {
+      return res.json({ token: "f", usuario: "erro" });
+    };
 
-app.listen(3001, () => {
-  console.log("Servidor rodando...");
+  })
 });
+
+app.listen(3000, () => {
+  console.log("Servidor rodando...");
+})
