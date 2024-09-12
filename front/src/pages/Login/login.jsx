@@ -3,27 +3,23 @@ import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import { useAuth } from '../../context/AuthProvider/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const auth = useAuth();
-    const navigate = useNavigate()
-    if (auth.email == auth.emailback && auth.senha == auth.senhaback && auth.token == "v") {
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
+    if (auth.token == true) {
         navigate("/home");
-    }
-    function Error() {
-        if (auth.token == undefined) {
-            return <p className={styles.input_menssage}></p>
-        }else if (auth.email != auth.emailback || auth.senha != auth.senhaback) {
-            return <p className={styles.input_menssage}>Email ou Senha estão errados</p>
-        } else {
-            return <p className={styles.input_menssage}></p>
-        }
     }
     async function dados(values) {
         try {
             await auth.authenticate(values.email, values.senha);
-            if (auth.email == auth.emailback && auth.senha == auth.senhaback && auth.token == "v") {
+            if (auth.token == true) {
                 navigate("/home");
+            }
+            if (auth.token == false) {
+                setError("Email ou Senha invalido");
             }
         } catch (erro) {
             console.log(erro);
@@ -33,8 +29,8 @@ function Login() {
     return (
         <>
             <div className={styles.container}>
+                <p className={styles.input_menssage}>{error}</p>
                 <div className={styles.title}>
-                    <Error></Error>
                     <label htmlFor="title">Entrar na conta</label>
                 </div>
                 <div className={styles.form}>

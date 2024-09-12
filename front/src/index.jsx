@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
-import Navbar from './pages/Navbar/navbar';
 import Login from './pages/Login/login';
 import Cadastro from './pages/Cadastro/cadastro';
 import Home from './pages/Home/home';
