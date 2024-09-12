@@ -5,14 +5,18 @@ import Login from './pages/Login/login';
 import Cadastro from './pages/Cadastro/cadastro';
 import Home from './pages/Home/home';
 import { AuthProvider } from './context/AuthProvider';
-import { ProtectedLayout } from './pages/ProtectedLayout/index';
+import { ProtectedLayout, ProtectedLayoutFunc } from './pages/ProtectedLayout/index';
+import Homefunc from './pages/Home/homefunc';
+import Navbar from './pages/Navbar/navbar';
 
 export default function Web() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/n" element={<Navbar />} />
           <Route path="/home" element={<ProtectedLayout><Home /></ProtectedLayout>} />
+          <Route path="/homefunc" element={<ProtectedLayoutFunc><Homefunc /></ProtectedLayoutFunc>} />
           <Route path="/" element={<Login />} />
           <Route path="*" element={<Login />} />
           <Route path="/cadastro" element={<Cadastro />} />

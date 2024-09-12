@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthProvider/useAuth';
 
 export default function Home() {
+    
     const auth = useAuth();
     const navigate = useNavigate();
     function Sair(){
@@ -10,7 +11,7 @@ export default function Home() {
     }
     return (
         <>
-            <h1>Acesso liberado</h1>
+            <h1>Acesso liberado para Cliente</h1>
             <button onClick={() => { Sair()}}>Fazer o logout</button>
         </>
     )

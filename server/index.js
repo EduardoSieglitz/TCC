@@ -28,15 +28,15 @@ app.post("/login/auth", async (req, res) => {
   const { email } = req.body,
     { senha } = req.body;
 
-  sql = "select * from usuario where email = ? or senha = ?;";
+  sql = "select * from usuario where email = ? and senha = ?;";
   db.query(sql, [email, senha], (erro, result) => {
     if(result <= 0){
       return res.json({ token : false, dados: "error" });
     }
-    if (result[0].email != email || result[0].senha != senha) {
-      return res.json({ token: false, dados: result });
+    if (result[0].email == email && result[0].senha == senha && result[0].nivel == "Func") {
+      return res.json({ token: true, dados: result });
     } 
-    if (result[0].email == email && result[0].senha == senha) {
+    if (result[0].email == email && result[0].senha == senha && result[0].nivel == "Clien") {
       return res.json({ token: true, dados: result });
     }
     

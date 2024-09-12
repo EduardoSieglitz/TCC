@@ -1,6 +1,6 @@
 export interface IUser {
     email?: string;
-    dados?: string;
+    dados?: {};
     token?: boolean;
 }
 

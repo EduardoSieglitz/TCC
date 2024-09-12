@@ -3,20 +3,26 @@ import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import { useAuth } from '../../context/AuthProvider/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const auth = useAuth();
     const [error, setError] = useState("");
     const navigate = useNavigate();
-    if (auth.token == true) {
+    if (auth.dados == "Clien") {
         navigate("/home");
+    }
+    if (auth.dados == "Func") {
+        navigate("/homefunc");
     }
     async function dados(values) {
         try {
             await auth.authenticate(values.email, values.senha);
-            if (auth.token == true) {
+            if (auth.dados == "Clien") {
                 navigate("/home");
+            }
+            if (auth.dados == "Func") {
+                navigate("/homefunc");
             }
             if (auth.token == false) {
                 setError("Email ou Senha invalido");
