@@ -1,185 +1,250 @@
-const sequelize = require('sequelize');
-const conexao = require('../database/bancodados.js');
+const { Sequelize, DataTypes } = require('sequelize');
+const conexao = require('../database/bancodados'); // Importar a conexão
 
-// Tabela Usuario
-const Usuario = conexao.define('usuario', {
-    idUsuario: {
-        type: sequelize.INTEGER,
+// Modelo de Funcionario
+const Funcionario = conexao.define('Funcionario', {
+    idFuncionario: {
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
     nome: {
-        type: sequelize.STRING,
-        allowNull: false
-    },
-    email: {
-        type: sequelize.STRING,
-        allowNull: false,
-    },
-    senha: {
-        type: sequelize.STRING,
-        allowNull: false
-    },
-    telefone: {
-        type: sequelize.STRING,
-        allowNull: false,
-    },
-    inicioLogin: {
-        type: sequelize.DATE,
-        allowNull: true
-    },
-    fimLogin: {
-        type: sequelize.DATE,
-        allowNull: true
-    },
-    nivel: {
-        type: sequelize.ENUM('Func', 'Clien'),
-        allowNull: false
-    }
-
-});
-
-// Tabela Agendamento
-const Agendamento = conexao.define('agendamento', {
-    idAgendamento: {
-        type: sequelize.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
-    solicitacao: {
-        type: sequelize.DATE,
-        allowNull: false
-    },
-    dataAgendada: {
-        type: sequelize.DATE,
-        allowNull: false
-    },
-    status: {
-        type: sequelize.ENUM('E', 'A', 'C'),
-        allowNull: false
-    },
-    servico: {
-        type: sequelize.ENUM('L', 'R', 'P'),
+        type: DataTypes.STRING,
         allowNull: false
     },
     descricao: {
-        type: sequelize.STRING,
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    cpf: {
+        type: DataTypes.STRING,
         allowNull: false
     },
-    idUsuario: {
-        type: sequelize.INTEGER,
-        references: {
-            model: Usuario,
-            key: 'idUsuario'
-        },
+    telefone: {
+        type: DataTypes.STRING,
         allowNull: false
-    }
+    },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true 
+    },
+    senha: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
 });
 
-// Tabela Mensagem
-const Mensagem = conexao.define('mensagem', {
-    idMensagem: {
-        type: sequelize.INTEGER,
+// Modelo de Cliente
+const Cliente = conexao.define('Cliente', {
+    idCliente: {
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    dataHora: {
-        type: sequelize.DATE,
+    nome: {
+        type: DataTypes.STRING,
         allowNull: false
     },
-    conteudo: {
-        type: sequelize.STRING,
+    cpf: {
+        type: DataTypes.STRING,
         allowNull: false
-    }
+    },
+    telefone: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    endereco: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true 
+    }, 
+    senha: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
 });
-// Tabela Chat ao Vivo
-const ChatAoVivo = conexao.define('chat_aovivo', {
+
+// Modelo de ChatAoVivo
+const ChatAoVivo = conexao.define('ChatAoVivo', {
     idChat: {
-        type: sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
     dataInicio: {
-        type: sequelize.DATE,
+        type: DataTypes.DATE,
         allowNull: false
     },
-    idUsuario: {
-        type: sequelize.INTEGER,
+    idCliente: {
+        type: DataTypes.INTEGER,
         references: {
-            model: Usuario,
-            key: 'idUsuario'
-        },
-        allowNull: false
+            model: Cliente,
+            key: 'idCliente'
+        }
+    },
+    idFuncionario: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Funcionario,
+            key: 'idFuncionario'
+        }
     },
     idMensagem: {
-        type: sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         references: {
-            model: Mensagem,
+            model: 'Mensagem',
             key: 'idMensagem'
-        },
-        allowNull: false
+        }
     }
 });
-// Tabela Cortina
-const Cortina = conexao.define('cortina', {
+
+// Modelo de AgendamentoDeServico
+const AgendamentoDeServico = conexao.define('AgendamentoDeServico', {
+    idAgendamento: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+    },
+    solicitacao: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    dataAgendada: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    descricao: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    status: {
+        type: DataTypes.ENUM('E', 'A', 'C'),
+        allowNull: false
+    },
+    idServico: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'Servico',
+            key: 'idServico'
+        }
+    },
+    idFuncionario: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Funcionario,
+            key: 'idFuncionario'
+        }
+    },
+    idCliente: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Cliente,
+            key: 'idCliente'
+        }
+    }
+});
+
+// Modelo de Servico
+const Servico = conexao.define('Servico', {
+    idServico: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+    },
+    valor: {
+        type: DataTypes.DECIMAL(6, 2),
+        allowNull: false
+    },
+    servico: {
+        type: DataTypes.ENUM('L', 'R', 'P'),
+        allowNull: false
+    },
+    descricao: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    }
+});
+
+// Modelo de Cortina
+const Cortina = conexao.define('Cortina', {
     idCortina: {
-        type: sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
     nome: {
-        type: sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false
     },
     descricao: {
-        type: sequelize.STRING,
-        allowNull: false
+        type: DataTypes.TEXT,
+        allowNull: true
     },
     imagem: {
-        type: sequelize.STRING,
-        allowNull: false
+        type: DataTypes.STRING,
+        allowNull: true
     },
     tipo: {
-        type: sequelize.STRING,
+        type: DataTypes.CHAR,
         allowNull: false
     },
     material: {
-        type: sequelize.STRING,
-        allowNull: false
-    },
-    categoriaMaterial: {
-        type: sequelize.STRING,
-        allowNull: false
+        type: DataTypes.STRING,
+        allowNull: true
     }
 });
 
-// Tabela ControleCortina
-const ControleCortina = conexao.define('controle_cortina', {
-    idControle: {
-        type: sequelize.INTEGER,
+// Modelo de Mensagem
+const Mensagem = conexao.define('Mensagem', {
+    idMensagem: {
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    idUsuario: {
-        type: sequelize.INTEGER,
-        references: {
-            model: Usuario,
-            key: 'idUsuario'
-        },
+    dataHora: {
+        type: DataTypes.DATE,
         allowNull: false
     },
-    idCortina: {
-        type: sequelize.INTEGER,
-        references: {
-            model: Cortina,
-            key: 'idCortina'
-        },
+    conteudo: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    imagem: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    audio: {
+        type: DataTypes.BLOB,
+        allowNull: true
+    },
+    visualizada: {
+        type: DataTypes.ENUM('L', 'NL', 'NE'),
+        allowNull: false
+    }
+});
+
+// Modelo de Usuario com FKs para emails
+const Usuario = conexao.define('Usuario', {
+    idUsuario: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+    },
+    nivelUser: {
+        type: DataTypes.ENUM('Func', 'Clien'),
         allowNull: false
     }
 });
@@ -197,10 +262,12 @@ const sincronizarTabelas = async () => {
 sincronizarTabelas();
 
 module.exports = {
-    Usuario,
-    Agendamento,
-    Mensagem,
+    Funcionario,
+    Cliente,
     ChatAoVivo,
+    AgendamentoDeServico,
+    Servico,
     Cortina,
-    ControleCortina
+    Mensagem,
+    Usuario
 };
