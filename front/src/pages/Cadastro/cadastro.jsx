@@ -9,9 +9,13 @@ export default function Cadastro() {
         
         Axios.post("http://localhost:3001/registrar", {
             nome: event.nome,
+            cpf : "111-111-111-06",
             email: event.email,
             senha: event.senha,
             telefone : event.telefone,
+            endereco : "Rua caguei no chão"
+        }).then((response)=>{
+            console.log(response)
         });
     }
     return (

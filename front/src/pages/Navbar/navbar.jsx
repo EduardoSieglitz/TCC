@@ -3,6 +3,7 @@ import styles from './navbar.module.css';
 import logo from '../../img/logo_cortina.png';
 import user_image from '../../img/user_profile.png';
 import { NavLink } from 'react-router-dom';
+import { IoMenu, IoClose } from 'react-icons/io5';
 
 export default function Navbar() {
     return (
@@ -28,6 +29,13 @@ export default function Navbar() {
                 </ul>
 
                 <img src={user_image} alt="" className={styles.user_image} />
+
+                <div className={styles.toggle_menu}>
+                    <IoMenu />
+                </div>
+                <div className={styles.close_menu}>
+                    <IoClose />
+                </div>
             </nav>
         </header>
     )

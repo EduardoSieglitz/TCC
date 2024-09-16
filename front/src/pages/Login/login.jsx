@@ -4,6 +4,7 @@ import validator from 'validator';
 import { useAuth } from '../../context/AuthProvider/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+
 function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const auth = useAuth();
@@ -33,7 +34,7 @@ function Login() {
     }
 
     return (
-        <>
+        <body className={styles.bodyLogin}>
             <div className={styles.container}>
                 <p className={styles.input_menssage}>{error}</p>
                 <div className={styles.title}>
@@ -68,7 +69,7 @@ function Login() {
                     <a href="/cadastro"><button>Criar nova conta</button></a>
                 </div>
             </div>
-        </>
+        </body>
     );
 }
 

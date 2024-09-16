@@ -5,7 +5,7 @@
     font-family: 'Poppins', Arial, sans-serif;
 }
 
-body {
+.bodyLogin {
     height: 90vh;
     display: flex;
     align-items: center;

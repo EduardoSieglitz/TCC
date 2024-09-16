@@ -246,6 +246,20 @@ const Usuario = conexao.define('Usuario', {
     nivelUser: {
         type: DataTypes.ENUM('Func', 'Clien'),
         allowNull: false
+    },
+    idFuncionario: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Funcionario,
+            key: 'idFuncionario'
+        }
+    },
+    idCliente: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Cliente,
+            key: 'idCliente'
+        }
     }
 });
 
