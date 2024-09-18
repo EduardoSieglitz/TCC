@@ -43,10 +43,14 @@ app.post("/login/auth", async (req, res) => {
       }
     } catch (erro) {
       db.query(sqlFuncionario, [email, senha], (erro, results) => {
+       try{
         if (results[0].email == email && results[0].senha == senha) {
           return res.json({ token: true, dados: results });
         }
-      })
+       }catch(error){
+        return res.json({ token: false, dados: [{ nivelUser : "error"}] });
+       }
+      });
     }
   })
 });

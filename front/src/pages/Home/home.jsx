@@ -10,9 +10,9 @@ export default function Home() {
         auth.logout();
     }
     return (
-        <>
+        <body>
             <h1>Acesso liberado para Cliente</h1>
             <button onClick={() => { Sair()}}>Fazer o logout</button>
-        </>
+        </body>
     )
 }

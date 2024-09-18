@@ -27,8 +27,7 @@ const Funcionario = conexao.define('Funcionario', {
     },
     email: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true 
+        allowNull: false
     },
     senha: {
         type: DataTypes.STRING,
@@ -62,8 +61,7 @@ const Cliente = conexao.define('Cliente', {
     },
     email: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true 
+        allowNull: false
     }, 
     senha: {
         type: DataTypes.STRING,
