@@ -9,6 +9,7 @@ import { ProtectedLayout, ProtectedLayoutFunc } from './ProtectedLayout/index';
 import Homefunc from './pages/Home/homefunc';
 import Navbar from './pages/Navbar/navbar';
 import TFuncionario from "./pages/Tabelas/funcionario";
+import TCliente from "./pages/Tabelas/cliente";
 
 export default function Web() {
   return (
@@ -21,7 +22,8 @@ export default function Web() {
           <Route path="/" element={<Login />} />
           <Route path="*" element={<Login />} />
           <Route path="/cadastro" element={<Cadastro />} />
-          <Route path="/tabelafuncionario" element={<TFuncionario />} />
+          <Route path="/tabelafuncionario" element={<ProtectedLayoutFunc><TFuncionario /></ProtectedLayoutFunc>} />
+          <Route path="/tabelacliente" element={<ProtectedLayout><TCliente /></ProtectedLayout>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
