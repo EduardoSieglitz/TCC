@@ -1,15 +1,15 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
-import Login from './pages/Login/login';
-import Cadastro from './pages/Cadastro/cadastro';
-import Home from './pages/Home/home';
+import Login from './pages/Liberada/Login/login';
+import Cadastro from './pages/Liberada/Cadastro/cadastro';
+import Home from './pages/Liberada/Home/home';
 import { AuthProvider } from './context/AuthProvider';
 import { ProtectedLayout, ProtectedLayoutFunc } from './ProtectedLayout/index';
-import Homefunc from './pages/Home/homefunc';
-import Navbar from './pages/Navbar/navbar';
-import TFuncionario from "./pages/Tabelas/funcionario";
-import TCliente from "./pages/Tabelas/cliente";
+import Homefunc from './pages/ProtectedFunc/Home/homefunc';
+import Navbar from './Navbar/navbar';
+import TFuncionario from "./pages/ProtectedFunc/Tabelas/funcionario";
+import TCliente from "./pages/ProtectedFunc/Tabelas/cliente";
 
 export default function Web() {
   return (
@@ -23,7 +23,7 @@ export default function Web() {
           <Route path="*" element={<Login />} />
           <Route path="/cadastro" element={<Cadastro />} />
           <Route path="/tabelafuncionario" element={<ProtectedLayoutFunc><TFuncionario /></ProtectedLayoutFunc>} />
-          <Route path="/tabelacliente" element={<ProtectedLayout><TCliente /></ProtectedLayout>} />
+          <Route path="/tabelacliente" element={<ProtectedLayoutFunc><TCliente /></ProtectedLayoutFunc>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
