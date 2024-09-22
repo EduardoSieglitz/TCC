@@ -264,7 +264,7 @@ const Usuario = conexao.define('Usuario', {
 // Sincronizando as tabelas
 const sincronizarTabelas = async () => {
     try {
-        await conexao.sync({ alter: true });
+        //await conexao.sync({ alter: true });
         console.log("Tabelas sincronizadas com sucesso.");
     } catch (erro) {
         console.error("Erro ao sincronizar tabelas: ", erro);

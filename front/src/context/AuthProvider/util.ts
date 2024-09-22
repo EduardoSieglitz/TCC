@@ -23,3 +23,4 @@ export async function LoginRequest(email: string, senha: string) {
         return null;
     }
 }
+

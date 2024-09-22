@@ -46,6 +46,9 @@ const TabelaCliente = () => {
           ))}
         </tbody>
       </table>
+      <div>
+        <a href='homefunc'>Voltar</a><br />
+      </div>
     </div>
   );
 };

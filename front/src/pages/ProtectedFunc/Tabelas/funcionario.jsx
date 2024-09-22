@@ -8,7 +8,7 @@ const TabelaFuncionario = () => {
   const fetchData = async () => {
     try {
       const response = await axios.post('http://localhost:3001/tabelafuncionario');
-      setUsers(response.data); 
+      setUsers(response.data);
     } catch (error) {
       console.error('Erro ao buscar dados do back-end:', error);
     }
@@ -46,6 +46,9 @@ const TabelaFuncionario = () => {
           ))}
         </tbody>
       </table>
+      <div>
+        <a href='homefunc'>Voltar</a><br />
+      </div>
     </div>
   );
 };

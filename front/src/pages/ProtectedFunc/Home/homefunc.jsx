@@ -13,9 +13,11 @@ export default function Home() {
         <body className={styles.body}>
             <h1>Acesso liberado para Funcionario</h1>
             <button onClick={() => { Sair() }}>Fazer o logout</button>
-            <div >
-                <a href='tabelafuncionario'>Funcionario</a><br />
-                <a href='tabelacliente'>Cliente</a>
+            <div>
+                <a href='tabelafuncionario'>Tabela do Funcionario</a>
+                <a href='tabelacliente'>Tabela do Cliente</a>
+                <a href='registrocliente'>Registrar Cliente</a>
+                <a href='registrofuncionario'>Registrar Funcioario</a>
             </div>
         </body>
     )

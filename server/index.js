@@ -8,7 +8,7 @@ const { json } = require("body-parser"),
 app.use(cors());
 app.use(json());
 
-//Cadastro de Usuario
+//Cadastro de Cliente
 app.post("/registrar", (req, res) => {
   const { nome } = req.body,
     { email } = req.body,
@@ -23,6 +23,28 @@ app.post("/registrar", (req, res) => {
     console.log("Cadastrado Cliente");
     const idCliente = result.insertId;
     db.query(sqlUsuario, [Usuario, idCliente], (erro, result) => {
+      console.log("Castrado Usuario");
+      return res.json({ Cadastro: "Cadastrado" });
+    });
+  });
+});
+//
+
+//Cadastro Funcionario
+app.post("/registrarfunc", (req, res) => {
+  const { nome } = req.body,
+    { email } = req.body,
+    { senha } = req.body,
+    { telefone } = req.body,
+    { cpf } = req.body,
+    { descricao } = req.body,
+    Usuario = "Func",
+    sqlCliente = "INSERT INTO funcionario(nome, cpf, senha, email, telefone, descricao) VALUES(?, ?, ?, ?, ?, ?)",
+    sqlUsuario = "INSERT INTO usuario(nivelUser, idFuncionario) VALUES(?, ?)";
+  db.query(sqlCliente, [nome, cpf, senha, email, telefone, descricao], (erro, result) => {
+    console.log("Cadastrado Funcionario");
+    const idFuncionario = result.insertId;
+    db.query(sqlUsuario, [Usuario, idFuncionario], (erro, result) => {
       console.log("Castrado Usuario");
       return res.json({ Cadastro: "Cadastrado" });
     });
