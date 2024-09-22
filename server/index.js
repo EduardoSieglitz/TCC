@@ -23,7 +23,7 @@ app.post("/registrar", (req, res) => {
     console.log("Cadastrado Cliente");
     const idCliente = result.insertId;
     db.query(sqlUsuario, [Usuario, idCliente], (erro, result) => {
-      console.log("Cdastrado Usuario");
+      console.log("Castrado Usuario");
       return res.json({ Cadastro: "Cadastrado" });
     });
   });
@@ -43,14 +43,38 @@ app.post("/login/auth", async (req, res) => {
       }
     } catch (erro) {
       db.query(sqlFuncionario, [email, senha], (erro, results) => {
-       try{
-        if (results[0].email == email && results[0].senha == senha) {
-          return res.json({ token: true, dados: results });
+        try {
+          if (results[0].email == email && results[0].senha == senha) {
+            return res.json({ token: true, dados: results });
+          }
+        } catch (error) {
+          return res.json({ token: false, dados: [{ nivelUser: "error" }] });
         }
-       }catch(error){
-        return res.json({ token: false, dados: [{ nivelUser : "error"}] });
-       }
       });
+    }
+  })
+});
+
+//Tabelas Funcionario
+app.post("/tabelafuncionario", async (req, res) => {
+  const sql = "SELECT * FROM funcionario";
+  db.query(sql, (erro, result) => {
+    try {
+      return res.json(result);
+    } catch (erro) {
+      return res.json("error");
+    }
+  })
+});
+
+//Tabelas Cliente
+app.post("/tabelacliente", async (req, res) => {
+  const sql = "SELECT * FROM cliente";
+  db.query(sql, (erro, result) => {
+    try {
+      return res.json(result);
+    } catch (erro) {
+      return res.json("error");
     }
   })
 });
