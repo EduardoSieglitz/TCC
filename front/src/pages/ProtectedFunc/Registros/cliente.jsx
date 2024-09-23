@@ -2,26 +2,44 @@ import styles from './cliente.module.css';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import Axios from 'axios';
+import { useState } from 'react';
 
 export default function Cadastro() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     
-    const dados = (event) => {
-        Axios.post("http://localhost:3001/registrar", {
-            nome: event.nome,
-            cpf: event.cpf,
-            email: event.email,
-            senha: event.senha,
-            telefone: event.telefone,
-            endereco: event.endereco
-        }).then((response) => {
-            console.log(response);
-        });
+    const [error, setError] = useState("");
+    async function dados(event) {
+        try {
+            const request = await Axios.post("http://localhost:3001/registrar", {
+                nome: event.nome,
+                email: event.email,
+                senha: event.senha,
+                cpf: event.cpf,
+                telefone: event.telefone,
+                endereco: event.endereco
+            });
+            console.log(request.data)
+            if(request.data == "Cadastrado"){
+                setError("");
+            }
+            if(request.data == "Email"){
+                setError("Email já existe");
+            }
+            if(request.data == "Telefone"){
+                setError("Telefone já existe");
+            }
+            if(request.data == "CPF"){
+                setError("CPF já existe");
+            }
+        } catch {
+            console.log("Error")
+        }
     }
 
     return (
         <div className={styles.body}>
             <div className={styles.container}>
+                {error}
                 <div className={styles.title}>
                     <label htmlFor="title">Registrar</label>
                 </div>

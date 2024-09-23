@@ -61,7 +61,7 @@ const Cliente = conexao.define('Cliente', {
     },
     email: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
     }, 
     senha: {
         type: DataTypes.STRING,

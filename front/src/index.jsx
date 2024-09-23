@@ -1,13 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
-import Login from './pages/Liberada/Login/login';
-import Cadastro from './pages/Liberada/Cadastro/cadastro';
-import Home from './pages/Liberada/Home/home';
+import Login from './pages/ProtectedClien/Login/login';
+import Cadastro from './pages/ProtectedClien/Cadastro/cadastro';
+import Home from './pages/ProtectedClien/Home/home';
 import { AuthProvider } from './context/AuthProvider';
 import { ProtectedLayout, ProtectedLayoutFunc } from './ProtectedLayout/index';
 import Homefunc from './pages/ProtectedFunc/Home/homefunc';
-import Navbar from './pages/Liberada/Navbar/navbar';
+import Navbar from './pages/ProtectedClien/Navbar/navbar';
 import RegistroClien from "./pages/ProtectedFunc/Registros/cliente";
 import RegistroFunc from "./pages/ProtectedFunc/Registros/funcionario"
 import TFuncionario from "./pages/ProtectedFunc/Tabelas/funcionario";
