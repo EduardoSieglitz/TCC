@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './funcionario.module.css';
+import { Link } from 'react-router-dom';
 
 const TabelaFuncionario = () => {
   const [users, setUsers] = useState([]);
@@ -10,7 +11,7 @@ const TabelaFuncionario = () => {
       const response = await axios.post('http://localhost:3001/tabelafuncionario');
       setUsers(response.data);
     } catch (error) {
-      console.error('Erro ao buscar dados do back-end:', error);
+      console.error(error);
     }
   };
 
@@ -47,7 +48,7 @@ const TabelaFuncionario = () => {
         </tbody>
       </table>
       <div>
-        <a href='homefunc'>Voltar</a><br />
+        <Link to="/homefunc" className={styles.return}>Voltar</Link>
       </div>
     </div>
   );

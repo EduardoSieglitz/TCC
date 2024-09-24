@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import Axios from 'axios';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Cadastro() {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -17,18 +18,16 @@ export default function Cadastro() {
                 telefone: event.telefone,
                 endereco: event.endereco
             });
-            console.log(request.data)
             if (request.data == "Cadastrado") {
                 setError("");
-            }
-            if (request.data == "Email") {
+            }else if (request.data == "Email") {
                 setError("Email já existe");
-            }
-            if (request.data == "Telefone") {
+            } else if (request.data == "Telefone") {
                 setError("Telefone já existe");
-            }
-            if (request.data == "CPF") {
+            } else if (request.data == "CPF") {
                 setError("CPF já existe");
+            } else {
+                setError("");
             }
         } catch {
             console.log("Error")
@@ -40,7 +39,7 @@ export default function Cadastro() {
             <div className={styles.container}>
                 {error}
                 <div className={styles.title}>
-                    <label htmlFor="title">Registrar</label>
+                    <label htmlFor="title">Registrar Funcionario</label>
                 </div>
 
                 <input type="text" placeholder="Nome"
@@ -59,11 +58,10 @@ export default function Cadastro() {
                 {errors?.descricao?.type === 'maxLength' && <p className={styles.input_menssage}>maxLength</p>}
 
                 <input type="text" placeholder="CPF"
-                    {...register('cpf', { required: true, validate: (value) => validator.isTaxID(value, 'pt-BR') })}
+                    {...register('cpf', { required: true })}
                     className={errors?.cpf && styles.input_error}
                 />
                 {errors?.cpf?.type === 'required' && <p className={styles.input_menssage}>Required</p>}
-                {errors?.cpf?.type === 'validate' && <p className={styles.input_menssage}>CPF inválido</p>}
 
                 <input type="text" placeholder="Telefone"
                     {...register("telefone", { required: true, validate: (value) => /^[1-9]{2}-?[9]{0,1}[0-9]{4}-?[0-9]{4}$/.test(value) })}
@@ -90,7 +88,7 @@ export default function Cadastro() {
                 {errors?.senha?.type === 'maxLength' && <p className={styles.input_menssage}>maxLength</p>}
 
                 <button onClick={() => { handleSubmit(dados)() }}>Cadastrar</button>
-                <a href="/homefunc" className={styles.return}>Voltar</a>
+                <Link to="/homefunc" className={styles.return}>Voltar</Link>
             </div>
         </div >
     )

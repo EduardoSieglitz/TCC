@@ -69,6 +69,7 @@ app.post("/registrarfunc", (req, res) => {
     Usuario = "Func",
     sqlFuncionarioS = "SELECT * FROM funcionario WHERE funcionario.email = ? || funcionario.cpf = ? || funcionario.telefone = ?;",
     sqlCliente = "INSERT INTO funcionario(nome, cpf, senha, email, telefone, descricao) VALUES(?, ?, ?, ?, ?, ?)",
+    sqlClienteS = "SELECT * FROM cliente WHERE cliente.email = ? || cliente.cpf = ? || cliente.telefone = ?;",
     sqlUsuario = "INSERT INTO usuario(nivelUser, idFuncionario) VALUES(?, ?)";
   db.query(sqlFuncionarioS, [email, cpf, telefone], (erro, result) => {
     try {
@@ -82,13 +83,27 @@ app.post("/registrarfunc", (req, res) => {
         return res.json("Telefone");
       }
     } catch {
-      db.query(sqlCliente, [nome, cpf, senha, email, telefone, descricao], (erro, result) => {
-        console.log("Cadastrado Funcionario");
-        const idFuncionario = result.insertId;
-        db.query(sqlUsuario, [Usuario, idFuncionario], (erro, result) => {
-          console.log("Castrado Usuario");
-          return res.json("Cadastrado");
-        });
+      db.query(sqlClienteS, [email, cpf, telefone], (erro, result) => {
+        try {
+          if (result[0].email == email) {
+            return res.json("Email");
+          }
+          if (result[0].cpf == cpf) {
+            return res.json("CPF");
+          }
+          if (result[0].telefone == telefone) {
+            return res.json("Telefone");
+          }
+        } catch {
+          db.query(sqlCliente, [nome, cpf, senha, email, telefone, descricao], (erro, result) => {
+            console.log("Cadastrado Funcionario");
+            const idFuncionario = result.insertId;
+            db.query(sqlUsuario, [Usuario, idFuncionario], (erro, result) => {
+              console.log("Castrado Usuario");
+              return res.json("Cadastrado");
+            });
+          });
+        }
       });
     }
   });

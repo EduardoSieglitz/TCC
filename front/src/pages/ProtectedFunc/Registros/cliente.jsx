@@ -3,10 +3,11 @@ import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import Axios from 'axios';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Cadastro() {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    
+
     const [error, setError] = useState("");
     async function dados(event) {
         try {
@@ -18,18 +19,16 @@ export default function Cadastro() {
                 telefone: event.telefone,
                 endereco: event.endereco
             });
-            console.log(request.data)
-            if(request.data == "Cadastrado"){
+            if (request.data == "Cadastrado") {
                 setError("");
-            }
-            if(request.data == "Email"){
+            }else if (request.data == "Email") {
                 setError("Email já existe");
-            }
-            if(request.data == "Telefone"){
+            } else if (request.data == "Telefone") {
                 setError("Telefone já existe");
-            }
-            if(request.data == "CPF"){
+            } else if (request.data == "CPF") {
                 setError("CPF já existe");
+            } else {
+                setError("");
             }
         } catch {
             console.log("Error")
@@ -41,7 +40,7 @@ export default function Cadastro() {
             <div className={styles.container}>
                 {error}
                 <div className={styles.title}>
-                    <label htmlFor="title">Registrar</label>
+                    <label htmlFor="title">Registrar Cliente</label>
                 </div>
 
                 <input type="text" placeholder="Nome"
@@ -53,18 +52,17 @@ export default function Cadastro() {
                 {errors?.nome?.type === 'maxLength' && <p className={styles.input_menssage}>maxLength</p>}
 
                 <input type="text" placeholder="CPF"
-                    {...register('cpf', { required: true, validate: (value) => validator.isTaxID(value, 'pt-BR')})}
+                    {...register('cpf', { required: true })}
                     className={errors?.cpf && styles.input_error}
                 />
                 {errors?.cpf?.type === 'required' && <p className={styles.input_menssage}>Required</p>}
-                {errors?.cpf?.type === 'validate' && <p className={styles.input_menssage}>CPF inválido</p>}
 
                 <input type="text" placeholder="Email"
-                    {...register('email', { 
-                        required: true, 
-                        minLength: 6, 
-                        maxLength: 50, 
-                        validate: (value) => validator.isEmail(value) 
+                    {...register('email', {
+                        required: true,
+                        minLength: 6,
+                        maxLength: 50,
+                        validate: (value) => validator.isEmail(value)
                     })}
                     className={errors?.email && styles.input_error}
                 />
@@ -82,9 +80,9 @@ export default function Cadastro() {
                 {errors?.senha?.type === 'maxLength' && <p className={styles.input_menssage}>maxLength</p>}
 
                 <input type="text" placeholder="Telefone"
-                    {...register("telefone", { 
-                        required: true, 
-                        validate: (value) => /^[1-9]{2}-?[9]{0,1}[0-9]{4}-?[0-9]{4}$/.test(value) 
+                    {...register("telefone", {
+                        required: true,
+                        validate: (value) => /^[1-9]{2}-?[9]{0,1}[0-9]{4}-?[0-9]{4}$/.test(value)
                     })}
                     className={errors?.telefone && styles.input_error}
                 />
@@ -100,7 +98,7 @@ export default function Cadastro() {
                 {errors?.endereco?.type === 'maxLength' && <p className={styles.input_menssage}>maxLength: 100 caracteres</p>}
 
                 <button onClick={() => { handleSubmit(dados)() }}>Cadastrar</button>
-                <a href="/homefunc" className={styles.return}>Voltar</a>
+                <Link to="/homefunc" className={styles.return}>Voltar</Link>
             </div>
         </div>
     );

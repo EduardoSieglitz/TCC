@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthProvider/useAuth';
 import styles from "./home.module.css";
 export default function Home() {
@@ -14,7 +14,7 @@ export default function Home() {
             <h1>Acesso liberado para Cliente</h1>
             <button onClick={() => { Sair() }}>Fazer o logout</button>
             <div>
-                <a href='#'>Vai fazer o resto vagabundo</a>
+                <Link to='#'>Vai ser feito o resto</Link>
             </div>
         </body>
     )

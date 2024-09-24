@@ -2,7 +2,7 @@ import styles from './Login.module.css';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import { useAuth } from '../../../context/AuthProvider/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useState } from 'react';
 
 function Login() {
@@ -10,23 +10,20 @@ function Login() {
     const auth = useAuth();
     const [error, setError] = useState("");
     const navigate = useNavigate();
-    if (auth.dados == "Clien") {
+    if (auth.dados === "Clien") {
         navigate("/home");
-    }
-    if (auth.dados == "Func") {
+    } else if (auth.dados === "Func") {
         navigate("/homefunc");
     }
     async function dados(values) {
         try {
             await auth.authenticate(values.email, values.senha);
-            if (auth.dados == "Clien") {
+            if (auth.dados === "Clien") {
                 navigate("/home");
-            }
-            if (auth.dados == "Func") {
+            } else if (auth.dados === "Func") {
                 navigate("/homefunc");
-            }
-            if (auth.token == false) {
-                setError("Email ou Senha invalido");
+            } else if (!auth.token) {
+                setError("Email ou Senha inválido");
             }
         } catch (erro) {
             console.log(erro);
@@ -66,7 +63,7 @@ function Login() {
                 </div>
                 <div className={styles.line}></div>
                 <div className={styles.cad}>
-                    <a href="/cadastro"><button>Criar nova conta</button></a>
+                    <Link to="/cadastro"><button>Criar nova conta</button></Link>
                 </div>
             </div>
         </body>

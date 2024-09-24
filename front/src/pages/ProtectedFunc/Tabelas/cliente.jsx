@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './cliente.module.css';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const TabelaCliente = () => {
   const [users, setUsers] = useState([]);
@@ -11,7 +12,7 @@ const TabelaCliente = () => {
       setUsers(response.data);
       console.log(response.data)
     } catch (error) {
-      console.error('Erro ao buscar dados do back-end:', error);
+      console.error(error);
     }
   };
 
@@ -47,7 +48,7 @@ const TabelaCliente = () => {
         </tbody>
       </table>
       <div>
-        <a href='homefunc'>Voltar</a><br />
+        <Link to="/homefunc" className={styles.return}>Voltar</Link>
       </div>
     </div>
   );
