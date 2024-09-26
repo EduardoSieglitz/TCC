@@ -17,7 +17,8 @@ thead {
     color: #fff;
 }
 
-th, td {
+th,
+td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #ccd0d5;
@@ -26,4 +27,16 @@ th, td {
 
 th {
     text-transform: uppercase;
+}
+
+input {
+    border-radius: 10px;
+    width: 9vw;
+    height: 4vh;
+    border: 1px solid black;
+    padding: 1vh;
+}
+
+button {
+    margin: 2vh;
 }
