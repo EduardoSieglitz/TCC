@@ -245,20 +245,14 @@ const Usuario = conexao.define('Usuario', {
         type: DataTypes.ENUM('Func', 'Clien'),
         allowNull: false
     },
-    idFuncionario: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Funcionario,
-            key: 'idFuncionario'
-        }
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
-    idCliente: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Cliente,
-            key: 'idCliente'
-        }
-    }
+    senha: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
 });
 
 // Sincronizando as tabelas
