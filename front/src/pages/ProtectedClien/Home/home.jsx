@@ -10,7 +10,7 @@ export default function Home() {
         auth.logout();
     }
     return (
-        <body className={styles.body}>
+        <body className={styles.bodyHome_Clien}>
             <h1>Acesso liberado para Cliente</h1>
             <button onClick={() => { Sair() }}>Fazer o logout</button>
             <div>

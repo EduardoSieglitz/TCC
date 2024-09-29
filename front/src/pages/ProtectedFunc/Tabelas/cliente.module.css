@@ -1,42 +1,59 @@
-body {
+.bodyClien__Table {
     font-family: Arial, sans-serif;
     background-color: #f0f2f5;
     margin: 0;
     padding: 20px;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    background-color: #fff;
-}
-
-thead {
-    background-color: #673DE6;
-    color: #fff;
-}
-
-th,
-td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ccd0d5;
-}
-
-
-th {
-    text-transform: uppercase;
-}
-
-input {
-    border-radius: 10px;
-    width: 9vw;
-    height: 4vh;
-    border: 1px solid black;
-    padding: 1vh;
-}
-
-button {
-    margin: 2vh;
+.containerClien__Table {
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        background-color: #fff;
+        height: 100%;
+    }
+    
+    thead {
+        background-color: #673DE6;
+        color: #fff;
+    }
+    
+    th,
+    td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ccd0d5;
+    }
+    
+    
+    th {
+        text-transform: uppercase;
+    }
+    
+    input {
+        border-radius: 5px;
+        width: 10vw;
+        height: 4.5vh;
+        border: 1px solid black;
+        padding: 1vh;
+    }
+    
+    button {
+        background-color: #673DE6;
+        color: #fff;
+        border: 0;
+        border-radius: 8px;
+        padding: 0 12px;
+        width: 70%;
+        height: 35px;
+        font-size: 18px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        font-weight: 3003;
+        transition: 0.4s;
+    }
 }

@@ -12,7 +12,7 @@ export default function Home() {
     }
 
     return (
-        <div className={styles.body}>
+        <div className={styles.bodyHome_Func}>
             <h1>Acesso liberado para Funcionario</h1>
             <button onClick={Sair}>Fazer o logout</button>
             <div>

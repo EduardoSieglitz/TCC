@@ -21,7 +21,7 @@ export default function Cadastro() {
             });
             if (request.data == "Cadastrado") {
                 setError("");
-            }else if (request.data == "Email") {
+            } else if (request.data == "Email") {
                 setError("Email já existe");
             } else if (request.data == "Telefone") {
                 setError("Telefone já existe");
@@ -37,7 +37,7 @@ export default function Cadastro() {
 
     return (
         <div className={styles.body}>
-            <div className={styles.container}>
+            <div className={styles.containerClien}>
                 {error}
                 <div className={styles.title}>
                     <label htmlFor="title">Registrar Cliente</label>

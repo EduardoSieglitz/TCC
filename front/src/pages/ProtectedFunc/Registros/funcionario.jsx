@@ -10,13 +10,13 @@ export default function Cadastro() {
     const [error, setError] = useState("");
     async function dados(event) {
         try {
-            const request = await Axios.post("http://localhost:3001/registrar", {
+            const request = await Axios.post("http://localhost:3001/registrarfunc", {
                 nome: event.nome,
                 email: event.email,
                 senha: event.senha,
                 cpf: event.cpf,
                 telefone: event.telefone,
-                endereco: event.endereco
+                descricao: event.descricao
             });
             if (request.data == "Cadastrado") {
                 setError("");
@@ -36,7 +36,7 @@ export default function Cadastro() {
 
     return (
         <div className={styles.body}>
-            <div className={styles.container}>
+            <div className={styles.containerFunc}>
                 {error}
                 <div className={styles.title}>
                     <label htmlFor="title">Registrar Funcionario</label>

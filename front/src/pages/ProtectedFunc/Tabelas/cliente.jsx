@@ -22,7 +22,7 @@ const TabelaCliente = () => {
 
   const handleDelete = async (idCliente) => {
     try {
-      await Axios.delete(`http://localhost:3001/clientes/${idCliente}`);
+      await Axios.delete(`http://localhost:3001/delete/${idCliente}`);
       fetchData(); // Atualiza a lista após deletar
     } catch (error) {
       console.error('Erro ao deletar:', error);
@@ -42,7 +42,7 @@ const TabelaCliente = () => {
 
   const handleSave = async (data) => {
     try {
-      const response = await Axios.put(`http://localhost:3001/clientes/${editUserId}`, data);
+      const response = await Axios.put(`http://localhost:3001/editar/${editUserId}`, data);
       if (response.data === "Cadastrado") {
         setError("");
         setEditUserId(null); // Sai do modo de edição
@@ -61,11 +61,11 @@ const TabelaCliente = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData()]);
 
   return (
-    <div className={styles.body}>
-      <div className={styles.container}>
+    <div className={styles.bodyClien__Table}>
+      <div className={styles.containerClien__Table}>
         {error && <p className={styles.error_message}>{error}</p>}
         <table className={styles.table}>
           <thead className={styles.thead}>
