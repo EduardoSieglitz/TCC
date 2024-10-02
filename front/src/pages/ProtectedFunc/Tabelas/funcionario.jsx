@@ -146,7 +146,7 @@ const TabelaFuncionario = () => {
                     <td>{user.idFuncionario}</td>
                     <td>{user.nome}</td>
                     <td>{user.descricao}</td>
-                    <td>{user.cpf}</td>
+                    <td>{user.cpfFunc}</td>
                     <td>{user.telefone}</td>
                     <td>{user.email}</td>
                     <td>{user.senha}</td>

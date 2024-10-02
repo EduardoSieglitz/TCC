@@ -3,11 +3,11 @@ import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import Axios from 'axios';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Cadastro() {
     const { register, handleSubmit, formState: { errors } } = useForm();
-
+    const navigate = useNavigate();
     const [error, setError] = useState("");
     async function dados(event) {
         try {
@@ -21,6 +21,7 @@ export default function Cadastro() {
             });
             if (request.data == "Cadastrado") {
                 setError("");
+                navigate("/tabelacliente");
             } else if (request.data == "Email") {
                 setError("Email já existe");
             } else if (request.data == "Telefone") {

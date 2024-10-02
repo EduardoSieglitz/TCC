@@ -31,7 +31,7 @@ function Login() {
     }
 
     return (
-        <body className={styles.bodyLogin}>
+        <div className={styles.bodyLogin}>
             <div className={styles.container}>
                 <p className={styles.input_menssage}>{error}</p>
                 <div className={styles.title}>
@@ -66,7 +66,7 @@ function Login() {
                     <Link to="/cadastro"><button>Criar nova conta</button></Link>
                 </div>
             </div>
-        </body>
+        </div>
     );
 }
 

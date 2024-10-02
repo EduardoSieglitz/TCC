@@ -1,4 +1,4 @@
-.containerFunc__Table {
+.body_agendamento {
     font-family: Arial, sans-serif;
     background-color: #f0f2f5;
     margin: 0;
@@ -8,30 +8,32 @@
     overflow: visible;
 }
 
-.containerFunc__Table {
+.containerAgendamento__Table {
     table {
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 20px;
         background-color: #fff;
+        height: 100%;
     }
-    
+
     thead {
         background-color: #673DE6;
         color: #fff;
     }
-    
+
     th,
     td {
         padding: 12px;
         text-align: left;
         border-bottom: 1px solid #ccd0d5;
     }
-    
+
+
     th {
         text-transform: uppercase;
     }
-    
+
     input {
         border-radius: 5px;
         width: 10vw;
@@ -39,7 +41,7 @@
         border: 1px solid black;
         padding: 1vh;
     }
-    
+
     button {
         background-color: #673DE6;
         color: #fff;

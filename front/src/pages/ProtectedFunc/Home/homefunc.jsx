@@ -18,8 +18,10 @@ export default function Home() {
             <div>
                 <Link to='/tabelafuncionario'>Tabela do Funcionario</Link>
                 <Link to='/tabelacliente'>Tabela do Cliente</Link>
+                <Link to='/tabelaagendamento'>Tabela do Agendamento</Link>
                 <Link to='/registrocliente'>Registrar Cliente</Link>
                 <Link to='/registrofuncionario'>Registrar Funcioario</Link>
+                <Link to='/registroagendamento'>Registrar Agendamento</Link>
             </div>
         </div>
     );

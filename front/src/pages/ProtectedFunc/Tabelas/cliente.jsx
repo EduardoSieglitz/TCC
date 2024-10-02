@@ -34,7 +34,7 @@ const TabelaCliente = () => {
     // Preenche os valores no formulário para edição
     setValue("nome", user.nome);
     setValue("endereco", user.endereco);
-    setValue("cpf", user.cpf);
+    setValue("cpf", user.cpfclien);
     setValue("telefone", user.telefone);
     setValue("email", user.email);
     setValue("senha", user.senha);
@@ -146,7 +146,7 @@ const TabelaCliente = () => {
                     <td>{user.idCliente}</td>
                     <td>{user.nome}</td>
                     <td>{user.endereco}</td>
-                    <td>{user.cpf}</td>
+                    <td>{user.cpfClien}</td>
                     <td>{user.telefone}</td>
                     <td>{user.email}</td>
                     <td>{user.senha}</td>

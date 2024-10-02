@@ -17,13 +17,17 @@ const Funcionario = conexao.define('Funcionario', {
         type: DataTypes.TEXT,
         allowNull: true
     },
-    cpf: {
+    cpfFunc: {
         type: DataTypes.STRING,
         allowNull: false
     },
     telefone: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    imagem: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
     email: {
         type: DataTypes.STRING,
@@ -47,7 +51,7 @@ const Cliente = conexao.define('Cliente', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    cpf: {
+    cpfClien: {
         type: DataTypes.STRING,
         allowNull: false
     },
@@ -58,6 +62,10 @@ const Cliente = conexao.define('Cliente', {
     endereco: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    imagem: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
     email: {
         type: DataTypes.STRING,
@@ -167,10 +175,6 @@ const Servico = conexao.define('Servico', {
         type: DataTypes.ENUM('L', 'R', 'P'),
         allowNull: false
     },
-    descricao: {
-        type: DataTypes.TEXT,
-        allowNull: true
-    }
 });
 
 // Modelo de Cortina

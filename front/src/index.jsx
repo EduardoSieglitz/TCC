@@ -10,8 +10,10 @@ import Homefunc from './pages/ProtectedFunc/Home/homefunc';
 import Navbar from './pages/ProtectedClien/Navbar/navbar';
 import RegistroClien from "./pages/ProtectedFunc/Registros/cliente";
 import RegistroFunc from "./pages/ProtectedFunc/Registros/funcionario"
+import RegistroAgend from "./pages/ProtectedFunc/Registros/agendamento"
 import TFuncionario from "./pages/ProtectedFunc/Tabelas/funcionario";
 import TCliente from "./pages/ProtectedFunc/Tabelas/cliente";
+import TAgendamento from "./pages/ProtectedFunc/Tabelas/agendamento";
 
 export default function Web() {
   return (
@@ -26,8 +28,10 @@ export default function Web() {
           <Route path="/cadastro" element={<Cadastro />} />
           <Route path="/registrocliente" element={<ProtectedLayoutFunc><RegistroClien /></ProtectedLayoutFunc>} />
           <Route path="/registrofuncionario" element={<ProtectedLayoutFunc><RegistroFunc /></ProtectedLayoutFunc>} />
+          <Route path="/registroagendamento" element={<ProtectedLayoutFunc><RegistroAgend /></ProtectedLayoutFunc>} />
           <Route path="/tabelafuncionario" element={<ProtectedLayoutFunc><TFuncionario /></ProtectedLayoutFunc>} />
           <Route path="/tabelacliente" element={<ProtectedLayoutFunc><TCliente /></ProtectedLayoutFunc>} />
+          <Route path="/tabelaagendamento" element={<ProtectedLayoutFunc><TAgendamento /></ProtectedLayoutFunc>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

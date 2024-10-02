@@ -3,11 +3,12 @@ import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import Axios from 'axios';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Cadastro() {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const [error, setError] = useState("");
+    const navigate = useNavigate();
     async function dados(event) {
         try {
             const request = await Axios.post("http://localhost:3001/registrarfunc", {
@@ -20,6 +21,7 @@ export default function Cadastro() {
             });
             if (request.data == "Cadastrado") {
                 setError("");
+                navigate("/tabelafuncionario");
             }else if (request.data == "Email") {
                 setError("Email já existe");
             } else if (request.data == "Telefone") {
@@ -29,8 +31,8 @@ export default function Cadastro() {
             } else {
                 setError("");
             }
-        } catch {
-            console.log("Error")
+        } catch(error) {
+            console.log("Error: " + error)
         }
     }
 
