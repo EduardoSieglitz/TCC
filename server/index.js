@@ -23,27 +23,15 @@ app.post("/registrar", async (req, res) => {
     sqlUsuario = "INSERT INTO usuario(nivelUser, email, senha) VALUES(?, ?, ?)";
   db.query(sqlFuncionarioS, [email, cpf, telefone], (erro, result) => {
     try {
-      if (result[0].email == email) {
-        return res.json("Email");
-      }
-      if (result[0].cpf == cpf) {
-        return res.json("CPF");
-      }
-      if (result[0].telefone == telefone) {
-        return res.json("Telefone");
-      }
+      if (result[0].email == email) { return res.json("Email"); }
+      if (result[0].cpf == cpf) { return res.json("CPF"); }
+      if (result[0].telefone == telefone) { return res.json("Telefone"); }
     } catch {
       db.query(sqlClienteS, [email, cpf, telefone], (erro, result) => {
         try {
-          if (result[0].email == email) {
-            return res.json("Email");
-          }
-          if (result[0].cpf == cpf) {
-            return res.json("CPF");
-          }
-          if (result[0].telefone == telefone) {
-            return res.json("Telefone");
-          }
+          if (result[0].email == email) { return res.json("Email"); }
+          if (result[0].cpf == cpf) { return res.json("CPF"); }
+          if (result[0].telefone == telefone) { return res.json("Telefone"); }
         } catch {
           db.query(sqlCliente, [nome, cpf, senha, email, telefone, endereco], (erro, result) => {
             try {
@@ -76,27 +64,15 @@ app.post("/registrarfunc", async (req, res) => {
     sqlUsuario = "INSERT INTO usuario(nivelUser, email, senha) VALUES(?, ?, ?)";
   db.query(sqlFuncionarioS, [email, cpf, telefone], (erro, result) => {
     try {
-      if (result[0].email == email) {
-        return res.json("Email");
-      }
-      if (result[0].cpf == cpf) {
-        return res.json("CPF");
-      }
-      if (result[0].telefone == telefone) {
-        return res.json("Telefone");
-      }
+      if (result[0].email == email) { return res.json("Email"); }
+      if (result[0].cpf == cpf) { return res.json("CPF"); }
+      if (result[0].telefone == telefone) { return res.json("Telefone"); }
     } catch {
       db.query(sqlClienteS, [email, cpf, telefone], (erro, result) => {
         try {
-          if (result[0].email == email) {
-            return res.json("Email");
-          }
-          if (result[0].cpf == cpf) {
-            return res.json("CPF");
-          }
-          if (result[0].telefone == telefone) {
-            return res.json("Telefone");
-          }
+          if (result[0].email == email) { return res.json("Email"); }
+          if (result[0].cpf == cpf) { return res.json("CPF"); }
+          if (result[0].telefone == telefone) { return res.json("Telefone"); }
         } catch {
           db.query(sqlCliente, [nome, cpf, senha, email, telefone, descricao], (erro, result) => {
             db.query(sqlUsuario, [Usuario, email, senha], (erro, result) => {
@@ -109,6 +85,66 @@ app.post("/registrarfunc", async (req, res) => {
   });
 })
 //
+
+//Cadastro Agendamento
+app.post("/registraragendamento", async (req, res) => {
+  const dataAtual = new Date();
+  const hora = dataAtual.getHours();   // Pega a hora atual
+  const minutos = dataAtual.getMinutes(); // Pega os minutos atuais
+  const segundos = dataAtual.getSeconds(); // Pega os segundos atuais
+
+  const { solicitacao, dataAgendada, descricao, servico, cpfFunc, cpfClien, status, valor } = req.body;
+
+  const sqlsAgendamento = "INSERT INTO agendamentodeservico(solicitacao, dataAgendada, descricao, status, idServico, idFuncionario, idCliente) VALUES(?, ?, ?, ?, ?, ?, ?)";
+  const sqlServico = "INSERT INTO servico(valor, servico) VALUES(?, ?)";
+  const sqlPesquisaClien = "SELECT * FROM cliente WHERE cpf = ?";
+  const sqlPesquisaFunc = "SELECT * FROM funcionario WHERE cpf = ?";
+
+  try {
+    const [clienteResults] = await db.query(sqlPesquisaClien, [cpfClien]);
+    if (clienteResults.length === 0) {
+      return res.status(404).json("Cliente não encontrado.");
+    }
+    const idCliente = clienteResults[0].idCliente;
+
+    const [funcionarioResults] = await db.query(sqlPesquisaFunc, [cpfFunc]);
+    if (funcionarioResults.length === 0) {
+      return res.status(404).json("Funcionário não encontrado.");
+    }
+    const idFuncionario = funcionarioResults[0].idFuncionario;
+
+    const [servicoInsertResult] = await db.query(sqlServico, [valor, servico]);
+    const idServico = servicoInsertResult.insertId;
+
+    await db.query(sqlsAgendamento, [
+      `${solicitacao} ${hora}:${minutos}:${segundos}`,
+      `${dataAgendada} ${hora}:${minutos}:${segundos}`,
+      descricao,
+      status,
+      idServico,
+      idFuncionario,
+      idCliente
+    ]);
+
+    return res.json("Cadastrado");
+  } catch (error) {
+    console.log("Erro ao registrar agendamento:", error);
+    return res.status(500).json({ error: "Erro no servidor ao registrar o agendamento." });
+  }
+});
+
+//Tabela Agendamento 
+app.post("/tabelaagendamentos", async (req, res) => {
+  const sql = "SELECT * FROM agendamentodeservico";
+  const [sqlAgenda] = await db.query(sql);
+
+  try {
+    return res.json(sqlAgenda);
+  } catch (erro) {
+    return res.json("error");
+  }
+
+});
 
 //Login de Usuario
 app.post("/login/auth", async (req, res) => {
@@ -169,7 +205,7 @@ app.delete("/delete/:id", async (req, res) => {
     db.query(sqlUsuario, [id]);
     return res.json({ message: "Cliente deletado com sucesso." });
   } catch (error) {
-    return res.status(500).json({ message: "Erro ao deletar cliente.", error });
+    return res.json({ message: "Erro ao deletar cliente.", error });
   }
 });
 
@@ -185,7 +221,6 @@ app.put("/editar/:id", async (req, res) => {
 
   try {
     const result = db.query(sqlCheckDuplicates, [email, cpf, telefone, id]);
-    console.log(result)
     if (result.length > 0) {
       const existingUser = result[0];
       if (existingUser.email === email) return res.json("Email");
@@ -197,7 +232,7 @@ app.put("/editar/:id", async (req, res) => {
 
     return res.json("Cadastrado");
   } catch (error) {
-    return res.status(500).json({ message: "Erro ao atualizar cliente.", error });
+    return res.json({ message: "Erro ao atualizar cliente.", error });
   }
 });
 
@@ -211,7 +246,7 @@ app.delete("/deletefunc/:id", async (req, res) => {
     db.query(sqlUsuario, [id]);
     return res.json({ message: "Funcionario deletado com sucesso." });
   } catch (error) {
-    return res.status(500).json({ message: "Erro ao deletar Funcionario.", error });
+    return res.json({ message: "Erro ao deletar Funcionario.", error });
   }
 });
 
@@ -239,11 +274,9 @@ app.put("/editarfunc/:id", async (req, res) => {
 
     return res.json("Cadastrado");
   } catch (error) {
-    return res.status(500).json({ message: "Erro ao atualizar funcionario.", error });
+    return res.json({ message: "Erro ao atualizar funcionario.", error });
   }
 });
-
-
 
 app.listen(3001, () => {
   console.log("Servidor rodando...");
