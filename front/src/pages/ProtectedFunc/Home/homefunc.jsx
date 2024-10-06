@@ -1,28 +1,26 @@
-import { useNavigate, Link } from 'react-router-dom'; 
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthProvider/useAuth';
 import styles from "./home.module.css";
-
+import Navbar from "../Navbar/navbar";
 export default function Home() {
     const auth = useAuth();
     const navigate = useNavigate();
-
     function Sair() {
         auth.logout();
         navigate("/");
     }
 
     return (
-        <div className={styles.bodyHome_Func}>
-            <h1>Acesso liberado para Funcionario</h1>
-            <button onClick={Sair}>Fazer o logout</button>
-            <div>
-                <Link to='/tabelafuncionario'>Tabela do Funcionario</Link>
-                <Link to='/tabelacliente'>Tabela do Cliente</Link>
-                <Link to='/tabelaagendamento'>Tabela do Agendamento</Link>
-                <Link to='/registrocliente'>Registrar Cliente</Link>
-                <Link to='/registrofuncionario'>Registrar Funcioario</Link>
-                <Link to='/registroagendamento'>Registrar Agendamento</Link>
+        <>
+            <Navbar></Navbar>
+            <div className={styles.bodyHome_Func}>
+            <br /><br /><br /><br />
+                <h1>Acesso liberado para Funcionario</h1>
+                <button onClick={Sair}>Fazer o logout</button>
+                <div>
+                    
+                </div>
             </div>
-        </div>
+        </>
     );
 }

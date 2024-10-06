@@ -20,7 +20,7 @@ export default function Web() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/n" element={<Navbar />} />
+          <Route element={<Navbar />} />
           <Route path="/home" element={<ProtectedLayout><Home /></ProtectedLayout>} />
           <Route path="/homefunc" element={<ProtectedLayoutFunc><Homefunc /></ProtectedLayoutFunc>} />
           <Route path="/" element={<Login />} />

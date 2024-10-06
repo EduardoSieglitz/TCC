@@ -4,6 +4,7 @@ import validator from 'validator';
 import Axios from 'axios';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Navbar from "../Navbar/navbar";
 
 export default function Cadastro() {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -37,6 +38,8 @@ export default function Cadastro() {
     }
 
     return (
+        <>
+        <Navbar></Navbar>
         <div className={styles.body}>
             <div className={styles.containerClien}>
                 {error}
@@ -102,5 +105,6 @@ export default function Cadastro() {
                 <Link to="/homefunc" className={styles.return}>Voltar</Link>
             </div>
         </div>
+        </>
     );
 }
