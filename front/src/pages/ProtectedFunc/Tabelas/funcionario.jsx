@@ -24,7 +24,7 @@ const TabelaFuncionario = () => {
   const handleDelete = async (idFuncionario) => {
     try {
       await axios.delete(`http://localhost:3001/deletefunc/${idFuncionario}`);
-      fetchData(); // Atualiza a lista após deletar
+      fetchData(); 
     } catch (error) {
       console.error('Erro ao deletar:', error);
     }
@@ -32,7 +32,6 @@ const TabelaFuncionario = () => {
 
   const handleEdit = (user) => {
     setEditUserId(user.idFuncionario);
-    // Preencher o formulário com os dados do funcionário para edição
     setValue("nome", user.nome);
     setValue("descricao", user.descricao);
     setValue("cpf", user.cpf);
@@ -46,8 +45,8 @@ const TabelaFuncionario = () => {
       const response = await axios.put(`http://localhost:3001/editarfunc/${editUserId}`, data);
       if (response.data === "Atualizado") {
         setError("");
-        setEditUserId(null); // Sai do modo de edição
-        fetchData(); // Atualiza a lista após salvar
+        setEditUserId(null);
+        fetchData();
       } else if (response.data === "Email") {
         setError("Email já existe");
       } else if (response.data === "Telefone") {

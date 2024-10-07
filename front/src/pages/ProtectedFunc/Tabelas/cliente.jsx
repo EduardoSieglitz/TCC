@@ -24,7 +24,7 @@ const TabelaCliente = () => {
   const handleDelete = async (idCliente) => {
     try {
       await Axios.delete(`http://localhost:3001/delete/${idCliente}`);
-      fetchData(); // Atualiza a lista após deletar
+      fetchData(); 
     } catch (error) {
       console.error('Erro ao deletar:', error);
     }
@@ -32,7 +32,6 @@ const TabelaCliente = () => {
 
   const handleEdit = (user) => {
     setEditUserId(user.idCliente);
-    // Preenche os valores no formulário para edição
     setValue("nome", user.nome);
     setValue("endereco", user.endereco);
     setValue("cpf", user.cpfClien);
@@ -47,8 +46,8 @@ const TabelaCliente = () => {
       const response = await Axios.post(`http://localhost:3001/editar/${editUserId}`, data);
       if (response.data === "Cadastrado") {
         setError("");
-        setEditUserId(null); // Sai do modo de edição
-        fetchData(); // Atualiza a lista após salvar
+        setEditUserId(null); 
+        fetchData(); 
       } else if (response.data === "Email") {
         setError("Email já existe");
       } else if (response.data === "Telefone") {

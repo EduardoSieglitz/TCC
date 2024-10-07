@@ -14,7 +14,7 @@ export default function CadastroAgendamento() {
         try {
             const request = await Axios.post("http://localhost:3001/registraragendamento", {
                 solicitacao: event.solicitacao,
-                dataAgendada: event.dataAgendada, // já recebe data e hora
+                dataAgendada: event.dataAgendada,
                 descricao: event.descricao,
                 status: event.status,
                 servico: event.servico,

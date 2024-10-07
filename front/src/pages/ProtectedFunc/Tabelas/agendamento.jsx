@@ -10,9 +10,8 @@ const TabelaAgendamento = () => {
   const [editAgendamentoId, setEditAgendamentoId] = useState(null);
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
   const [error, setError] = useState("");
-  const navigate = useNavigate();
-  const [searchField, setSearchField] = useState("nome");  // Campo de filtro selecionado
-  const [searchValue, setSearchValue] = useState("");      // Valor do input de pesquisa
+  const [searchField, setSearchField] = useState(""); 
+  const [searchValue, setSearchValue] = useState("");  
 
   // Buscar os agendamentos no backend
   const fetchData = async () => {
@@ -37,11 +36,11 @@ const TabelaAgendamento = () => {
   // Preparar os valores para edição
   const handleEdit = (agendamento) => {
     setEditAgendamentoId(agendamento.idAgendamento);
-    
+
     // Preparar o campo de data e hora no formato ISO para `datetime-local`
     const solicitacao = new Date(agendamento.solicitacao).toISOString().slice(0, 16); // Inclui data e hora
     const dataAgendada = new Date(agendamento.dataAgendada).toISOString().slice(0, 16);
-    
+
     // Definir os valores nos campos de edição
     setValue("solicitacao", solicitacao);
     setValue("dataAgendada", dataAgendada);
@@ -53,15 +52,13 @@ const TabelaAgendamento = () => {
     setValue("cpffunc", agendamento.cpfFunc);
   };
 
-  // Salvar as alterações de edição
   const handleSave = async (data) => {
     try {
-      console.log(data)
       const response = await axios.put(`http://localhost:3001/editaragendamento/${editAgendamentoId}`, data);
       if (response.data === "Atualizado") {
         setError("");
-        setEditAgendamentoId(null); // Sai do modo de edição
-        fetchData(); // Atualiza a lista após salvar
+        setEditAgendamentoId(null);
+        fetchData();
       }
     } catch (error) {
       console.error('Erro ao salvar:', error);
@@ -72,18 +69,39 @@ const TabelaAgendamento = () => {
     fetchData();
   }, []);
 
-  // Filtrando agendamentos com base no valor de pesquisa e campo selecionado
   const filteredAgendamentos = agendamentos.filter((agendamento) => {
+    console.log(searchField);
     if (searchField === 'CPF Funcionario') {
       return agendamento.cpfFunc?.toLowerCase().includes(searchValue.toLowerCase());
     } else if (searchField === 'CPF Cliente') {
-      return agendamento.cpfClien?.includes(searchValue);
-    } else if (searchField === 'Serviço') {
-      return agendamento.servico?.toLowerCase().includes(searchValue.toLowerCase());
+      return agendamento.cpfClien?.toLowerCase().includes(searchValue.toLowerCase());
+    } else if (searchField === 'Valor') {
+      return agendamento.valor?.includes(searchValue);
+    } else if (searchField === 'Solicitação') {
+      return agendamento.solicitacao?.includes(searchValue);
+    } else if (searchField === 'Data Agendada') {
+      return agendamento.dataAgendada?.includes(searchValue);
     }
-    return true; // Caso padrão, retorna todos
+    return true;
   });
-  
+  function Serviço(servico) {
+    if (servico == "P") {
+      return "Personalizar";
+    } else if (servico == "L") {
+      return "Lavagem";
+    } else {
+      return "Reforma";
+    }
+  }
+  function Status(status) {
+    if (status == "E") {
+      return "Em andamento";
+    } else if (status == "A") {
+      return "Agendado";
+    } else {
+      return "Concluído";
+    }
+  }
   return (
     <>
       <Navbar></Navbar>
@@ -98,7 +116,9 @@ const TabelaAgendamento = () => {
             >
               <option value="CPF Cliente">CPF Cliente</option>
               <option value="CPF Funcionario">CPF Funcionário</option>
-              <option value="Serviço">Serviço</option>
+              <option value="Valor">Valor</option>
+              <option value="Solicitação">Solicitação</option>
+              <option value="Data Agendada">Data Agendada</option>
             </select>
             <input
               type="text"
@@ -131,7 +151,7 @@ const TabelaAgendamento = () => {
                       <td>{agendamento.idAgendamento}</td>
                       <td>{new Date(agendamento.solicitacao).toLocaleString()}</td>
                       <td>
-                        <input 
+                        <input
                           type="datetime-local"
                           {...register('dataAgendada', { required: true })}
                           className={errors?.dataAgendada && styles.input_error}
@@ -139,7 +159,7 @@ const TabelaAgendamento = () => {
                         {errors?.dataAgendada && <p className={styles.input_message}>Data inválida</p>}
                       </td>
                       <td>
-                        <input 
+                        <input
                           type="text"
                           {...register('descricao')}
                           className={errors?.descricao && styles.input_error}
@@ -153,18 +173,18 @@ const TabelaAgendamento = () => {
                         </select>
                       </td>
                       <td>
-                        <input 
+                        <input
                           type="text"
                           {...register('valor', { required: true })}
                           className={errors?.valor && styles.input_error}
                         />
                       </td>
                       <td>
-                        <input 
-                          type="text"
-                          {...register('servico', { required: true })}
-                          className={errors?.servico && styles.input_error}
-                        />
+                        <select {...register('servico', { required: true })}>
+                          <option value="L">Lavagem</option>
+                          <option value="R">Reforma</option>
+                          <option value="P">Cortina</option>
+                        </select>
                       </td>
                       <td>{agendamento.cpfClien}</td>
                       <td>{agendamento.cpfFunc}</td>
@@ -179,9 +199,9 @@ const TabelaAgendamento = () => {
                       <td>{new Date(agendamento.solicitacao).toLocaleString()}</td>
                       <td>{new Date(agendamento.dataAgendada).toLocaleString()}</td>
                       <td>{agendamento.descricao}</td>
-                      <td>{agendamento.status}</td>
+                      <td>{Status(agendamento.status)}</td>
                       <td>{agendamento.valor}</td>
-                      <td>{agendamento.servico}</td>
+                      <td>{Serviço(agendamento.servico)}</td>
                       <td>{agendamento.cpfClien}</td>
                       <td>{agendamento.cpfFunc}</td>
                       <td>
