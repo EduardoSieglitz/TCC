@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './cliente.module.css';
 import Axios from 'axios';
-import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import Navbar from "../Navbar/navbar";
@@ -11,7 +10,8 @@ const TabelaCliente = () => {
   const [editUserId, setEditUserId] = useState(null);
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
   const [error, setError] = useState('');
-
+  const [searchField, setSearchField] = useState("");
+  const [searchValue, setSearchValue] = useState("");
   const fetchData = async () => {
     try {
       const response = await Axios.post('http://localhost:3001/tabelacliente');
@@ -24,7 +24,7 @@ const TabelaCliente = () => {
   const handleDelete = async (idCliente) => {
     try {
       await Axios.delete(`http://localhost:3001/delete/${idCliente}`);
-      fetchData(); 
+      fetchData();
     } catch (error) {
       console.error('Erro ao deletar:', error);
     }
@@ -41,13 +41,12 @@ const TabelaCliente = () => {
   };
 
   const handleSave = async (data) => {
-    console.log(data)
     try {
       const response = await Axios.post(`http://localhost:3001/editar/${editUserId}`, data);
-      if (response.data === "Cadastrado") {
+      if (response.data === "Atualizado") {
         setError("");
-        setEditUserId(null); 
-        fetchData(); 
+        setEditUserId(null);
+        fetchData();
       } else if (response.data === "Email") {
         setError("Email já existe");
       } else if (response.data === "Telefone") {
@@ -62,14 +61,46 @@ const TabelaCliente = () => {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData()]);
+  }, []);
 
+  const filteredUsers = users.filter((user) => {
+    if (searchField === 'Nome') {
+      return user.nome.toUpperCase().includes(searchValue.toUpperCase());
+    } else if (searchField === 'CPF Cliente') {
+      return user.cpfClien.includes(searchValue);
+    } else if (searchField === 'Telefone') {
+      return user.telefone?.includes(searchValue);
+    } else if (searchField === 'Email') {
+      return user.email?.includes(searchValue);
+    }
+    return true;
+  });
   return (
     <>
       <Navbar></Navbar>
       <div className={styles.bodyClien__Table}>
         <div className={styles.containerClien__Table}>
           {error && <p className={styles.error_message}>{error}</p>}
+          <div className={styles.filter_section}>
+            <select
+              value={searchField}
+              onChange={(e) => setSearchField(e.target.value)}
+              className={styles.select_filter}
+            >
+              <option value="">Selecione</option>
+              <option value="Nome">Nome</option>
+              <option value="CPF Cliente">CPF Cliente</option>
+              <option value="Telefone">Telefone</option>
+              <option value="Email">Email</option>
+            </select>
+            <input
+              type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder={`Buscar ${searchField}`}
+              className={styles.input_filter}
+            />
+          </div>
           <table className={styles.table}>
             <thead className={styles.thead}>
               <tr>
@@ -84,7 +115,7 @@ const TabelaCliente = () => {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {filteredUsers.map((user) => (
                 <tr key={user.idCliente}>
                   {editUserId === user.idCliente ? (
                     <>
@@ -140,7 +171,7 @@ const TabelaCliente = () => {
                         {errors?.senha && <p className={styles.input_menssage}>Senha inválida</p>}
                       </td>
                       <td>
-                        <button onClick={handleSubmit(handleSave)()}>Salvar</button>
+                        <button onClick={handleSubmit(handleSave)}>Salvar</button>
                         <button onClick={() => setEditUserId(null)}>Cancelar</button>
                       </td>
                     </>

@@ -11,6 +11,8 @@ const TabelaFuncionario = () => {
   const [editUserId, setEditUserId] = useState(null);
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
   const [error, setError] = useState("");
+  const [searchField, setSearchField] = useState("");
+  const [searchValue, setSearchValue] = useState("");
 
   const fetchData = async () => {
     try {
@@ -24,7 +26,7 @@ const TabelaFuncionario = () => {
   const handleDelete = async (idFuncionario) => {
     try {
       await axios.delete(`http://localhost:3001/deletefunc/${idFuncionario}`);
-      fetchData(); 
+      fetchData();
     } catch (error) {
       console.error('Erro ao deletar:', error);
     }
@@ -34,7 +36,7 @@ const TabelaFuncionario = () => {
     setEditUserId(user.idFuncionario);
     setValue("nome", user.nome);
     setValue("descricao", user.descricao);
-    setValue("cpf", user.cpf);
+    setValue("cpf", user.cpfFunc);
     setValue("telefone", user.telefone);
     setValue("email", user.email);
     setValue("senha", user.senha);
@@ -61,14 +63,45 @@ const TabelaFuncionario = () => {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData()]);
-
+  }, []);
+  const filteredUsers = users.filter((user) => {
+    if (searchField === 'Nome') {
+      return user.nome.toUpperCase().includes(searchValue.toUpperCase());
+    } else if (searchField === 'CPF Cliente') {
+      return user.cpfFunc.includes(searchValue);
+    } else if (searchField === 'Telefone') {
+      return user.telefone?.includes(searchValue);
+    } else if (searchField === 'Email') {
+      return user.email?.includes(searchValue);
+    }
+    return true;
+  });
   return (
     <>
       <Navbar></Navbar>
       <div className={styles.body}>
         <div className={styles.containerFunc__Table}>
           <div>{error && <p className={styles.error_message}>{error}</p>}</div>
+          <div className={styles.filter_section}>
+            <select
+              value={searchField}
+              onChange={(e) => setSearchField(e.target.value)}
+              className={styles.select_filter}
+            >
+               <option value="">Selecione</option>
+              <option value="Nome">Nome</option>
+              <option value="CPF Cliente">CPF Cliente</option>
+              <option value="Telefone">Telefone</option>
+              <option value="Email">Email</option>
+            </select>
+            <input
+              type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder={`Buscar ${searchField}`}
+              className={styles.input_filter}
+            />
+          </div>
           <table className={styles.table}>
             <thead className={styles.thead}>
               <tr>
@@ -83,7 +116,7 @@ const TabelaFuncionario = () => {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {filteredUsers.map((user) => (
                 <tr key={user.idFuncionario} className={styles.row}>
                   {editUserId === user.idFuncionario ? (
                     <>

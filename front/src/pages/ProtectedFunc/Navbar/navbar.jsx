@@ -27,10 +27,10 @@ export default function Navbar() {
                         <li>TAgendamento</li>
                     </NavLink>
                     <NavLink to="/registrocliente" className={styles.menu_link}>
-                        <li>RFuncionario</li>
+                        <li>RCliente</li>
                     </NavLink>
                     <NavLink to="/registrofuncionario" className={styles.menu_link}>
-                        <li>RCliente</li>
+                        <li>RFuncionario</li>
                     </NavLink>
                     <NavLink to="/registroagendamento" className={styles.menu_link}>
                         <li>RAgendamento</li>

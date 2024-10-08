@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './agendamento.module.css';
-import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Navbar from "../Navbar/navbar";
 
@@ -10,10 +9,9 @@ const TabelaAgendamento = () => {
   const [editAgendamentoId, setEditAgendamentoId] = useState(null);
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
   const [error, setError] = useState("");
-  const [searchField, setSearchField] = useState(""); 
-  const [searchValue, setSearchValue] = useState("");  
+  const [searchField, setSearchField] = useState("");
+  const [searchValue, setSearchValue] = useState("");
 
-  // Buscar os agendamentos no backend
   const fetchData = async () => {
     try {
       const response = await axios.post('http://localhost:3001/tabelaagendamentos');
@@ -23,7 +21,6 @@ const TabelaAgendamento = () => {
     }
   };
 
-  // Deletar um agendamento
   const handleDelete = async (idAgendamento) => {
     try {
       await axios.delete(`http://localhost:3001/deleteagendamento/${idAgendamento}`);
@@ -32,16 +29,11 @@ const TabelaAgendamento = () => {
       console.error('Erro ao deletar:', error);
     }
   };
-
-  // Preparar os valores para edição
   const handleEdit = (agendamento) => {
     setEditAgendamentoId(agendamento.idAgendamento);
-
-    // Preparar o campo de data e hora no formato ISO para `datetime-local`
-    const solicitacao = new Date(agendamento.solicitacao).toISOString().slice(0, 16); // Inclui data e hora
+    const solicitacao = new Date(agendamento.solicitacao).toISOString().slice(0, 16);
     const dataAgendada = new Date(agendamento.dataAgendada).toISOString().slice(0, 16);
 
-    // Definir os valores nos campos de edição
     setValue("solicitacao", solicitacao);
     setValue("dataAgendada", dataAgendada);
     setValue("descricao", agendamento.descricao);
@@ -72,9 +64,9 @@ const TabelaAgendamento = () => {
   const filteredAgendamentos = agendamentos.filter((agendamento) => {
     console.log(searchField);
     if (searchField === 'CPF Funcionario') {
-      return agendamento.cpfFunc?.toLowerCase().includes(searchValue.toLowerCase());
+      return agendamento.cpfFunc?.includes(searchValue);
     } else if (searchField === 'CPF Cliente') {
-      return agendamento.cpfClien?.toLowerCase().includes(searchValue.toLowerCase());
+      return agendamento.cpfClien?.includes(searchValue);
     } else if (searchField === 'Valor') {
       return agendamento.valor?.includes(searchValue);
     } else if (searchField === 'Solicitação') {
@@ -114,6 +106,7 @@ const TabelaAgendamento = () => {
               onChange={(e) => setSearchField(e.target.value)}
               className={styles.select_filter}
             >
+              <option value="">Selecione</option>
               <option value="CPF Cliente">CPF Cliente</option>
               <option value="CPF Funcionario">CPF Funcionário</option>
               <option value="Valor">Valor</option>
@@ -124,7 +117,7 @@ const TabelaAgendamento = () => {
               type="text"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              placeholder={`Buscar por ${searchField}`}
+              placeholder={`Buscar ${searchField}`}
               className={styles.input_filter}
             />
           </div>
