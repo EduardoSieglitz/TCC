@@ -64,6 +64,7 @@ const TabelaFuncionario = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
   const filteredUsers = users.filter((user) => {
     if (searchField === 'Nome') {
       return user.nome.toUpperCase().includes(searchValue.toUpperCase());

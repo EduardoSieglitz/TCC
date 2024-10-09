@@ -23,7 +23,7 @@ const TabelaCliente = () => {
 
   const handleDelete = async (idCliente) => {
     try {
-      await Axios.delete(`http://localhost:3001/delete/${idCliente}`);
+      await Axios.delete(`http://localhost:3001/delete/${idCliente.idCliente}/${idCliente.idUsuario}`);
       fetchData();
     } catch (error) {
       console.error('Erro ao deletar:', error);
@@ -42,7 +42,7 @@ const TabelaCliente = () => {
 
   const handleSave = async (data) => {
     try {
-      const response = await Axios.post(`http://localhost:3001/editar/${editUserId}`, data);
+      const response = await Axios.put(`http://localhost:3001/editar/${editUserId}`, data);
       if (response.data === "Atualizado") {
         setError("");
         setEditUserId(null);
@@ -80,7 +80,6 @@ const TabelaCliente = () => {
       <Navbar></Navbar>
       <div className={styles.bodyClien__Table}>
         <div className={styles.containerClien__Table}>
-          {error && <p className={styles.error_message}>{error}</p>}
           <div className={styles.filter_section}>
             <select
               value={searchField}
@@ -156,8 +155,7 @@ const TabelaCliente = () => {
                           {...register('email', {
                             required: true,
                             minLength: 6,
-                            maxLength: 50,
-                            validate: (value) => validator.isEmail(value)
+                            maxLength: 50
                           })}
                           className={errors?.email && styles.input_error}
                         />
@@ -169,6 +167,7 @@ const TabelaCliente = () => {
                           className={errors?.senha && styles.input_error}
                         />
                         {errors?.senha && <p className={styles.input_menssage}>Senha inválida</p>}
+                        <input type="hidden" {...register("idUsurio")}/>
                       </td>
                       <td>
                         <button onClick={handleSubmit(handleSave)}>Salvar</button>
@@ -186,7 +185,7 @@ const TabelaCliente = () => {
                       <td>{user.senha}</td>
                       <td>
                         <button onClick={() => handleEdit(user)}>Editar</button>
-                        <button onClick={() => handleDelete(user.idCliente)}>Deletar</button>
+                        <button onClick={() => handleDelete(user)}>Deletar</button>
                       </td>
                     </>
                   )}
@@ -194,6 +193,7 @@ const TabelaCliente = () => {
               ))}
             </tbody>
           </table>
+          {error && <p className={styles.error_message}>{error}</p>}
           <div className={styles.line}></div>
         </div>
       </div>
