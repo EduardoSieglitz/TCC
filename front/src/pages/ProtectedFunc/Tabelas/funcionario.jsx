@@ -25,7 +25,7 @@ const TabelaFuncionario = () => {
 
   const handleDelete = async (idFuncionario) => {
     try {
-      await axios.delete(`http://localhost:3001/deletefunc/${idFuncionario}`);
+      await axios.delete(`http://localhost:3001/deletefunc/${idFuncionario.idCliente}/${idFuncionario.idUsuario}`);
       fetchData();
     } catch (error) {
       console.error('Erro ao deletar:', error);
@@ -188,7 +188,7 @@ const TabelaFuncionario = () => {
                       <td>{user.senha}</td>
                       <td>
                         <button onClick={() => handleEdit(user)}>Editar</button>
-                        <button onClick={() => handleDelete(user.idFuncionario)}>Deletar</button>
+                        <button onClick={() => handleDelete(user)}>Deletar</button>
                       </td>
                     </>
                   )}

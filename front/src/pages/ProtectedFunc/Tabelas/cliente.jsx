@@ -12,6 +12,12 @@ const TabelaCliente = () => {
   const [error, setError] = useState('');
   const [searchField, setSearchField] = useState("");
   const [searchValue, setSearchValue] = useState("");
+
+  // Função para formatar o endereço completo
+  const formatAddress = (user) => {
+    return `${user.rua}, ${user.numero} - ${user.bairro}, ${user.cidade} - ${user.estado}, CEP: ${user.cep}`;
+  };
+
   const fetchData = async () => {
     try {
       const response = await Axios.post('http://localhost:3001/tabelacliente');
@@ -31,9 +37,15 @@ const TabelaCliente = () => {
   };
 
   const handleEdit = (user) => {
+    console.log(user)
     setEditUserId(user.idCliente);
     setValue("nome", user.nome);
-    setValue("endereco", user.endereco);
+    setValue("rua", user.rua);
+    setValue("numero", user.numero);
+    setValue("bairro", user.bairro);
+    setValue("cidade", user.cidade);
+    setValue("estado", user.estado);
+    setValue("cep", user.cep);
     setValue("cpf", user.cpfClien);
     setValue("telefone", user.telefone);
     setValue("email", user.email);
@@ -75,9 +87,10 @@ const TabelaCliente = () => {
     }
     return true;
   });
+
   return (
     <>
-      <Navbar></Navbar>
+      <Navbar />
       <div className={styles.bodyClien__Table}>
         <div className={styles.containerClien__Table}>
           <div className={styles.filter_section}>
@@ -127,11 +140,31 @@ const TabelaCliente = () => {
                         {errors?.nome && <p className={styles.input_menssage}>Nome inválido</p>}
                       </td>
                       <td>
-                        <input type="text" placeholder="Endereço"
-                          {...register("endereco", { required: true, maxLength: 100 })}
-                          className={errors?.endereco && styles.input_error}
+                        <input type="text" placeholder="Rua"
+                          {...register('rua', { required: true })}
+                          className={errors?.rua && styles.input_error}
                         />
-                        {errors?.endereco && <p className={styles.input_menssage}>Endereço inválido</p>}
+                        <input type="text" placeholder="Número"
+                          {...register('numero', { required: true })}
+                          className={errors?.numero && styles.input_error}
+                        />
+                        <input type="text" placeholder="Bairro"
+                          {...register('bairro', { required: true })}
+                          className={errors?.bairro && styles.input_error}
+                        />
+                        <input type="text" placeholder="Cidade"
+                          {...register('cidade', { required: true })}
+                          className={errors?.cidade && styles.input_error}
+                        />
+                        <input type="text" placeholder="Estado"
+                          {...register('estado', { required: true })}
+                          className={errors?.estado && styles.input_error}
+                        />
+                        <input type="text" placeholder="CEP"
+                          {...register('cep', { required: true })}
+                          className={errors?.cep && styles.input_error}
+                        />
+                        {errors?.cep && <p className={styles.input_menssage}>CEP inválido</p>}
                       </td>
                       <td>
                         <input type="text" placeholder="CPF"
@@ -142,7 +175,7 @@ const TabelaCliente = () => {
                       </td>
                       <td>
                         <input type="text" placeholder="Telefone"
-                          {...register("telefone", {
+                          {...register('telefone', {
                             required: true,
                             validate: (value) => /^[1-9]{2}-?[9]{0,1}[0-9]{4}-?[0-9]{4}$/.test(value)
                           })}
@@ -167,7 +200,7 @@ const TabelaCliente = () => {
                           className={errors?.senha && styles.input_error}
                         />
                         {errors?.senha && <p className={styles.input_menssage}>Senha inválida</p>}
-                        <input type="hidden" {...register("idUsurio")}/>
+                        <input type="hidden" {...register("idUsurio")} />
                       </td>
                       <td>
                         <button onClick={handleSubmit(handleSave)}>Salvar</button>
@@ -178,7 +211,7 @@ const TabelaCliente = () => {
                     <>
                       <td>{user.idCliente}</td>
                       <td>{user.nome}</td>
-                      <td>{user.endereco}</td>
+                      <td>{formatAddress(user)}</td>
                       <td>{user.cpfClien}</td>
                       <td>{user.telefone}</td>
                       <td>{user.email}</td>
