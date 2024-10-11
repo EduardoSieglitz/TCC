@@ -19,12 +19,12 @@ export default function Cadastro() {
                 senha: event.senha,
                 cpf: event.cpf,
                 telefone: event.telefone,
-                rua : event.rua,
-                estado : event.estado,
-                cidade : event.cidade,
-                cep : event.cep,
-                numero : event.numero,
-                bairro : event.bairro
+                rua: event.rua,
+                estado: event.estado,
+                cidade: event.cidade,
+                cep: event.cep,
+                numero: event.numero,
+                bairro: event.bairro
             });
             if (request.data == "Cadastrado") {
                 setError("");

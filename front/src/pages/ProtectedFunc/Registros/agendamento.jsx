@@ -45,16 +45,15 @@ export default function CadastroAgendamento() {
                     </div>
 
                     <input
-                        type="date" 
+                        type="date"
                         placeholder="Data de Solicitação"
                         {...register('solicitacao', { required: true })}
                         className={errors?.solicitacao && styles.input_error}
                     />
                     {errors?.solicitacao?.type === 'required' && <p className={styles.input_message}>required</p>}
 
-                    {/* Campo de Data e Hora */}
                     <input
-                        type="datetime-local" 
+                        type="datetime-local"
                         placeholder="Data e Hora Agendada"
                         {...register('dataAgendada', { required: true })}
                         className={errors?.dataAgendada && styles.input_error}
@@ -62,7 +61,7 @@ export default function CadastroAgendamento() {
                     {errors?.dataAgendada?.type === 'required' && <p className={styles.input_message}>required</p>}
 
                     <input
-                        type="text" 
+                        type="text"
                         placeholder="Descrição"
                         {...register('descricao', { maxLength: 200 })}
                         className={errors?.descricao && styles.input_error}
@@ -90,7 +89,7 @@ export default function CadastroAgendamento() {
                     {errors?.servico?.type === 'required' && <p className={styles.input_message}>required</p>}
 
                     <input
-                        type="text" 
+                        type="text"
                         placeholder="Valor"
                         {...register('valor', { required: true })}
                         className={errors?.cpfFuncionario && styles.input_error}
@@ -98,7 +97,7 @@ export default function CadastroAgendamento() {
                     {errors?.valor?.type === 'required' && <p className={styles.input_message}>required</p>}
 
                     <input
-                        type="text" 
+                        type="text"
                         placeholder="CPF do Funcionario"
                         {...register('cpfFuncionario', {
                             required: true,
@@ -110,7 +109,7 @@ export default function CadastroAgendamento() {
                     {errors?.cpfFuncionario?.type === 'validate' && <p className={styles.input_message}>CPF inválido (deve ter 11 dígitos)</p>}
 
                     <input
-                        type="text" 
+                        type="text"
                         placeholder="CPF do Cliente"
                         {...register('cpfCliente', {
                             required: true,
@@ -121,7 +120,6 @@ export default function CadastroAgendamento() {
                     {errors?.cpfCliente?.type === 'required' && <p className={styles.input_message}>required</p>}
                     {errors?.cpfCliente?.type === 'validate' && <p className={styles.input_message}>CPF inválido (deve ter 11 dígitos)</p>}
 
-                    {/* Botão de Cadastro */}
                     <button onClick={() => { handleSubmit(dados)() }}>Cadastrar</button>
                     <Link to="/homefunc" className={styles.return}>Voltar</Link>
                 </div>

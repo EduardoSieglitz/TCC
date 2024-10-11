@@ -46,29 +46,14 @@ app.post("/login/auth", async (req, res) => {
 
 //Cadastro de Cliente
 app.post("/registrar", async (req, res) => {
-  const { nome, email, senha, telefone, cpf, endereco } = req.body;
+  const { nome, email, senha, telefone, cpf, rua, estado, cidade, cep, numero, bairro } = req.body;
   const Usuario = "Clien";
-  const sqlClienteS = `
-    SELECT * 
-    FROM cliente 
-    WHERE email = ? OR cpfClien = ? OR telefone = ?;
-  `;
-  const sqlFuncionarioS = `
-    SELECT * 
-    FROM funcionario 
-    WHERE email = ? OR cpfFunc = ? OR telefone = ?;
-  `;
-  const sqlCliente = `
-    INSERT INTO cliente(nome, cpfClien, senha, email, telefone, endereco) 
-    VALUES(?, ?, ?, ?, ?, ?);
-  `;
-  const sqlUsuario = `
-    INSERT INTO usuario(nivelUser, email, senha) 
-    VALUES(?, ?, ?);
-  `;
+  const sqlClienteS = `SELECT * FROM cliente WHERE email = ? OR cpfClien = ? OR telefone = ?;`;
+  const sqlFuncionarioS = `SELECT * FROM funcionario WHERE email = ? OR cpfFunc = ? OR telefone = ?;`;
+  const sqlCliente = `INSERT INTO cliente(nome, cpfClien, senha, email, telefone, rua, estado, cidade, cep, numero, bairro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+  const sqlUsuario = `INSERT INTO usuario(nivelUser, email, senha) VALUES(?, ?, ?);`;
   try {
     const [funcionarioResult] = await db.query(sqlFuncionarioS, [email, cpf, telefone]);
-
     if (funcionarioResult.length > 0) {
       if (funcionarioResult[0].email === email) return res.json("Email");
       if (funcionarioResult[0].cpfFunc === cpf) return res.json("CPF");
@@ -80,7 +65,7 @@ app.post("/registrar", async (req, res) => {
       if (clienteResult[0].cpfClien === cpf) return res.json("CPF");
       if (clienteResult[0].telefone === telefone) return res.json("Telefone");
     }
-    await db.query(sqlCliente, [nome, cpf, senha, email, telefone, endereco]);
+    await db.query(sqlCliente, [nome, cpf, senha, email, telefone, rua, estado, cidade, cep, numero, bairro]);
     await db.query(sqlUsuario, [Usuario, email, senha]);
     return res.json("Cadastrado");
   } catch (error) {
@@ -214,8 +199,8 @@ app.post("/tabelafuncionario", async (req, res) => {
 
 //Tabelas Cliente
 app.post("/tabelacliente", async (req, res) => {
-  const sql = `SELECT c.idCliente, u.idUsuario, c.nome, c.endereco, c.cpfClien, c.telefone, c.email,
-   c.senha FROM cliente c LEFT JOIN usuario u on c.email = u.email;`;
+  const sql = `SELECT c.idCliente, u.idUsuario, c.nome, c.cpfClien, c.telefone, c.email,
+   c.senha, c.rua, c.estado, c.cidade, c.cep, c.numero, c.bairro FROM cliente c LEFT JOIN usuario u on c.email = u.email;`;
   try {
     const [result] = await db.query(sql);
     return res.json(result);
@@ -244,9 +229,10 @@ app.delete("/deleteagendamento/:id", async (req, res) => {
 //
 //Delete Cliente
 app.delete("/delete/:id/:idusuario", async (req, res) => {
-  const { id, idusuario} = req.params;
+  const { id, idusuario } = req.params;
   const sqlUsuario = "DELETE FROM usuario WHERE idUsuario = ?;";
   const sqlCliente = "DELETE FROM cliente WHERE idCliente = ?;";
+  console.log( id, idusuario )
   try {
     await db.query(sqlCliente, [id]);
     await db.query(sqlUsuario, [idusuario]);
@@ -259,13 +245,14 @@ app.delete("/delete/:id/:idusuario", async (req, res) => {
 //
 
 //Delete Funcionario
-app.delete("/deletefunc/:id", async (req, res) => {
-  const { id } = req.params;
+app.delete("/deletefunc/:id/:idusuario", async (req, res) => {
+  const { id, idusuario } = req.params;
   const sqlDeleteUsuario = "DELETE FROM usuario WHERE idUsuario = ?;";
   const sqlDeleteFuncionario = "DELETE FROM funcionario WHERE idFuncionario = ?;";
+  console.log( id, idusuario )
   try {
     await db.query(sqlDeleteFuncionario, [id]);
-    await db.query(sqlDeleteUsuario, [id]);
+    await db.query(sqlDeleteUsuario, [idusuario]);
     return res.json({ message: "Funcionário deletado com sucesso." });
   } catch (error) {
     console.error("Erro ao deletar funcionário:", error);
@@ -277,51 +264,15 @@ app.delete("/deletefunc/:id", async (req, res) => {
 //Editar Cliente
 app.put("/editar/:id", async (req, res) => {
   const { id } = req.params;
-  const { nome, email, senha, telefone, cpf, endereco, idUsuario } = req.body;
-  const sqlUpdateCliente = `UPDATE cliente SET nome = ?, email = ?, senha = ?, telefone = ?, cpfClien = ?, endereco = ? WHERE idCliente = ?;`;
+  const { nome, email, senha, telefone, cpf, rua, estado, cidade, cep, numero, bairro, idUsuario } = req.body;
+  console.log( nome, email, senha, telefone, cpf, rua, estado, cidade, cep, numero, bairro, idUsuario )
+  const sqlUpdateCliente = `UPDATE cliente SET nome = ?, email = ?, senha = ?, telefone = ?, cpfClien = ?, 
+  rua = ?, estado = ?, cidade = ?, cep = ?, numero = ?, bairro = ? WHERE idCliente = ?;`;
   const sqlUpdateUsuario = `UPDATE usuario SET email = ?, senha = ? WHERE idUsuario = ?;`;
   const sqlCheckDuplicatesClien = `SELECT * FROM cliente WHERE (email = ? OR cpfClien = ? OR telefone = ?) AND idCliente != ?;`;
   const sqlCheckDuplicatesFunc = `SELECT * FROM funcionario WHERE (email = ? OR cpfFunc = ? OR telefone = ?);`;
   try {
     const [result] = await db.query(sqlCheckDuplicatesClien, [email, cpf, telefone, id]);
-    const [resultFunc] = await db.query(sqlCheckDuplicatesFunc, [email, cpf, telefone, id]);
-
-    if (result.length > 0 || resultFunc.length > 0) {
-      const existingUser = result.length > 0 ? result[0] : null;
-      const existingUserFunc = resultFunc.length > 0 ? resultFunc[0] : null;
-
-      if (existingUser && existingUser.email === email || existingUserFunc && existingUserFunc.email === email) {
-        return res.json("Email");
-      }
-      if (existingUser && existingUser.cpfClien === cpf || existingUserFunc && existingUserFunc.cpfFunc === cpf) {
-        return res.json("CPF");
-      }
-      if (existingUser && existingUser.telefone === telefone || existingUserFunc && existingUserFunc.telefone === telefone) {
-        return res.json("Telefone");
-      }
-    }
-
-    await db.query(sqlUpdateCliente, [nome, email, senha, telefone, cpf, endereco, id]);
-    await db.query(sqlUpdateUsuario, [email, senha, idUsuario]);
-    return res.json("Atualizado");
-
-  } catch (error) {
-    console.error("Erro ao atualizar cliente:", error);
-    return res.status(500).json({ message: "Erro ao atualizar cliente.", error });
-  }
-});
-//
-
-//Editar Funcionário
-app.put("/editarfunc/:id", async (req, res) => {
-  const { id } = req.params;
-  const { nome, email, senha, telefone, cpf, descricao } = req.body;
-  const sqlUpdateFuncionario = `UPDATE funcionario SET nome = ?, email = ?, senha = ?, telefone = ?, cpfFunc = ?, descricao = ? WHERE idFuncionario = ?`;
-  const sqlUpdateUsuario = `UPDATE usuario SET email = ?, senha = ? WHERE email = (SELECT email FROM funcionario WHERE idFuncionario = ?)`;
-  const sqlCheckDuplicatesClien = `SELECT * FROM cliente WHERE email = ? OR cpfClien = ? OR telefone = ?;`;
-  const sqlCheckDuplicatesFunc = `SELECT * FROM funcionario WHERE email = ? OR cpfFunc = ? OR telefone = ?;`;
-  try {
-    const [result] = await db.query(sqlCheckDuplicatesClien, [email, cpf, telefone]);
     const [resultFunc] = await db.query(sqlCheckDuplicatesFunc, [email, cpf, telefone]);
 
     if (result.length > 0 || resultFunc.length > 0) {
@@ -339,8 +290,47 @@ app.put("/editarfunc/:id", async (req, res) => {
       }
     }
 
+    await db.query(sqlUpdateCliente, [nome, email, senha, telefone, cpf, rua, estado, cidade, cep, numero, bairro, id]);
+    await db.query(sqlUpdateUsuario, [email, senha, idUsuario]);
+    return res.json("Atualizado");
+
+  } catch (error) {
+    console.error("Erro ao atualizar cliente:", error);
+    return res.status(500).json({ message: "Erro ao atualizar cliente.", error });
+  }
+});
+//
+
+//Editar Funcionário
+app.put("/editarfunc/:id", async (req, res) => {
+  const { id } = req.params;
+  const { nome, email, senha, telefone, cpf, descricao, idUsuario } = req.body;
+  console.log(nome, email, senha, telefone, cpf, descricao, idUsuario);
+  const sqlUpdateFuncionario = `UPDATE funcionario SET nome = ?, email = ?, senha = ?, telefone = ?, cpfFunc = ?, descricao = ? WHERE idFuncionario = ?`;
+  const sqlUpdateUsuario = `UPDATE usuario SET email = ?, senha = ? WHERE idUsuario = ?;`;
+  const sqlCheckDuplicatesClien = `SELECT * FROM cliente WHERE (email = ? OR cpfClien = ? OR telefone = ?)`;
+  const sqlCheckDuplicatesFunc = `SELECT * FROM funcionario WHERE (email = ? OR cpfFunc = ? OR telefone = ?) AND idFuncionario != ?;;`;
+  try {
+    const [result] = await db.query(sqlCheckDuplicatesClien, [email, cpf, telefone]);
+    const [resultFunc] = await db.query(sqlCheckDuplicatesFunc, [email, cpf, telefone, id]);
+
+    if (result.length > 0 || resultFunc.length > 0) {
+      const existingUser = result.length > 0 ? result[0] : null;
+      const existingUserFunc = resultFunc.length > 0 ? resultFunc[0] : null;
+
+      if (existingUser && existingUser.email === email || existingUserFunc && existingUserFunc.email === email) {
+        return res.json("Email");
+      }
+      if (existingUser && existingUser.cpfClien === cpf || existingUserFunc && existingUserFunc.cpfFunc === cpf) {
+        return res.json("CPF");
+      }
+      if (existingUser && existingUser.telefone === telefone || existingUserFunc && existingUserFunc.telefone === telefone) {
+        return res.json("Telefone");
+      }
+    }
+
     await db.query(sqlUpdateFuncionario, [nome, email, senha, telefone, cpf, descricao, id]);
-    await db.query(sqlUpdateUsuario, [email, senha, id]);
+    await db.query(sqlUpdateUsuario, [email, senha, idUsuario]);
 
     return res.json("Atualizado");
   } catch (error) {

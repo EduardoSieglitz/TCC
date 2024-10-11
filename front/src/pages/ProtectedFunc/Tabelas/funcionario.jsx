@@ -25,7 +25,7 @@ const TabelaFuncionario = () => {
 
   const handleDelete = async (idFuncionario) => {
     try {
-      await axios.delete(`http://localhost:3001/deletefunc/${idFuncionario.idCliente}/${idFuncionario.idUsuario}`);
+      await axios.delete(`http://localhost:3001/deletefunc/${idFuncionario.idFuncionario}/${idFuncionario.idUsuario}`);
       fetchData();
     } catch (error) {
       console.error('Erro ao deletar:', error);
@@ -34,6 +34,7 @@ const TabelaFuncionario = () => {
 
   const handleEdit = (user) => {
     setEditUserId(user.idFuncionario);
+    setValue("idUsuario", user.idUsuario);
     setValue("nome", user.nome);
     setValue("descricao", user.descricao);
     setValue("cpf", user.cpfFunc);
@@ -43,6 +44,7 @@ const TabelaFuncionario = () => {
   };
 
   const handleSave = async (data) => {
+    console.log(data)
     try {
       const response = await axios.put(`http://localhost:3001/editarfunc/${editUserId}`, data);
       if (response.data === "Atualizado") {
@@ -89,7 +91,7 @@ const TabelaFuncionario = () => {
               onChange={(e) => setSearchField(e.target.value)}
               className={styles.select_filter}
             >
-               <option value="">Selecione</option>
+              <option value="">Selecione</option>
               <option value="Nome">Nome</option>
               <option value="CPF Cliente">CPF Cliente</option>
               <option value="Telefone">Telefone</option>
@@ -157,9 +159,8 @@ const TabelaFuncionario = () => {
                         <input type="text" placeholder="Email"
                           {...register('email', {
                             required: true,
-                            minLength: 6,
-                            maxLength: 50,
-                            validate: (value) => validator.isEmail(value)
+                            minLength: 2,
+                            maxLength: 50
                           })}
                           className={errors?.email && styles.input_error}
                         />
@@ -172,6 +173,7 @@ const TabelaFuncionario = () => {
                         />
                         {errors?.senha && <p className={styles.input_menssage}>Senha inválida</p>}
                       </td>
+                      <input type="hidden" {...register("idUsuario")} />
                       <td>
                         <button onClick={handleSubmit(handleSave)}>Salvar</button>
                         <button onClick={() => setEditUserId(null)}>Cancelar</button>

@@ -59,7 +59,27 @@ const Cliente = conexao.define('Cliente', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    endereco: {
+    rua: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    bairro: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    cidade: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    cep: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    estado: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    numero: {
         type: DataTypes.STRING,
         allowNull: false
     },
@@ -133,7 +153,7 @@ const AgendamentoDeServico = conexao.define('AgendamentoDeServico', {
         allowNull: true
     },
     status: {
-        type: DataTypes.ENUM('E', 'A', 'C'),
+        type: DataTypes.ENUM('EE', 'EA', 'C', 'A'),
         allowNull: false
     },
     idServico: {

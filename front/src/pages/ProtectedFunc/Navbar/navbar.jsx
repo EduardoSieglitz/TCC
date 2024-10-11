@@ -18,22 +18,25 @@ export default function Navbar() {
                         <li>Início</li>
                     </NavLink>
                     <NavLink to="/tabelafuncionario" className={styles.menu_link}>
-                        <li>TFuncionario</li>
+                        <li>TFunc</li>
                     </NavLink>
                     <NavLink to="/tabelacliente" className={styles.menu_link}>
-                        <li>TCliente</li>
+                        <li>TClien</li>
                     </NavLink>
                     <NavLink to="/tabelaagendamento" className={styles.menu_link}>
-                        <li>TAgendamento</li>
+                        <li>TAgenda</li>
                     </NavLink>
                     <NavLink to="/registrocliente" className={styles.menu_link}>
-                        <li>RCliente</li>
+                        <li>RClien</li>
                     </NavLink>
                     <NavLink to="/registrofuncionario" className={styles.menu_link}>
-                        <li>RFuncionario</li>
+                        <li>RFunc</li>
                     </NavLink>
                     <NavLink to="/registroagendamento" className={styles.menu_link}>
-                        <li>RAgendamento</li>
+                        <li>RAgenda</li>
+                    </NavLink>
+                    <NavLink to="/registrocortinas" className={styles.menu_link}>
+                        <li>RCortina</li>
                     </NavLink>
                 </ul>
 

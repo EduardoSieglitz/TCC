@@ -13,7 +13,6 @@ const TabelaCliente = () => {
   const [searchField, setSearchField] = useState("");
   const [searchValue, setSearchValue] = useState("");
 
-  // Função para formatar o endereço completo
   const formatAddress = (user) => {
     return `${user.rua}, ${user.numero} - ${user.bairro}, ${user.cidade} - ${user.estado}, CEP: ${user.cep}`;
   };
@@ -37,8 +36,8 @@ const TabelaCliente = () => {
   };
 
   const handleEdit = (user) => {
-    console.log(user)
     setEditUserId(user.idCliente);
+    setValue("idUsuario", user.idUsuario);
     setValue("nome", user.nome);
     setValue("rua", user.rua);
     setValue("numero", user.numero);
@@ -53,6 +52,7 @@ const TabelaCliente = () => {
   };
 
   const handleSave = async (data) => {
+    console.log(data)
     try {
       const response = await Axios.put(`http://localhost:3001/editar/${editUserId}`, data);
       if (response.data === "Atualizado") {
@@ -200,7 +200,7 @@ const TabelaCliente = () => {
                           className={errors?.senha && styles.input_error}
                         />
                         {errors?.senha && <p className={styles.input_menssage}>Senha inválida</p>}
-                        <input type="hidden" {...register("idUsurio")} />
+                        <input type="hidden" {...register("idUsuario")} />
                       </td>
                       <td>
                         <button onClick={handleSubmit(handleSave)}>Salvar</button>

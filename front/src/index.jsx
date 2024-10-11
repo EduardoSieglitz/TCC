@@ -11,6 +11,7 @@ import Navbar from './pages/ProtectedClien/Navbar/navbar';
 import RegistroClien from "./pages/ProtectedFunc/Registros/cliente";
 import RegistroFunc from "./pages/ProtectedFunc/Registros/funcionario"
 import RegistroAgend from "./pages/ProtectedFunc/Registros/agendamento"
+import RegistroCortina from "./pages/ProtectedFunc/Registros/cortina"
 import TFuncionario from "./pages/ProtectedFunc/Tabelas/funcionario";
 import TCliente from "./pages/ProtectedFunc/Tabelas/cliente";
 import TAgendamento from "./pages/ProtectedFunc/Tabelas/agendamento";
@@ -32,6 +33,7 @@ export default function Web() {
           <Route path="/tabelafuncionario" element={<ProtectedLayoutFunc><TFuncionario /></ProtectedLayoutFunc>} />
           <Route path="/tabelacliente" element={<ProtectedLayoutFunc><TCliente /></ProtectedLayoutFunc>} />
           <Route path="/tabelaagendamento" element={<ProtectedLayoutFunc><TAgendamento /></ProtectedLayoutFunc>} />
+          <Route path="/registrocortinas" element={<ProtectedLayoutFunc><RegistroCortina /></ProtectedLayoutFunc>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
