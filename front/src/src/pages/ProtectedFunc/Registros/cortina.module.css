@@ -4,14 +4,14 @@
     font-family: 'Poppins', arial, sans-serif;
 }
 
-.bodyclien {
+.bodycortina {
     height: 90vh;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.containerClien {
+.containerCortina {
     background-color: #fff;
     border-radius: 12px;
     width: 432px;
@@ -30,7 +30,8 @@
         margin: 15px 0 20px;
     }
 
-    input {
+    input,
+    textarea {
         width: 80%;
         border: 1px solid #ccd0d5;
         border-radius: 8px;

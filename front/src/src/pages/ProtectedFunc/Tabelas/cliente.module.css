@@ -15,24 +15,33 @@
         background-color: #fff;
         height: 100%;
     }
-    
+
     thead {
         background-color: #673DE6;
         color: #fff;
     }
-    
+
     th,
     td {
         padding: 12px;
         text-align: left;
         border-bottom: 1px solid #ccd0d5;
     }
-    
-    
+
+
     th {
         text-transform: uppercase;
     }
-    
+
+    .filter_section input {
+        border-radius: 5px;
+        width: 10vw;
+        height: 4.5vh;
+        border: 1px solid black;
+        padding: 1vh;
+        margin: 4px;
+    }
+
     input {
         border-radius: 5px;
         width: 10vw;
@@ -40,7 +49,23 @@
         border: 1px solid black;
         padding: 1vh;
     }
-    
+
+    .filter_section select {
+        border-radius: 5px;
+        width: 11vw;
+        height: 4.5vh;
+        border: 1px solid black;
+        padding: 1vh;
+    }
+
+    select {
+        border-radius: 5px;
+        width: 11vw;
+        height: 4.5vh;
+        border: 1px solid black;
+        padding: 1vh;
+    }
+
     button {
         background-color: #673DE6;
         color: #fff;

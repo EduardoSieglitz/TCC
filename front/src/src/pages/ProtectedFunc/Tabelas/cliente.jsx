@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './cliente.module.css';
 import Axios from 'axios';
-import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
 import Navbar from "../Navbar/navbar";
@@ -11,6 +10,12 @@ const TabelaCliente = () => {
   const [editUserId, setEditUserId] = useState(null);
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
   const [error, setError] = useState('');
+  const [searchField, setSearchField] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+
+  const formatAddress = (user) => {
+    return `${user.rua}, ${user.numero} - ${user.bairro}, ${user.cidade} - ${user.estado}, CEP: ${user.cep}`;
+  };
 
   const fetchData = async () => {
     try {
@@ -23,8 +28,8 @@ const TabelaCliente = () => {
 
   const handleDelete = async (idCliente) => {
     try {
-      await Axios.delete(`http://localhost:3001/delete/${idCliente}`);
-      fetchData(); // Atualiza a lista após deletar
+      await Axios.delete(`http://localhost:3001/delete/${idCliente.idCliente}/${idCliente.idUsuario}`);
+      fetchData();
     } catch (error) {
       console.error('Erro ao deletar:', error);
     }
@@ -32,9 +37,14 @@ const TabelaCliente = () => {
 
   const handleEdit = (user) => {
     setEditUserId(user.idCliente);
-    // Preenche os valores no formulário para edição
+    setValue("idUsuario", user.idUsuario);
     setValue("nome", user.nome);
-    setValue("endereco", user.endereco);
+    setValue("rua", user.rua);
+    setValue("numero", user.numero);
+    setValue("bairro", user.bairro);
+    setValue("cidade", user.cidade);
+    setValue("estado", user.estado);
+    setValue("cep", user.cep);
     setValue("cpf", user.cpfClien);
     setValue("telefone", user.telefone);
     setValue("email", user.email);
@@ -44,11 +54,11 @@ const TabelaCliente = () => {
   const handleSave = async (data) => {
     console.log(data)
     try {
-      const response = await Axios.post(`http://localhost:3001/editar/${editUserId}`, data);
-      if (response.data === "Cadastrado") {
+      const response = await Axios.put(`http://localhost:3001/editar/${editUserId}`, data);
+      if (response.data === "Atualizado") {
         setError("");
-        setEditUserId(null); // Sai do modo de edição
-        fetchData(); // Atualiza a lista após salvar
+        setEditUserId(null);
+        fetchData();
       } else if (response.data === "Email") {
         setError("Email já existe");
       } else if (response.data === "Telefone") {
@@ -63,14 +73,46 @@ const TabelaCliente = () => {
 
   useEffect(() => {
     fetchData();
-  }, [fetchData()]);
+  }, []);
+
+  const filteredUsers = users.filter((user) => {
+    if (searchField === 'Nome') {
+      return user.nome.toUpperCase().includes(searchValue.toUpperCase());
+    } else if (searchField === 'CPF Cliente') {
+      return user.cpfClien.includes(searchValue);
+    } else if (searchField === 'Telefone') {
+      return user.telefone?.includes(searchValue);
+    } else if (searchField === 'Email') {
+      return user.email?.includes(searchValue);
+    }
+    return true;
+  });
 
   return (
     <>
-      <Navbar></Navbar>
+      <Navbar />
       <div className={styles.bodyClien__Table}>
         <div className={styles.containerClien__Table}>
-          {error && <p className={styles.error_message}>{error}</p>}
+          <div className={styles.filter_section}>
+            <select
+              value={searchField}
+              onChange={(e) => setSearchField(e.target.value)}
+              className={styles.select_filter}
+            >
+              <option value="">Selecione</option>
+              <option value="Nome">Nome</option>
+              <option value="CPF Cliente">CPF Cliente</option>
+              <option value="Telefone">Telefone</option>
+              <option value="Email">Email</option>
+            </select>
+            <input
+              type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder={`Buscar ${searchField}`}
+              className={styles.input_filter}
+            />
+          </div>
           <table className={styles.table}>
             <thead className={styles.thead}>
               <tr>
@@ -85,7 +127,7 @@ const TabelaCliente = () => {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {filteredUsers.map((user) => (
                 <tr key={user.idCliente}>
                   {editUserId === user.idCliente ? (
                     <>
@@ -98,11 +140,31 @@ const TabelaCliente = () => {
                         {errors?.nome && <p className={styles.input_menssage}>Nome inválido</p>}
                       </td>
                       <td>
-                        <input type="text" placeholder="Endereço"
-                          {...register("endereco", { required: true, maxLength: 100 })}
-                          className={errors?.endereco && styles.input_error}
+                        <input type="text" placeholder="Rua"
+                          {...register('rua', { required: true })}
+                          className={errors?.rua && styles.input_error}
                         />
-                        {errors?.endereco && <p className={styles.input_menssage}>Endereço inválido</p>}
+                        <input type="text" placeholder="Número"
+                          {...register('numero', { required: true })}
+                          className={errors?.numero && styles.input_error}
+                        />
+                        <input type="text" placeholder="Bairro"
+                          {...register('bairro', { required: true })}
+                          className={errors?.bairro && styles.input_error}
+                        />
+                        <input type="text" placeholder="Cidade"
+                          {...register('cidade', { required: true })}
+                          className={errors?.cidade && styles.input_error}
+                        />
+                        <input type="text" placeholder="Estado"
+                          {...register('estado', { required: true })}
+                          className={errors?.estado && styles.input_error}
+                        />
+                        <input type="text" placeholder="CEP"
+                          {...register('cep', { required: true })}
+                          className={errors?.cep && styles.input_error}
+                        />
+                        {errors?.cep && <p className={styles.input_menssage}>CEP inválido</p>}
                       </td>
                       <td>
                         <input type="text" placeholder="CPF"
@@ -113,7 +175,7 @@ const TabelaCliente = () => {
                       </td>
                       <td>
                         <input type="text" placeholder="Telefone"
-                          {...register("telefone", {
+                          {...register('telefone', {
                             required: true,
                             validate: (value) => /^[1-9]{2}-?[9]{0,1}[0-9]{4}-?[0-9]{4}$/.test(value)
                           })}
@@ -126,8 +188,7 @@ const TabelaCliente = () => {
                           {...register('email', {
                             required: true,
                             minLength: 6,
-                            maxLength: 50,
-                            validate: (value) => validator.isEmail(value)
+                            maxLength: 50
                           })}
                           className={errors?.email && styles.input_error}
                         />
@@ -139,9 +200,10 @@ const TabelaCliente = () => {
                           className={errors?.senha && styles.input_error}
                         />
                         {errors?.senha && <p className={styles.input_menssage}>Senha inválida</p>}
+                        <input type="hidden" {...register("idUsuario")} />
                       </td>
                       <td>
-                        <button onClick={handleSubmit(handleSave)()}>Salvar</button>
+                        <button onClick={handleSubmit(handleSave)}>Salvar</button>
                         <button onClick={() => setEditUserId(null)}>Cancelar</button>
                       </td>
                     </>
@@ -149,14 +211,14 @@ const TabelaCliente = () => {
                     <>
                       <td>{user.idCliente}</td>
                       <td>{user.nome}</td>
-                      <td>{user.endereco}</td>
+                      <td>{formatAddress(user)}</td>
                       <td>{user.cpfClien}</td>
                       <td>{user.telefone}</td>
                       <td>{user.email}</td>
                       <td>{user.senha}</td>
                       <td>
                         <button onClick={() => handleEdit(user)}>Editar</button>
-                        <button onClick={() => handleDelete(user.idCliente)}>Deletar</button>
+                        <button onClick={() => handleDelete(user)}>Deletar</button>
                       </td>
                     </>
                   )}
@@ -164,8 +226,8 @@ const TabelaCliente = () => {
               ))}
             </tbody>
           </table>
+          {error && <p className={styles.error_message}>{error}</p>}
           <div className={styles.line}></div>
-          <Link to="/homefunc" className={styles.return}>Voltar</Link>
         </div>
       </div>
     </>

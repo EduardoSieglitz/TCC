@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './agendamento.module.css';
-import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Navbar from "../Navbar/navbar";
 
@@ -10,6 +9,8 @@ const TabelaAgendamento = () => {
   const [editAgendamentoId, setEditAgendamentoId] = useState(null);
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
   const [error, setError] = useState("");
+  const [searchField, setSearchField] = useState("");
+  const [searchValue, setSearchValue] = useState("");
 
   const fetchData = async () => {
     try {
@@ -28,11 +29,13 @@ const TabelaAgendamento = () => {
       console.error('Erro ao deletar:', error);
     }
   };
-
   const handleEdit = (agendamento) => {
     setEditAgendamentoId(agendamento.idAgendamento);
-    setValue("solicitacao", new Date(agendamento.solicitacao).toISOString().slice(0, 10));
-    setValue("dataAgendada", new Date(agendamento.dataAgendada).toISOString().slice(0, 10));
+    const solicitacao = new Date(agendamento.solicitacao).toISOString().slice(0, 16);
+    const dataAgendada = new Date(agendamento.dataAgendada).toISOString().slice(0, 16);
+
+    setValue("solicitacao", solicitacao);
+    setValue("dataAgendada", dataAgendada);
     setValue("descricao", agendamento.descricao);
     setValue("status", agendamento.status);
     setValue("valor", agendamento.valor);
@@ -46,10 +49,8 @@ const TabelaAgendamento = () => {
       const response = await axios.put(`http://localhost:3001/editaragendamento/${editAgendamentoId}`, data);
       if (response.data === "Atualizado") {
         setError("");
-        setEditAgendamentoId(null); // Sai do modo de edição
-        fetchData(); // Atualiza a lista após salvar
-      } else {
-        setError("Erro ao salvar os dados do agendamento");
+        setEditAgendamentoId(null);
+        fetchData();
       }
     } catch (error) {
       console.error('Erro ao salvar:', error);
@@ -60,12 +61,66 @@ const TabelaAgendamento = () => {
     fetchData();
   }, []);
 
+  const filteredAgendamentos = agendamentos.filter((agendamento) => {
+    console.log(searchField);
+    if (searchField === 'CPF Funcionario') {
+      return agendamento.cpfFunc?.includes(searchValue);
+    } else if (searchField === 'CPF Cliente') {
+      return agendamento.cpfClien?.includes(searchValue);
+    } else if (searchField === 'Valor') {
+      return agendamento.valor?.includes(searchValue);
+    } else if (searchField === 'Solicitação') {
+      return agendamento.solicitacao?.includes(searchValue);
+    } else if (searchField === 'Data Agendada') {
+      return agendamento.dataAgendada?.includes(searchValue);
+    }
+    return true;
+  });
+  function Serviço(servico) {
+    if (servico == "P") {
+      return "Personalizar";
+    } else if (servico == "L") {
+      return "Lavagem";
+    } else {
+      return "Reforma";
+    }
+  }
+  function Status(status) {
+    if (status == "E") {
+      return "Em andamento";
+    } else if (status == "A") {
+      return "Agendado";
+    } else {
+      return "Concluído";
+    }
+  }
   return (
     <>
       <Navbar></Navbar>
       <div className={styles.body_agendamento}>
         <div className={styles.containerAgendamento__Table}>
           <div>{error && <p className={styles.error_message}>{error}</p>}</div>
+          <div className={styles.filter_section}>
+            <select
+              value={searchField}
+              onChange={(e) => setSearchField(e.target.value)}
+              className={styles.select_filter}
+            >
+              <option value="">Selecione</option>
+              <option value="CPF Cliente">CPF Cliente</option>
+              <option value="CPF Funcionario">CPF Funcionário</option>
+              <option value="Valor">Valor</option>
+              <option value="Solicitação">Solicitação</option>
+              <option value="Data Agendada">Data Agendada</option>
+            </select>
+            <input
+              type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder={`Buscar ${searchField}`}
+              className={styles.input_filter}
+            />
+          </div>
           <table className={styles.table}>
             <thead className={styles.thead}>
               <tr>
@@ -82,63 +137,50 @@ const TabelaAgendamento = () => {
               </tr>
             </thead>
             <tbody>
-              {agendamentos.map((agendamento) => (
+              {filteredAgendamentos.map((agendamento) => (
                 <tr key={agendamento.idAgendamento} className={styles.row}>
                   {editAgendamentoId === agendamento.idAgendamento ? (
                     <>
                       <td>{agendamento.idAgendamento}</td>
+                      <td>{new Date(agendamento.solicitacao).toLocaleString()}</td>
                       <td>
-                        <input type="date"
-                          {...register('solicitacao', { required: true })}
-                          className={errors?.solicitacao && styles.input_error}
-                        />
-                        {errors?.solicitacao && <p className={styles.input_message}>Data inválida</p>}
-                      </td>
-                      <td>
-                        <input type="date"
+                        <input
+                          type="datetime-local"
                           {...register('dataAgendada', { required: true })}
                           className={errors?.dataAgendada && styles.input_error}
                         />
                         {errors?.dataAgendada && <p className={styles.input_message}>Data inválida</p>}
                       </td>
                       <td>
-                        <input type="text" placeholder="Descrição"
-                          {...register("descricao")}
+                        <input
+                          type="text"
+                          {...register('descricao')}
                           className={errors?.descricao && styles.input_error}
                         />
                       </td>
                       <td>
-                        <select {...register("status", { required: true })}
-                          className={errors?.status && styles.input_error}>
+                        <select {...register('status', { required: true })}>
                           <option value="E">Em andamento</option>
                           <option value="A">Agendado</option>
                           <option value="C">Concluído</option>
                         </select>
                       </td>
                       <td>
-                        <input type="text" placeholder="Serviço"
-                          {...register('servico', { required: true })}
-                          className={errors?.idServico && styles.input_error}
-                        />
-                      </td>
-                      <td>
-                        <input type="text" placeholder="Valor"
+                        <input
+                          type="text"
                           {...register('valor', { required: true })}
-                          className={errors?.idFuncionario && styles.input_error}
+                          className={errors?.valor && styles.input_error}
                         />
                       </td>
                       <td>
-                        <input type="text" placeholder="CPF Cliente"
-                          {...register('cpfclien', { required: true })}
-                          className={errors?.idCliente && styles.input_error}
-                        />
+                        <select {...register('servico', { required: true })}>
+                          <option value="L">Lavagem</option>
+                          <option value="R">Reforma</option>
+                          <option value="P">Cortina</option>
+                        </select>
                       </td>
-                      <td>
-                        <input type="text" placeholder="CPF Funcionario"
-                          {...register('cpffunc', { required: true })}
-                          className={errors?.idCliente && styles.input_error}
-                        />
-                      </td>
+                      <td>{agendamento.cpfClien}</td>
+                      <td>{agendamento.cpfFunc}</td>
                       <td>
                         <button onClick={handleSubmit(handleSave)}>Salvar</button>
                         <button onClick={() => setEditAgendamentoId(null)}>Cancelar</button>
@@ -147,12 +189,12 @@ const TabelaAgendamento = () => {
                   ) : (
                     <>
                       <td>{agendamento.idAgendamento}</td>
-                      <td>{new Date(agendamento.solicitacao).toLocaleDateString()}</td>
-                      <td>{new Date(agendamento.dataAgendada).toLocaleDateString()}</td>
+                      <td>{new Date(agendamento.solicitacao).toLocaleString()}</td>
+                      <td>{new Date(agendamento.dataAgendada).toLocaleString()}</td>
                       <td>{agendamento.descricao}</td>
-                      <td>{agendamento.status}</td>
+                      <td>{Status(agendamento.status)}</td>
                       <td>{agendamento.valor}</td>
-                      <td>{agendamento.servico}</td>
+                      <td>{Serviço(agendamento.servico)}</td>
                       <td>{agendamento.cpfClien}</td>
                       <td>{agendamento.cpfFunc}</td>
                       <td>
@@ -165,9 +207,6 @@ const TabelaAgendamento = () => {
               ))}
             </tbody>
           </table>
-          <div>
-            <Link to="/homefunc" className={styles.return}>Voltar</Link>
-          </div>
         </div>
       </div>
     </>

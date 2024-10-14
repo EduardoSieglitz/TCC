@@ -4,10 +4,12 @@ import Axios from 'axios';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from "../Navbar/navbar";
+
 export default function CadastroAgendamento() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [error, setError] = useState("");
     const navigate = useNavigate();
+
     async function dados(event) {
         try {
             const request = await Axios.post("http://localhost:3001/registraragendamento", {
@@ -20,6 +22,7 @@ export default function CadastroAgendamento() {
                 cpfFunc: event.cpfFuncionario,
                 cpfClien: event.cpfCliente,
             });
+
             if (request.data === "Cadastrado") {
                 setError("");
                 navigate("/tabelaagendamento");
@@ -41,25 +44,32 @@ export default function CadastroAgendamento() {
                         <label htmlFor="title">Registrar Agendamento</label>
                     </div>
 
-                    <input type="date" placeholder="Data de Solicitação"
+                    <input
+                        type="date"
+                        placeholder="Data de Solicitação"
                         {...register('solicitacao', { required: true })}
                         className={errors?.solicitacao && styles.input_error}
                     />
                     {errors?.solicitacao?.type === 'required' && <p className={styles.input_message}>required</p>}
 
-                    <input type="date" placeholder="Data Agendada"
+                    <input
+                        type="datetime-local"
+                        placeholder="Data e Hora Agendada"
                         {...register('dataAgendada', { required: true })}
                         className={errors?.dataAgendada && styles.input_error}
                     />
                     {errors?.dataAgendada?.type === 'required' && <p className={styles.input_message}>required</p>}
 
-                    <input type="text" placeholder="Descrição"
+                    <input
+                        type="text"
+                        placeholder="Descrição"
                         {...register('descricao', { maxLength: 200 })}
                         className={errors?.descricao && styles.input_error}
                     />
                     {errors?.descricao?.type === 'maxLength' && <p className={styles.input_message}>Máximo de 200 caracteres</p>}
 
-                    <select {...register('status', { required: true })}
+                    <select
+                        {...register('status', { required: true })}
                         className={errors?.status && styles.input_error}>
                         <option value="">Selecione o status</option>
                         <option value="E">Em andamento</option>
@@ -68,7 +78,8 @@ export default function CadastroAgendamento() {
                     </select>
                     {errors?.status?.type === 'required' && <p className={styles.input_message}>required</p>}
 
-                    <select {...register('servico', { required: true })}
+                    <select
+                        {...register('servico', { required: true })}
                         className={errors?.servico && styles.input_error}>
                         <option value="">Selecione o Serviço</option>
                         <option value="P">Cortina Personalizada</option>
@@ -77,15 +88,17 @@ export default function CadastroAgendamento() {
                     </select>
                     {errors?.servico?.type === 'required' && <p className={styles.input_message}>required</p>}
 
-                    <input type="text" placeholder="Valor"
-                        {...register('valor', {
-                            required: true
-                        })}
+                    <input
+                        type="text"
+                        placeholder="Valor"
+                        {...register('valor', { required: true })}
                         className={errors?.cpfFuncionario && styles.input_error}
                     />
                     {errors?.valor?.type === 'required' && <p className={styles.input_message}>required</p>}
 
-                    <input type="text" placeholder="CPF do Funcionario"
+                    <input
+                        type="text"
+                        placeholder="CPF do Funcionario"
                         {...register('cpfFuncionario', {
                             required: true,
                             validate: value => /^\d{11}$/.test(value),
@@ -95,8 +108,9 @@ export default function CadastroAgendamento() {
                     {errors?.cpfFuncionario?.type === 'required' && <p className={styles.input_message}>required</p>}
                     {errors?.cpfFuncionario?.type === 'validate' && <p className={styles.input_message}>CPF inválido (deve ter 11 dígitos)</p>}
 
-
-                    <input type="text" placeholder="CPF do Cliente"
+                    <input
+                        type="text"
+                        placeholder="CPF do Cliente"
                         {...register('cpfCliente', {
                             required: true,
                             validate: value => /^\d{11}$/.test(value),
@@ -106,7 +120,6 @@ export default function CadastroAgendamento() {
                     {errors?.cpfCliente?.type === 'required' && <p className={styles.input_message}>required</p>}
                     {errors?.cpfCliente?.type === 'validate' && <p className={styles.input_message}>CPF inválido (deve ter 11 dígitos)</p>}
 
-                    {/* Botão de Cadastro */}
                     <button onClick={() => { handleSubmit(dados)() }}>Cadastrar</button>
                     <Link to="/homefunc" className={styles.return}>Voltar</Link>
                 </div>
