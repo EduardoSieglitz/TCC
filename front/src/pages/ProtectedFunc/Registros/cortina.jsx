@@ -11,30 +11,38 @@ export default function CadastroCortina() {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     async function dados(event) {
+        console.log(event);
+        
+        const formData = new FormData();
+        formData.append('nome', event.nome);
+        formData.append('descricao', event.descricao);
+        formData.append('image', event.image[0]);  // Acessa o primeiro arquivo selecionado
+        formData.append('tipo', event.tipo);
+        formData.append('material', event.material);
+    
         try {
-            const request = await Axios.post("http://localhost:3001/registrarcortina", {
-                nome: event.nome,
-                descricao: event.descricao,
-                imagem: event.imagem,
-                tipo: event.tipo,
-                material: event.material
+            const request = await Axios.post("http://localhost:3001/registrarcortina", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
             });
-
+            
             if (request.data === "Cadastrado") {
                 setError("");
-                navigate("/tabelacortina"); 
+                navigate("/tabelacortina");
             } else {
-                setError("Erro ao cadastrar a cortina.");
+                console.log(request.data);
+                setError("Só é aceito png, jpg e jpeg");
             }
         } catch (error) {
             console.log("Erro: " + error);
             setError("Ocorreu um erro ao registrar a cortina.");
         }
     }
-
+    
     return (
         <>
-            <Navbar />
+            <Navbar></Navbar>
             <div className={styles.bodycortina}>
                 <div className={styles.containerCortina}>
                     {error && <p className={styles.error_message}>{error}</p>}
@@ -43,7 +51,9 @@ export default function CadastroCortina() {
                         <label htmlFor="title">Registrar Cortina</label>
                     </div>
 
-                    <input type="text" placeholder="Nome"
+                    <input 
+                        type="text" 
+                        placeholder="Nome"
                         {...register('nome', { required: true, maxLength: 50, minLength: 2 })}
                         className={errors?.nome && styles.input_error}
                     />
@@ -51,9 +61,9 @@ export default function CadastroCortina() {
                     {errors?.nome?.type === 'minLength' && <p className={styles.input_menssage}>minLength</p>}
                     {errors?.nome?.type === 'maxLength' && <p className={styles.input_menssage}>maxLength</p>}
 
-
                     <input
-                        type="text" placeholder="Descrição da Cortina"
+                        type="text" 
+                        placeholder="Descrição da Cortina"
                         {...register('descricao', { required: true, maxLength: 100, minLength: 1 })}
                         className={errors?.descricao && styles.input_error}
                     />
@@ -62,14 +72,15 @@ export default function CadastroCortina() {
                     {errors?.descricao?.type === 'maxLength' && <p className={styles.input_menssage}>maxLength</p>}
 
                     <input
-                        type="text" placeholder="URL da Imagem"
-                        {...register('imagem', { required: true })}
-                        className={errors?.imagem && styles.input_error}
+                        type="file" 
+                        {...register('image', { required: true })}
+                        className={errors?.image && styles.input_error}
                     />
-                    {errors?.imagem?.type === 'required' && <p className={styles.input_menssage}>Required</p>}
+                    {errors?.image?.type === 'required' && <p className={styles.input_menssage}>Required</p>}
 
                     <input
-                        type="text" placeholder="Tipo"
+                        type="text" 
+                        placeholder="Tipo"
                         {...register('tipo', { required: true, maxLength: 50, minLength: 1 })}
                         className={errors?.tipo && styles.input_error}
                     />
@@ -83,7 +94,7 @@ export default function CadastroCortina() {
                     />
                     {errors?.material?.type === 'required' && <p className={styles.input_menssage}>Required</p>}
 
-                    <button onClick={() => { handleSubmit(dados)() }}>Cadastrar</button>
+                    <button onClick={handleSubmit(dados)}>Cadastrar</button>  {/* Mudança aqui */}
                 </div>
             </div>
         </>

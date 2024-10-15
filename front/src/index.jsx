@@ -15,6 +15,7 @@ import RegistroCortina from "./pages/ProtectedFunc/Registros/cortina"
 import TFuncionario from "./pages/ProtectedFunc/Tabelas/funcionario";
 import TCliente from "./pages/ProtectedFunc/Tabelas/cliente";
 import TAgendamento from "./pages/ProtectedFunc/Tabelas/agendamento";
+import TCortina from "./pages/ProtectedFunc/Tabelas/cortina";
 
 export default function Web() {
   return (
@@ -33,6 +34,7 @@ export default function Web() {
           <Route path="/tabelafuncionario" element={<ProtectedLayoutFunc><TFuncionario /></ProtectedLayoutFunc>} />
           <Route path="/tabelacliente" element={<ProtectedLayoutFunc><TCliente /></ProtectedLayoutFunc>} />
           <Route path="/tabelaagendamento" element={<ProtectedLayoutFunc><TAgendamento /></ProtectedLayoutFunc>} />
+          <Route path="/tabelacortina" element={<ProtectedLayoutFunc><TCortina /></ProtectedLayoutFunc>} />
           <Route path="/registrocortinas" element={<ProtectedLayoutFunc><RegistroCortina /></ProtectedLayoutFunc>} />
         </Routes>
       </BrowserRouter>

@@ -26,6 +26,9 @@ export default function Navbar() {
                     <NavLink to="/tabelaagendamento" className={styles.menu_link}>
                         <li>TAgenda</li>
                     </NavLink>
+                    <NavLink to="/tabelacortina" className={styles.menu_link}>
+                        <li>TCortina</li>
+                    </NavLink>
                     <NavLink to="/registrocliente" className={styles.menu_link}>
                         <li>RClien</li>
                     </NavLink>
