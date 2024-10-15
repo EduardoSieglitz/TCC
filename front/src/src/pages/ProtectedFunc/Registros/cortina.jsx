@@ -11,6 +11,7 @@ export default function CadastroCortina() {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     async function dados(event) {
+        console.log(event)
         try {
             const request = await Axios.post("http://localhost:3001/registrarcortina", {
                 nome: event.nome,
@@ -33,7 +34,7 @@ export default function CadastroCortina() {
 
     return (
         <>
-            <Navbar />
+             <Navbar></Navbar>
             <div className={styles.bodycortina}>
                 <div className={styles.containerCortina}>
                     {error && <p className={styles.error_message}>{error}</p>}
@@ -61,7 +62,7 @@ export default function CadastroCortina() {
                     {errors?.descricao?.type === 'maxLength' && <p className={styles.input_menssage}>maxLength</p>}
 
                     <input
-                        type="text" placeholder="URL da Imagem"
+                        type="file" placeholder="URL da Imagem"
                         {...register('imagem', { required: true })}
                         className={errors?.imagem && styles.input_error}
                     />
