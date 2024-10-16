@@ -3,10 +3,14 @@ const { json } = require("body-parser"),
   app = express(),
   db = require("./database/pool"),
   cors = require("cors"),
-  tabelas = require("./tabelas/Tabelas");
+  multer = require("multer"),
+  tabelas = require("./tabelas/Tabelas"),
+  upload = require("./upload/filecofig"),
+  path = require("path");
 
 app.use(cors());
 app.use(json());
+app.use(express.static(path.join(__dirname, "upload")))
 
 //Login de Usuario
 app.post("/login/auth", async (req, res) => {
@@ -168,6 +172,25 @@ app.post("/registraragendamento", async (req, res) => {
 });
 //
 
+//Cadastro Cortina
+app.post('/registrarcortina', upload.single("image"), async (req, res) => {
+  const { nome, descricao, tipo, material } = req.body;
+  const image = req.file;
+  
+  if (!req.file) {
+    return res.json({ error: 'Imagem é obrigatória.' });
+  }
+  const sql = `INSERT INTO cortina (nome, descricao, imagem, tipo, material) VALUES (?, ?, ?, ?, ?);`;
+  try {
+    await db.query(sql, [nome, descricao, image.filename, tipo, material]);
+    return res.json('Cadastrado');
+  } catch (error) {
+    console.error('Erro ao registrar a cortina:', error);
+    return res.json({ error: 'Erro ao registrar a cortina.' });
+  }
+});
+//
+
 //Tabela Agendamento 
 app.post("/tabelaagendamentos", async (req, res) => {
   const sql = `SELECT a.idAgendamento, a.solicitacao, a.dataAgendada, a.descricao,
@@ -211,6 +234,19 @@ app.post("/tabelacliente", async (req, res) => {
 });
 //
 
+//Tabelas Cortina
+app.post("/tabelacortinas", async (req, res) => {
+  const sql = `SELECT * FROM cortina;`;
+  try {
+    const [result] = await db.query(sql);
+    return res.json(result);
+  } catch (error) {
+    console.error("Erro ao buscar cortinas:", error);
+    return res.json("Erro");
+  }
+});
+//
+
 //Delete Agendamento
 app.delete("/deleteagendamento/:id", async (req, res) => {
   const { id } = req.params;
@@ -232,7 +268,7 @@ app.delete("/delete/:id/:idusuario", async (req, res) => {
   const { id, idusuario } = req.params;
   const sqlUsuario = "DELETE FROM usuario WHERE idUsuario = ?;";
   const sqlCliente = "DELETE FROM cliente WHERE idCliente = ?;";
-  console.log( id, idusuario )
+  console.log(id, idusuario)
   try {
     await db.query(sqlCliente, [id]);
     await db.query(sqlUsuario, [idusuario]);
@@ -249,7 +285,7 @@ app.delete("/deletefunc/:id/:idusuario", async (req, res) => {
   const { id, idusuario } = req.params;
   const sqlDeleteUsuario = "DELETE FROM usuario WHERE idUsuario = ?;";
   const sqlDeleteFuncionario = "DELETE FROM funcionario WHERE idFuncionario = ?;";
-  console.log( id, idusuario )
+  console.log(id, idusuario)
   try {
     await db.query(sqlDeleteFuncionario, [id]);
     await db.query(sqlDeleteUsuario, [idusuario]);
@@ -265,7 +301,7 @@ app.delete("/deletefunc/:id/:idusuario", async (req, res) => {
 app.put("/editar/:id", async (req, res) => {
   const { id } = req.params;
   const { nome, email, senha, telefone, cpf, rua, estado, cidade, cep, numero, bairro, idUsuario } = req.body;
-  console.log( nome, email, senha, telefone, cpf, rua, estado, cidade, cep, numero, bairro, idUsuario )
+  console.log(nome, email, senha, telefone, cpf, rua, estado, cidade, cep, numero, bairro, idUsuario)
   const sqlUpdateCliente = `UPDATE cliente SET nome = ?, email = ?, senha = ?, telefone = ?, cpfClien = ?, 
   rua = ?, estado = ?, cidade = ?, cep = ?, numero = ?, bairro = ? WHERE idCliente = ?;`;
   const sqlUpdateUsuario = `UPDATE usuario SET email = ?, senha = ? WHERE idUsuario = ?;`;
