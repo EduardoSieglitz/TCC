@@ -176,7 +176,7 @@ app.post("/registraragendamento", async (req, res) => {
 app.post('/registrarcortina', upload.single("image"), async (req, res) => {
   const { nome, descricao, tipo, material } = req.body;
   const image = req.file;
-  
+
   if (!req.file) {
     return res.json({ error: 'Imagem é obrigatória.' });
   }
@@ -263,6 +263,7 @@ app.delete("/deleteagendamento/:id", async (req, res) => {
 });
 
 //
+
 //Delete Cliente
 app.delete("/delete/:id/:idusuario", async (req, res) => {
   const { id, idusuario } = req.params;
@@ -293,6 +294,21 @@ app.delete("/deletefunc/:id/:idusuario", async (req, res) => {
   } catch (error) {
     console.error("Erro ao deletar funcionário:", error);
     return res.status(500).json({ message: "Erro ao deletar funcionário.", error });
+  }
+});
+//
+
+//Delete Cortina
+app.delete("/deletecortina/:id", async (req, res) => {
+  const { id } = req.params;
+  const sqlUsuario = "DELETE FROM cortinq WHERE idCortina = ?;";
+  console.log(id)
+  try {
+    await db.query(sqlUsuario, [id]);
+    return res.json({ message: "Cortina deletado com sucesso." });
+  } catch (error) {
+    console.error("Erro ao deletar Cortina:", error);
+    return res.json({ message: "Erro ao deletar Cortina.", error });
   }
 });
 //
