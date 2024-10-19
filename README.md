@@ -11,5 +11,6 @@ incluindo informações detalhadas sobre materiais e cuidados necessários. Alé
 lavagem e reforma de cortinas, trazendo praticidade e conveniência ao usuário e todas as tabelas de gerenciamento iram ter sistema de pesquisa.
 
 Desenvolvedor Back-end: Eduardo Sieglitz da Silveira;
+
 Desenvolvedor Front-end: Chauan da Silva de Villa;
 
