@@ -49,6 +49,10 @@ const CortinaPage = () => {
 
   const handleSave = async (data) => {
     const formData = new FormData();
+    formData.append('nome', data.nome);
+    formData.append('descricao', data.descricao);
+    formData.append('tipo', data.tipo);
+    formData.append('material', data.material);
     formData.append('image', data.image[0])
     try {
 

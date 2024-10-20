@@ -432,10 +432,11 @@ app.put("/editaragendamento/:id", async (req, res) => {
 
 app.put("/editarcortina/:id", upload.single('image'), async (req, res) => {
   const { id } = req.params;
+  const { nome, descricao, tipo, material } = req.body;
   const imagemdapasta = path.join(__dirname, './upload/img');
   console.log(req.file);
   const sqlSelectImage = "SELECT imagem FROM cortina WHERE idCortina = ?;";
-  const sqlUpdateImage = "UPDATE cortina SET imagem = ? WHERE idCortina = ?;";
+  const sqlUpdateImage = "UPDATE cortina SET imagem = ?, nome = ?, descricao = ?, tipo = ?, material = ? WHERE idCortina = ?;";
 
   try {
     const [rows] = await db.query(sqlSelectImage, [id]);
@@ -460,7 +461,7 @@ app.put("/editarcortina/:id", upload.single('image'), async (req, res) => {
       }
     }
     const newImageFile = req.file.filename; 
-    await db.query(sqlUpdateImage, [newImageFile, id]);
+    await db.query(sqlUpdateImage, [newImageFile, nome, descricao, tipo, material, id]);
 
     return res.json("Atualizado");
   } catch (error) {
