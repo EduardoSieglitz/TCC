@@ -39,6 +39,7 @@
         height: 4.5vh;
         border: 1px solid black;
         padding: 1vh;
+        margin: 10px;
     }
 
     .filter_section select {

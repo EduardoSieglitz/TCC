@@ -6,7 +6,8 @@ const { json } = require("body-parser"),
   multer = require("multer"),
   tabelas = require("./tabelas/Tabelas"),
   upload = require("./upload/filecofig"),
-  path = require("path");
+  path = require("path"),
+  fs = require("fs");
 
 app.use(cors());
 app.use(json());
@@ -300,15 +301,32 @@ app.delete("/deletefunc/:id/:idusuario", async (req, res) => {
 
 //Delete Cortina
 app.delete("/deletecortina/:id", async (req, res) => {
+  const imagemdapasta = path.join(__dirname, './upload/img');
+  const validExtensions = ['.jpg', '.jpeg', '.png'];
   const { id } = req.params;
-  const sqlUsuario = "DELETE FROM cortinq WHERE idCortina = ?;";
-  console.log(id)
+
+  const sqlSelectImage = "SELECT imagem FROM cortina WHERE idCortina = ?;";
+  const sqlDelete = "DELETE FROM cortina WHERE idCortina = ?;";
+
   try {
-    await db.query(sqlUsuario, [id]);
-    return res.json({ message: "Cortina deletado com sucesso." });
-  } catch (error) {
-    console.error("Erro ao deletar Cortina:", error);
-    return res.json({ message: "Erro ao deletar Cortina.", error });
+    const [rows] = await db.query(sqlSelectImage, [id]);
+    const imageFile = rows.length > 0 ? rows[0].imagem : null;
+
+    await db.query(sqlDelete, [id]);
+
+    const fileExtension = path.extname(imageFile).toLowerCase();
+    if (validExtensions.includes(fileExtension)) {
+      const imagePath = path.join(imagemdapasta, imageFile);
+
+      try {
+        await fs.promises.unlink(imagePath);
+      } catch {
+        return res.json("Cortina deletada, mas houve um erro ao excluir a imagem.");
+      }
+    }
+    return res.json("Cortina e imagem deletados com sucesso");
+  } catch {
+    return res.json("Erro ao deletar Cortina");
   }
 });
 //
@@ -408,6 +426,46 @@ app.put("/editaragendamento/:id", async (req, res) => {
   } catch (error) {
     console.error("Erro ao atualizar agendamento:", error);
     return res.status(500).json({ message: "Erro ao atualizar agendamento.", error });
+  }
+});
+
+
+app.put("/editarcortina/:id", upload.single('image'), async (req, res) => {
+  const { id } = req.params;
+  const imagemdapasta = path.join(__dirname, './upload/img');
+  console.log(req.file);
+  const sqlSelectImage = "SELECT imagem FROM cortina WHERE idCortina = ?;";
+  const sqlUpdateImage = "UPDATE cortina SET imagem = ? WHERE idCortina = ?;";
+
+  try {
+    const [rows] = await db.query(sqlSelectImage, [id]);
+
+    if (rows.length === 0) {
+      return res.json({ message: "Cortina não encontrada." });
+    }
+    const oldImageFile = rows[0].imagem;
+
+    if (oldImageFile) {
+      const oldImagePath = path.join(imagemdapasta, oldImageFile);
+      if (fs.existsSync(oldImagePath)) {
+        fs.unlink(oldImagePath, (err) => {
+          if (err) {
+            console.error("Erro ao excluir a imagem antiga");
+          } else {
+            console.log('Imagem antiga excluída com sucesso!');
+          }
+        });
+      } else {
+        console.log("A imagem antiga não foi encontrada");
+      }
+    }
+    const newImageFile = req.file.filename; 
+    await db.query(sqlUpdateImage, [newImageFile, id]);
+
+    return res.json("Atualizado");
+  } catch (error) {
+    console.error("Erro ao editar a imagem da cortina");
+    return res.json("Erro ao editar a imagem da cortina");
   }
 });
 

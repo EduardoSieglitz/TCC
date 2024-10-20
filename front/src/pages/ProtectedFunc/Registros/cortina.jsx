@@ -16,7 +16,7 @@ export default function CadastroCortina() {
         const formData = new FormData();
         formData.append('nome', event.nome);
         formData.append('descricao', event.descricao);
-        formData.append('image', event.image[0]);  // Acessa o primeiro arquivo selecionado
+        formData.append('image', event.image[0]);
         formData.append('tipo', event.tipo);
         formData.append('material', event.material);
     

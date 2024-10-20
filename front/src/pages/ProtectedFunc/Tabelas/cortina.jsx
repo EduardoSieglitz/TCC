@@ -3,14 +3,16 @@ import axios from "axios";
 import styles from "./cortina.module.css";
 import Navbar from "../Navbar/navbar";
 import { useForm } from 'react-hook-form';
+import { useNavigate } from "react-router-dom";
 
 const CortinaPage = () => {
   const [cortinas, setCortinas] = useState([]);
-  const [selectedCortina, setSelectedCortina] = useState(null); 
-  const [isEditing, setIsEditing] = useState(false); 
+  const [selectedCortina, setSelectedCortina] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
   const [searchField, setSearchField] = useState("");
   const [searchValue, setSearchValue] = useState("");
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     try {
@@ -21,26 +23,23 @@ const CortinaPage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const handleManage = (cortina) => {
     setSelectedCortina(cortina);
-    setIsEditing(false); 
+    setIsEditing(false);
   };
 
   const handleDelete = async (idCortina) => {
     try {
       await axios.delete(`http://localhost:3001/deletecortina/${idCortina}`);
-      fetchData(); 
       setSelectedCortina(null);
+      fetchData();
     } catch (error) {
       console.error("Erro ao deletar:", error);
     }
   };
 
   const handleEdit = () => {
+    fetchData();
     setIsEditing(true);
     setValue("nome", selectedCortina.nome);
     setValue("descricao", selectedCortina.descricao);
@@ -49,11 +48,18 @@ const CortinaPage = () => {
   };
 
   const handleSave = async (data) => {
+    const formData = new FormData();
+    formData.append('image', data.image[0])
     try {
-      const response = await axios.put(`http://localhost:3001/editarcortina/${selectedCortina.idCortina}`, data);
+
+      const response = await axios.put(`http://localhost:3001/editarcortina/${selectedCortina.idCortina}`,  formData,{
+        headers : {
+          'Content-Type': 'multipart/form-data'
+      }});
       if (response.data === "Atualizado") {
-        fetchData(); 
-        setIsEditing(false); 
+        navigate("/tabelacortina");
+        fetchData();
+        setIsEditing(false);
       }
     } catch (error) {
       console.error('Erro ao salvar:', error);
@@ -61,8 +67,12 @@ const CortinaPage = () => {
   };
 
   const handleCloseManage = () => {
-    setSelectedCortina(null); 
+    setSelectedCortina(null);
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const filteredCortinas = cortinas.filter((cortina) => {
     if (searchField === "Nome") {
@@ -80,7 +90,7 @@ const CortinaPage = () => {
       <Navbar />
       <div className={styles.containerCortina__Table}>
 
-        {!selectedCortina ? ( 
+        {!selectedCortina ? (
           <>
             <div className={styles.filter_section}>
               <select
@@ -158,7 +168,7 @@ const CortinaPage = () => {
                   className={errors?.nome && styles.input_error}
                 />
                 {errors?.nome && <p className={styles.input_message}>Nome é obrigatório</p>}
-                
+
                 <label>Descrição:</label>
                 <input
                   type="text"
@@ -181,6 +191,13 @@ const CortinaPage = () => {
                 />
                 {errors?.tipo && <p className={styles.input_message}>Tipo de material é obrigatório</p>}
 
+                <label>Nova Imagem:</label>
+                <input
+                  type="file"
+                  {...register('image', { required: true })}
+                  className={errors?.image && styles.input_error}
+                />
+                {errors?.image?.type === 'required' && <p className={styles.input_menssage}>Required</p>}
                 <br />
                 <button type="submit">Salvar</button>
                 <button onClick={() => setIsEditing(false)}>Cancelar</button>
