@@ -15,6 +15,15 @@ export function getUserLocalStorage() {
     return user ?? null;
 }
 
+export async function SenhaRequest(email: string) {
+    try {
+        const request = await axios.post("http://localhost:3001/requestreset", { email });
+        return request.data;
+    } catch (error) {
+        return null;
+    }
+}
+
 export async function LoginRequest(email: string, senha: string) {
     try {
         const request = await axios.post("http://localhost:3001/login/auth", { email, senha });

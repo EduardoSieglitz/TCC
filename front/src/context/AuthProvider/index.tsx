@@ -1,7 +1,7 @@
 
 import React, { createContext, useEffect, useState } from "react";
 import { IAuthProvider, IContext, IUser } from "./types"
-import { getUserLocalStorage, LoginRequest, setUserLocalStorage } from "./util";
+import { getUserLocalStorage, LoginRequest, setUserLocalStorage, SenhaRequest } from "./util";
 
 export const AuthContext = createContext<IContext>({} as IContext)
 
@@ -20,13 +20,21 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
         setUser(payload);
         setUserLocalStorage(payload);
     }
+
+    async function requestReset(email: string) {
+        const response = await SenhaRequest(email);
+        const payload = { senha: response, email };
+        setUser(payload);
+        setUserLocalStorage(payload);
+    }
+
     function logout() {
         setUser(null);
         setUserLocalStorage(null);
     }
 
     return (
-        <AuthContext.Provider value={{ ...user, authenticate, logout}}>
+        <AuthContext.Provider value={{ ...user, authenticate, logout, requestReset }}>
             {children}
         </AuthContext.Provider>
     )

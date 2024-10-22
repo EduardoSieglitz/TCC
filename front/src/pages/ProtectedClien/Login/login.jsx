@@ -59,7 +59,7 @@ function Login() {
                     {errors?.senha?.type == 'maxLength' && <p className={styles.input_menssage}>maxLength</p>}
 
                     <button onClick={() => { handleSubmit(dados)() }}>Entrar</button>
-                    <a href="#">Esqueceu a senha?</a>
+                    <a href="/RequestReset">Esqueceu a senha?</a>
                 </div>
                 <div className={styles.line}></div>
                 <div className={styles.cad}>
