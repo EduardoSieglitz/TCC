@@ -1,17 +1,101 @@
 const { json } = require("body-parser"),
   express = require("express"),
+  cors = require("cors"),
+  compression = require('compression'),
+  fs = require("fs"),
   app = express(),
   db = require("./database/pool"),
-  cors = require("cors"),
-  multer = require("multer"),
+  path = require("path"),
   tabelas = require("./tabelas/Tabelas"),
   upload = require("./upload/filecofig"),
-  path = require("path"),
-  fs = require("fs");
+  bcrypt = require('bcryptjs'),
+  jwt = require('jsonwebtoken'),
+  nodemailer = require('nodemailer');
 
 app.use(cors());
 app.use(json());
-app.use(express.static(path.join(__dirname, "upload")))
+app.use(compression());
+app.use(express.static(path.join(__dirname, "upload")));
+
+const generateResetToken = (email) => {
+  return jwt.sign({ email }, 'secret_key', { expiresIn: '1h' });
+};
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'eduardosieglitzdasilveira@gmail.com',
+    pass: 'wzls nqtv srvn bugg'
+  }
+});
+
+//Solicitar recuperação de senha
+app.post('/requestreset', async (req, res) => {
+  const { email } = req.body;
+  const sqlSearchUser = `SELECT * FROM cliente WHERE email = ?`;
+
+  try {
+    const [userResult] = await db.query(sqlSearchUser, [email]);
+
+    if (userResult.length === 0) {
+      return res.json('Usuário não encontrado');
+    }
+    const token = generateResetToken(email);
+
+    const mailOptions = {
+      from: 'eduardosieglitzdasilveira@gmail.com',
+      to: email,
+      subject: 'Recuperação de Senha',
+      text: `Use este token para redefinir sua senha: ${token}`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      console.log("Erro");
+      if (error) {
+        return res.json('Erro ao enviar email');
+      }
+      res.json('Email enviado com sucesso!');
+    });
+
+  } catch (error) {
+    console.log('Erro ao solicitar recuperação de senha:' + error);
+    res.json('Erro no servidor');
+  }
+});
+
+// Redefinir a senha usando o token
+app.post('/resetpassword', async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  try {
+    const decoded = jwt.verify(token, 'secret_key');
+    const email = decoded.email;
+
+    const sqlVerifyUser = `SELECT * FROM usuario WHERE email = ?`;
+    const [userResult] = await db.query(sqlVerifyUser, [email]);
+
+    if (userResult.length === 0) {
+      return res.json('Usuário não encontrado');
+    }
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(newPassword, salt);
+
+    const sqlUpdatePassword = `UPDATE usuario SET senha = ? WHERE email = ?`;
+    const sqlUpdatePasswordCliente = `UPDATE cliente SET senha = ? WHERE email = ?`;
+    await db.query(sqlUpdatePassword, [newPassword, email]);
+    await db.query(sqlUpdatePasswordCliente, [newPassword, email]);
+
+    res.json('Senha alterada com sucesso!');
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return res.json('Token expirado');
+    } else if (error.name === 'JsonWebTokenError') {
+      return res.json('Token inválido');
+    }
+    console.error('Erro ao redefinir a senha:', error);
+    return res.json('Erro ao processar solicitação');
+  }
+});
 
 //Login de Usuario
 app.post("/login/auth", async (req, res) => {
@@ -429,7 +513,7 @@ app.put("/editaragendamento/:id", async (req, res) => {
   }
 });
 
-
+//Editar Cortina
 app.put("/editarcortina/:id", upload.single('image'), async (req, res) => {
   const { id } = req.params;
   const { nome, descricao, tipo, material } = req.body;
@@ -460,7 +544,7 @@ app.put("/editarcortina/:id", upload.single('image'), async (req, res) => {
         console.log("A imagem antiga não foi encontrada");
       }
     }
-    const newImageFile = req.file.filename; 
+    const newImageFile = req.file.filename;
     await db.query(sqlUpdateImage, [newImageFile, nome, descricao, tipo, material, id]);
 
     return res.json("Atualizado");
