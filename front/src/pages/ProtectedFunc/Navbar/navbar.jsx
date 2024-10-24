@@ -41,6 +41,9 @@ export default function Navbar() {
                     <NavLink to="/registrocortinas" className={styles.menu_link}>
                         <li>RCortina</li>
                     </NavLink>
+                    <NavLink to="/chatFunc" className={styles.menu_link}>
+                        <li>Chat</li>
+                    </NavLink>
                 </ul>
 
                 <img src={user_image} alt="" className={styles.user_image} />

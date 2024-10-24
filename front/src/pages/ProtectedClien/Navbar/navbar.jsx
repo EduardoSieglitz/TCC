@@ -26,6 +26,9 @@ export default function Navbar() {
                     <NavLink to="/encomendar" className={styles.menu_link}>
                         <li>Encomendar</li>
                     </NavLink>
+                    <NavLink to="/chatClien" className={styles.menu_link}>
+                        <li>Chat</li>
+                    </NavLink>
                 </ul>
 
                 <img src={user_image} alt="" className={styles.user_image} />

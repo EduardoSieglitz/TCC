@@ -18,6 +18,7 @@ import TAgendamento from "./pages/ProtectedFunc/Tabelas/agendamento";
 import TCortina from "./pages/ProtectedFunc/Tabelas/cortina";
 import Password from "./pages/ChangePassword/ResetPassword"
 import Request from "./pages/ChangePassword/RequestReset"
+import Chat from './pages/ChatAoVivo/estrutura';
 
 export default function Web() {
   return (
@@ -40,6 +41,10 @@ export default function Web() {
           <Route path="/tabelaagendamento" element={<ProtectedLayoutFunc><TAgendamento /></ProtectedLayoutFunc>} />
           <Route path="/tabelacortina" element={<ProtectedLayoutFunc><TCortina /></ProtectedLayoutFunc>} />
           <Route path="/registrocortinas" element={<ProtectedLayoutFunc><RegistroCortina /></ProtectedLayoutFunc>} />
+          <Route path="/chatFunc" element={<ProtectedLayoutFunc><Chat /></ProtectedLayoutFunc>} />
+          <Route path="/chatClien" element={<ProtectedLayout><Chat /></ProtectedLayout>} />
+
+
         </Routes>
       </BrowserRouter>
     </AuthProvider>

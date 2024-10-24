@@ -11,6 +11,7 @@ const { json } = require("body-parser"),
   bcrypt = require('bcryptjs'),
   jwt = require('jsonwebtoken'),
   nodemailer = require('nodemailer');
+  
 
 app.use(cors());
 app.use(json());
@@ -77,8 +78,7 @@ app.post('/resetpassword', async (req, res) => {
     if (userResult.length === 0) {
       return res.json('Usuário não encontrado');
     }
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(newPassword, salt);
+    const hashedPassword = bcrypt.hashSync(newPassword);
 
     const sqlUpdatePassword = `UPDATE usuario SET senha = ? WHERE email = ?`;
     const sqlUpdatePasswordCliente = `UPDATE cliente SET senha = ? WHERE email = ?`;
@@ -212,9 +212,9 @@ app.post("/registrarfunc", async (req, res) => {
 //Cadastro Agendamento
 app.post("/registraragendamento", async (req, res) => {
   const dataAtual = new Date();
-  const hora = dataAtual.getHours();   // Pega a hora atual
-  const minutos = dataAtual.getMinutes(); // Pega os minutos atuais
-  const segundos = dataAtual.getSeconds(); // Pega os segundos atuais
+  const hora = dataAtual.getHours();
+  const minutos = dataAtual.getMinutes();
+  const segundos = dataAtual.getSeconds();
 
   const { solicitacao, dataAgendada, descricao, servico, cpfFunc, cpfClien, status, valor } = req.body;
 
@@ -552,6 +552,41 @@ app.put("/editarcortina/:id", upload.single('image'), async (req, res) => {
     console.error("Erro ao editar a imagem da cortina");
     return res.json("Erro ao editar a imagem da cortina");
   }
+});
+
+// Rota para buscar todas as mensagens
+app.get("/mensagens", async (req, res) => {
+  try {
+    const mensagens = await tabelas.Mensagem.findAll({
+      order: [["dataHora", "DESC"]], // Ordena por data/hora em ordem decrescente
+    });
+    res.json(mensagens); // Retorna as mensagens em formato JSON
+  } catch (err) {
+    console.error("Erro ao buscar mensagens:", err);
+    res.json({ error: "Erro ao buscar mensagens" });
+  }
+});
+
+// Rota para enviar uma nova mensagem
+app.post('/enviarmensagem', async (req, res) => {
+    const { conteudo, imagem, audio, visualizada } = req.body;
+
+    if (!conteudo) {
+        return res.status(400).json({ error: 'Conteúdo da mensagem é obrigatório' });
+    }
+
+    try {
+        const novaMensagem = await tabelas.Mensagem.create({
+            conteudo,
+            imagem: imagem || null,
+            audio: audio || null,
+            dataHora: new Date(),
+            visualizada: visualizada || 'NL'
+        });
+        res.status(200).json(novaMensagem);
+    } catch (err) {
+        res.status(500).json({ error: 'Erro ao enviar mensagem' });
+    }
 });
 
 app.listen(3001, () => {
