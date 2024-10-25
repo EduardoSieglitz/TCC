@@ -558,32 +558,22 @@ app.put("/editarcortina/:id", upload.single('image'), async (req, res) => {
 app.get("/mensagens", async (req, res) => {
   try {
     const mensagens = await tabelas.Mensagem.findAll({
-      order: [["dataHora", "DESC"]], // Ordena por data/hora em ordem decrescente
+      order: [["dataHora", "DESC"]], 
     });
-    res.json(mensagens); // Retorna as mensagens em formato JSON
+    res.json(mensagens); 
   } catch (err) {
     console.error("Erro ao buscar mensagens:", err);
     res.json({ error: "Erro ao buscar mensagens" });
   }
 });
 
-// Rota para enviar uma nova mensagem
+// Rota para enviar uma nova mensagem com validação
 app.post('/enviarmensagem', async (req, res) => {
     const { conteudo, imagem, audio, visualizada } = req.body;
-
-    if (!conteudo) {
-        return res.status(400).json({ error: 'Conteúdo da mensagem é obrigatório' });
-    }
-
+    const sqlMensagem = `INSERT INTO mensagem (conteudo, imagem, audio, visualizada) VALUES(?, ?, ?, ?);`;
     try {
-        const novaMensagem = await tabelas.Mensagem.create({
-            conteudo,
-            imagem: imagem || null,
-            audio: audio || null,
-            dataHora: new Date(),
-            visualizada: visualizada || 'NL'
-        });
-        res.status(200).json(novaMensagem);
+      await db.query(sqlMensagem, [conteudo, imagem, audio, visualizada]);
+        res.status(200).json('Cadastrado');
     } catch (err) {
         res.status(500).json({ error: 'Erro ao enviar mensagem' });
     }
