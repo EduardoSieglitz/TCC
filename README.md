@@ -10,7 +10,7 @@ O Sistema PCIC é uma plataforma web que não apenas vai facilita a comunicaçã
 incluindo informações detalhadas sobre materiais e cuidados necessários. Além disso, o sistema tem o objetivo permite o agendamento de serviços de retirada, 
 lavagem e reforma de cortinas, trazendo praticidade e conveniência ao usuário e todas as tabelas de gerenciamento iram ter sistema de pesquisa.
 
-Desenvolvedor Back-end: Eduardo Sieglitz da Silveira;
+Back-end: Eduardo Sieglitz da Silveira;
 
-Desenvolvedor Front-end: Chauan da Silva de Villa;
+Front-end: Chauan da Silva de Villa;
 
