@@ -7,14 +7,14 @@ import { IoMenu, IoClose } from 'react-icons/io5';
 
 export default function Navbar() {
     return (
-        <header>
+        <div className={styles.bodyHome}>
             <nav className={styles.navbar}>
-                <NavLink to="/">
+                <NavLink to="/home">
                     <img src={logo} alt="" className={styles.logo} />
                 </NavLink>
 
                 <ul className={styles.menu_items}>
-                    <NavLink to="/" className={styles.menu_link}>
+                    <NavLink to="/home" className={styles.menu_link}>
                         <li>Início</li>
                     </NavLink>
                     <NavLink to="/produtos" className={styles.menu_link}>
@@ -40,6 +40,6 @@ export default function Navbar() {
                     <IoClose />
                 </div>
             </nav>
-        </header>
+        </div>
     )
 }

@@ -1,0 +1,158 @@
+/* Estilos Globais */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #f5f5f5;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #444;
+  padding: 10px 20px;
+  color: white;
+}
+
+.logo h1 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.logo p {
+  font-size: 12px;
+}
+
+.navlinks {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+}
+
+.navlinks li {
+  cursor: pointer;
+}
+
+.userprofile {
+  background-color: #ccc;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+/* Search Bar */
+.searchbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+  padding: 0 20px;
+}
+
+.searchbar input {
+  width: 60%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+input {
+  margin-left: 20px;
+  width: 20%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px 15px;
+  border: none;
+  background-color: #444;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.searchbar button {
+  padding: 10px 15px;
+  border: none;
+  background-color: #444;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.searchbar select {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+/* Chat Message */
+.chatmessage {
+  background-color: #fff;
+  padding: 20px;
+  margin: 0 20px 20px 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.message {
+  display: flex;
+  align-items: center;
+}
+
+.useravatar {
+  background-color: black;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.messagecontent {
+  flex: 1;
+}
+
+.messagecontent h4 {
+  margin: 0 0 5px 0;
+}
+
+.messageoptions {
+  cursor: pointer;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  background-color: #444;
+  color: white;
+  padding: 20px;
+}
+
+.footerleft,
+.footerright {
+  width: 45%;
+}
+
+.footerleft h2 {
+  margin: 0;
+}
+
+.footerright p {
+  margin: 5px 0;
+}
+
+address {
+  font-style: normal;
+}

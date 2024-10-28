@@ -3,6 +3,8 @@ export interface IUser {
     dados?: {};
     token?: boolean;
     senha?: string;
+    id?: string;
+    idFunc?: string;
 }
 
 export interface IContext extends IUser {

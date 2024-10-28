@@ -3,21 +3,22 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins';
+    overflow: visible;
 }
-
-.header {
+.bodyHome {
     width: 100vw;
-    min-height: 100vh;
+    min-height: 10vh;
     background-color: #F0F2F5;
-}
+    overflow: hidden;
 
-.navbar {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #5B5B5B;
-    padding: 15px 7%;
+    .navbar {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #5B5B5B;
+        padding: 15px 7%;
+    }
 
     .logo {
         width: 86px;
