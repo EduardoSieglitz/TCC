@@ -73,7 +73,7 @@ input {
   border-radius: 5px;
 }
 
-button {
+.searchbar button {
   padding: 10px 15px;
   border: none;
   background-color: #444;
@@ -82,7 +82,7 @@ button {
   cursor: pointer;
 }
 
-.searchbar button {
+button {
   padding: 10px 15px;
   border: none;
   background-color: #444;
@@ -104,11 +104,13 @@ button {
   margin: 0 20px 20px 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  height: 100%;
 }
 
 .message {
   display: flex;
   align-items: center;
+  flex-direction: column;
 }
 
 .useravatar {
@@ -120,7 +122,16 @@ button {
 }
 
 .messagecontent {
-  flex: 1;
+  width: 90%;
+  height: 10vh;
+  display: flex;
+}
+
+.messagecontentf {
+  width: 90%;
+  height: 10vh;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .messagecontent h4 {

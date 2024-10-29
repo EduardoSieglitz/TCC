@@ -4,7 +4,7 @@ import validator from 'validator';
 import Axios from 'axios';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Navbar from "../Navbar/navbar";
+import NavbarCliente from '../../../components/NavbarCliente/navbar';
 
 export default function Cadastro() {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -45,7 +45,7 @@ export default function Cadastro() {
 
     return (
         <>
-            <Navbar></Navbar>
+            <NavbarCliente />
             <div className={styles.bodyclien}>
                 <div className={styles.containerClien}>
                     {error}

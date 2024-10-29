@@ -4,19 +4,39 @@
     font-family: 'Poppins', arial, sans-serif;
 }
 
-.body {
-    height: 90vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 500;
 }
 
-.container {
-    background-color: #fff;
+.bodyclien {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    background-color: #f0f2f5;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px (rgba(0, 0, 0, 0.2));
+    z-index: 1000;
+    /* Para garantir que a tela de cadastro fique sobreposta */
+}
+
+.containerClien {
+    background-color: #ffffff;
     border-radius: 12px;
     width: 432px;
     height: auto;
     display: flex;
+    margin: 10px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -39,22 +59,6 @@
 
     input:focus {
         outline: none;
-    }
-
-    .datanascimento {
-        margin: 5px 0 20px 0;
-        width: 80%;
-        display: flex;
-        justify-content: space-between;
-
-
-        select {
-            height: 36px;
-            border-radius: 4px;
-            border: 1px solid #ccd0d5;
-            padding: 0 20px 0 8px;
-            font-size: 15px;
-        }
     }
 
     button {
@@ -126,35 +130,4 @@
         margin: 0;
         font-size: 15px;
     }
-
-    .datanascimento .select_error{
-        height: 36px;
-        border-radius: 4px;
-        padding: 0 20px 0 8px;
-        font-size: 15px;
-        border: 1px solid #ce1010;
-    }
-
-
-
-    /* a button {
-        background-color: #00a400;
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 0;
-        border-radius: 8px;
-        padding: 0 32px;
-        height: 36px;
-        font-size: 18px;
-        cursor: pointer;
-        font-weight: 600;
-        margin-bottom: 20px;
-        transition: 0.4s;
-    }
-
-    a button:hover {
-        opacity: 0.7;
-    } */
 }

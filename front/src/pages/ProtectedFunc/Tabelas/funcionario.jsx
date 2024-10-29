@@ -4,7 +4,7 @@ import styles from './funcionario.module.css';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
-import Navbar from "../Navbar/navbar";
+import NavbarCliente from '../../../components/NavbarCliente/navbar';
 
 const TabelaFuncionario = () => {
   const [users, setUsers] = useState([]);
@@ -81,7 +81,7 @@ const TabelaFuncionario = () => {
   });
   return (
     <>
-      <Navbar></Navbar>
+      <NavbarCliente />
       <div className={styles.body}>
         <div className={styles.containerFunc__Table}>
           <div>{error && <p className={styles.error_message}>{error}</p>}</div>

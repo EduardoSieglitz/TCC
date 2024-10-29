@@ -2,7 +2,7 @@ import styles from './cortina.module.css';
 import { useState } from 'react';
 import Axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Navbar from "../Navbar/navbar";
+import NavbarCliente from '../../../components/NavbarCliente/navbar';
 import { useForm } from 'react-hook-form';
 
 export default function CadastroCortina() {
@@ -42,7 +42,7 @@ export default function CadastroCortina() {
     
     return (
         <>
-            <Navbar></Navbar>
+            <NavbarCliente />
             <div className={styles.bodycortina}>
                 <div className={styles.containerCortina}>
                     {error && <p className={styles.error_message}>{error}</p>}

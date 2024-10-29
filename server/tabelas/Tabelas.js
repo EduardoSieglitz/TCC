@@ -115,20 +115,6 @@ const ChatAoVivo = conexao.define('ChatAoVivo', {
             model: Cliente,
             key: 'idCliente'
         }
-    },
-    idFuncionario: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Funcionario,
-            key: 'idFuncionario'
-        }
-    },
-    idMensagem: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'Mensagem',
-            key: 'idMensagem'
-        }
     }
 });
 
@@ -254,7 +240,17 @@ const Mensagem = conexao.define('Mensagem', {
     visualizada: {
         type: DataTypes.ENUM('L', 'NL', 'NE'),
         allowNull: false
-    }
+    },
+    idMensagem: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'ChatAoVivo',
+            key: 'idChat'
+        }
+    }, remetente: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
 });
 
 // Modelo de Usuario com FKs para emails

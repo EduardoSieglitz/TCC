@@ -3,7 +3,7 @@ import styles from './cliente.module.css';
 import Axios from 'axios';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
-import Navbar from "../Navbar/navbar";
+import NavbarCliente from '../../../components/NavbarCliente/navbar';
 
 const TabelaCliente = () => {
   const [users, setUsers] = useState([]);
@@ -90,7 +90,7 @@ const TabelaCliente = () => {
 
   return (
     <>
-      <Navbar />
+      <NavbarCliente />
       <div className={styles.bodyClien__Table}>
         <div className={styles.containerClien__Table}>
           <div className={styles.filter_section}>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./cortina.module.css";
-import Navbar from "../Navbar/navbar";
+import NavbarCliente from '../../../components/NavbarCliente/navbar';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
 
@@ -91,7 +91,7 @@ const CortinaPage = () => {
 
   return (
     <>
-      <Navbar />
+      <NavbarCliente />
       <div className={styles.containerCortina__Table}>
 
         {!selectedCortina ? (

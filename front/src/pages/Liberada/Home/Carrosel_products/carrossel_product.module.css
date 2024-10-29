@@ -1,0 +1,10 @@
+.carrossel_product {
+    .slides_products {
+        height: auto;
+        padding: 15px;
+
+        .product_item {
+            width: auto;
+        }
+    }
+}

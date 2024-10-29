@@ -11,7 +11,7 @@ const { json } = require("body-parser"),
   bcrypt = require('bcryptjs'),
   jwt = require('jsonwebtoken'),
   nodemailer = require('nodemailer');
-  
+
 
 app.use(cors());
 app.use(json());
@@ -141,6 +141,8 @@ app.post("/registrar", async (req, res) => {
   const sqlFuncionarioS = `SELECT * FROM funcionario WHERE email = ? OR cpfFunc = ? OR telefone = ?;`;
   const sqlCliente = `INSERT INTO cliente(nome, cpfClien, senha, email, telefone, rua, estado, cidade, cep, numero, bairro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
   const sqlUsuario = `INSERT INTO usuario(nivelUser, email, senha) VALUES(?, ?, ?);`;
+  const sqlChat = `INSERT INTO chataovivo (dataInicio, idCliente) VALUES(?, ?);`;
+  const dataAtual = new Date();
   try {
     const [funcionarioResult] = await db.query(sqlFuncionarioS, [email, cpf, telefone]);
     if (funcionarioResult.length > 0) {
@@ -154,8 +156,10 @@ app.post("/registrar", async (req, res) => {
       if (clienteResult[0].cpfClien === cpf) return res.json("CPF");
       if (clienteResult[0].telefone === telefone) return res.json("Telefone");
     }
-    await db.query(sqlCliente, [nome, cpf, senha, email, telefone, rua, estado, cidade, cep, numero, bairro]);
+    const [result] = await db.query(sqlCliente, [nome, cpf, senha, email, telefone, rua, estado, cidade, cep, numero, bairro]);
+    const id = result.insertId;
     await db.query(sqlUsuario, [Usuario, email, senha]);
+    await db.query(sqlChat, [dataAtual, id]);
     return res.json("Cadastrado");
   } catch (error) {
     console.error("Erro ao registrar o cliente:", error);
@@ -215,7 +219,6 @@ app.post("/registraragendamento", async (req, res) => {
   const hora = dataAtual.getHours();
   const minutos = dataAtual.getMinutes();
   const segundos = dataAtual.getSeconds();
-
   const { solicitacao, dataAgendada, descricao, servico, cpfFunc, cpfClien, status, valor } = req.body;
 
   const sqlsAgendamento = "INSERT INTO agendamentodeservico(solicitacao, dataAgendada, descricao, status, idServico, idFuncionario, idCliente) VALUES(?, ?, ?, ?, ?, ?, ?)";
@@ -556,28 +559,63 @@ app.put("/editarcortina/:id", upload.single('image'), async (req, res) => {
 
 // Rota para buscar todas as mensagens
 app.get("/mensagens", async (req, res) => {
+  const sql = `SELECT m.remetente, u.nivelUser, c.idCliente, m.idMensagem, m.dataHora, m.conteudo, m.imagem, m.audio, m.visualizada,
+   cl.nome FROM cliente cl LEFT JOIN chataovivo c ON cl.idCliente = c.idCliente 
+   LEFT JOIN mensagem m ON c.idChat = m.idMensagem LEFT JOIN usuario u ON u.nivelUser = c.idCliente;`;
   try {
-    const mensagens = await tabelas.Mensagem.findAll({
-      order: [["dataHora", "DESC"]], 
-    });
-    res.json(mensagens); 
-  } catch (err) {
-    console.error("Erro ao buscar mensagens:", err);
-    res.json({ error: "Erro ao buscar mensagens" });
+    const [result] = await db.query(sql);
+    return res.json(result);
+  } catch {
+    res.json("Erro ao buscar mensagens");
   }
 });
 
 // Rota para enviar uma nova mensagem com validação
 app.post('/enviarmensagem', async (req, res) => {
-    const { conteudo, imagem, audio, visualizada } = req.body;
-    const sqlMensagem = `INSERT INTO mensagem (conteudo, imagem, audio, visualizada) VALUES(?, ?, ?, ?);`;
-    try {
-      await db.query(sqlMensagem, [conteudo, imagem, audio, visualizada]);
-        res.status(200).json('Cadastrado');
-    } catch (err) {
-        res.status(500).json({ error: 'Erro ao enviar mensagem' });
-    }
+  const { conteudo, imagem, audio, visualizada, id } = req.body;
+  const dataAtual = new Date();
+
+  const sqlMensagem = `INSERT INTO mensagem (remetente, dataHora, conteudo, imagem, audio, visualizada, idmensagem) VALUES (?, ?, ?, ?, ?, ?, ?);`;
+  const sqlChat = "SELECT * FROM chataovivo WHERE idCliente = ?;";
+  try {
+    const [result] = await db.query(sqlChat, [id]);
+    const idChat = result[0].idChat;
+    await db.query(sqlMensagem, ["C", dataAtual, conteudo, imagem, audio, visualizada, idChat]);
+    res.status(200).json('Cadastrado');
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao enviar mensagem' });
+  }
 });
+//
+
+// Rota para buscar todas as mensagen para o FUCIONARIO
+app.get("/mensagensfunc", async (req, res) => {
+  const sql = `SELECT m.remetente, u.nivelUser, c.idCliente, m.idMensagem, m.dataHora, m.conteudo, m.imagem, m.audio, m.visualizada,
+   cl.nome FROM cliente cl LEFT JOIN chataovivo c ON cl.idCliente = c.idCliente 
+   LEFT JOIN mensagem m ON c.idChat = m.idMensagem LEFT JOIN usuario u ON u.nivelUser = c.idCliente;`;
+  try {
+    const [result] = await db.query(sql);
+    return res.json(result);
+  } catch {
+    res.json("Erro ao buscar mensagens");
+  }
+});
+
+// Rota para enviar uma nova mensagem com validação para o FUNCIONARIO
+app.post('/enviarmensagemfunc', async (req, res) => {
+  const { conteudo, imagem, audio, visualizada } = req.body;
+  console.log(conteudo, imagem, audio, visualizada)
+  const dataAtual = new Date();
+
+  const sqlMensagem = `INSERT INTO mensagem (remetente, dataHora, conteudo, imagem, audio, visualizada, idmensagem) VALUES (?, ?, ?, ?, ?, ?, ?);`;
+  try {
+    await db.query(sqlMensagem, ["F", dataAtual, conteudo, imagem, audio, visualizada, 1]);
+    res.status(200).json('Cadastrado');
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao enviar mensagem' });
+  }
+});
+//
 
 app.listen(3001, () => {
   console.log("Servidor rodando...");

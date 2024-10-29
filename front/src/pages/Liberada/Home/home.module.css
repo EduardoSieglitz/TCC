@@ -1,7 +1,15 @@
-.body {
-    height: 90vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+.section_1 {
+    margin: 40px 0 30px;
+    
+    .line {
+        width: 1px;
+        margin-bottom: 30px;
+        height: 20px;
+        background-color: black;
+    }
+
+    h2 {
+        font-size: 1.7rem;
+        font-weight: 500;
+    }
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './agendamento.module.css';
 import { useForm } from 'react-hook-form';
-import Navbar from "../Navbar/navbar";
+import NavbarCliente from '../../../components/NavbarCliente/navbar';
 
 const TabelaAgendamento = () => {
   const [agendamentos, setAgendamentos] = useState([]);
@@ -96,7 +96,7 @@ const TabelaAgendamento = () => {
   }
   return (
     <>
-      <Navbar></Navbar>
+      <NavbarCliente />
       <div className={styles.body_agendamento}>
         <div className={styles.containerAgendamento__Table}>
           <div>{error && <p className={styles.error_message}>{error}</p>}</div>
@@ -137,7 +137,7 @@ const TabelaAgendamento = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredAgendamentos.map((agendamento) => (
+          ))}
                 <tr key={agendamento.idAgendamento} className={styles.row}>
                   {editAgendamentoId === agendamento.idAgendamento ? (
                     <>

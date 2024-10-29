@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import Axios from 'axios';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Navbar from "../Navbar/navbar";
+import NavbarCliente from '../../../components/NavbarCliente/navbar';
 
 export default function CadastroAgendamento() {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -36,7 +36,7 @@ export default function CadastroAgendamento() {
 
     return (
         <>
-            <Navbar></Navbar>
+            <NavbarCliente />
             <div className={styles.body}>
                 <div className={styles.containerAgendamento}>
                     {error && <p className={styles.error_message}>{error}</p>}
