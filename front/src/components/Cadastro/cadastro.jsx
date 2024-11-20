@@ -14,7 +14,7 @@ export default function Cadastro({ toggleLogin, closeScreens }) {
 
     async function dados(data) {
         try {
-            const request = await axios.post("http://localhost:3001/registrar", data);
+            const request = await axios.post("http://localhost:3001/registrarprimeira", data);
             if (request.data === "Cadastrado") {
                 setError("Cadastrado");
             } else if (request.data === "Email") {
@@ -44,7 +44,7 @@ export default function Cadastro({ toggleLogin, closeScreens }) {
                     <input
                         type='text'
                         placeholder='Nome'
-                        {...register('nome', { required: true, minLength: 6, maxLength: 50 })}
+                        {...register('nome', { required: true})}
                         className={`${styles.input_info} ${errors.nome && styles.input_error}`}
                     />
                     {errors.nome && <p className={styles.input_message}>Nome é obrigatório</p>}
@@ -81,77 +81,6 @@ export default function Cadastro({ toggleLogin, closeScreens }) {
                         />
                         {errors.confirmarSenha && <p className={styles.input_message}>{errors.confirmarSenha.message}</p>}
                     </div>
-
-                    <input
-                        type='text'
-                        placeholder='CPF'
-                        {...register('cpf', { required: true, minLength: 11, maxLength: 14 })}
-                        className={`${styles.input_info} ${errors.cpf && styles.input_error}`}
-                    />
-                    {errors?.cpf?.type == 'required' && <p className={styles.input_message}>CPF é obrigatório</p>}
-                    {errors?.cpf?.type == 'minLength' && <p className={styles.input_message}>CPF invalido</p>}
-                    {errors?.cpf?.type == 'maxLength' && <p className={styles.input_message}>CPF invalido</p>}
-
-                    <input
-                        type="text"
-                        placeholder="Telefone"
-                        {...register('telefone', { required: true, minLength: 10, maxLength: 15 })}
-                        className={`${styles.input_info} ${errors.telefone && styles.input_error}`}
-                    />
-                    {errors?.telefone?.type == 'required'&& <p className={styles.input_message}>Telefone é obrigatório</p>}
-                    {errors?.telefone?.type == 'minLength' && <p className={styles.input_message}>Telefone Invalido</p>}
-                    {errors?.telefone?.type == 'maxLength' && <p className={styles.input_message}>Telefone Invalido</p>}
-
-                    <div className={styles.input_group}>
-                        <input
-                            type='text'
-                            placeholder='Estado'
-                            {...register('estado', { required: true })}
-                            className={`${styles.input_info} ${errors.estado && styles.input_error}`}
-                        />
-                        <input
-                            type="text"
-                            placeholder='Cidade'
-                            {...register('cidade', { required: true })}
-                            className={`${styles.input_info} ${errors.cidade && styles.input_error}`}
-                        />
-                    </div>
-                    {errors.estado && <p className={styles.input_message}>Estado é obrigatório</p>}
-                    {errors.cidade && <p className={styles.input_message}>Cidade é obrigatória</p>}
-
-                    <input
-                        type="text"
-                        placeholder="Rua"
-                        {...register('rua', { required: true })}
-                        className={`${styles.input_info} ${errors.rua && styles.input_error}`}
-                    />
-                    {errors.rua && <p className={styles.input_message}>Rua é obrigatória</p>}
-
-                    <input
-                        type="text"
-                        placeholder="Bairro"
-                        {...register('bairro', { required: true })}
-                        className={`${styles.input_info} ${errors.bairro && styles.input_error}`}
-                    />
-                    {errors.bairro && <p className={styles.input_message}>Bairro é obrigatório</p>}
-
-                    <input
-                        type="text"
-                        placeholder="CEP"
-                        {...register('cep', { required: true, minLength: 8, maxLength: 9 })}
-                        className={`${styles.input_info} ${errors.cep && styles.input_error}`}
-                    />
-                    {errors?.cep?.type == 'required' && <p className={styles.input_message}>CEP é obrigatório</p>}
-                    {errors?.cep?.type == 'minLength' && <p className={styles.input_message}>CEP Invalido</p>}
-                    {errors?.cep?.type == 'maxLength' && <p className={styles.input_message}>CEP Invalido</p>}
-
-                    <input
-                        type="text"
-                        placeholder="Número"
-                        {...register('numero', { required: true })}
-                        className={`${styles.input_info} ${errors.numero && styles.input_error}`}
-                    />
-                    {errors.numero && <p className={styles.input_message}>Número é obrigatório</p>}
 
                     <button className={`${styles.action_btn} ${styles.register_btn}`} onClick={handleSubmit(dados)}>Cadastrar</button>
 
