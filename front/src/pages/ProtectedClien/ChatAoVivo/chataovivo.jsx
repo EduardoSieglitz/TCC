@@ -2,188 +2,163 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Axios from 'axios';
 import styles from "./chataovivo.module.css";
-import NavbarCliente from '../../../components/NavbarCliente/navbar';
-import { useAuth } from '../../../context/AuthProvider/useAuth';
+import NavbarFunc from '../../../components/navbar';
 
 export default function App() {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const [messages, setMessages] = useState([]);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
-    const auth = useAuth();
     const [searchField, setSearchField] = useState("");
     const [searchValue, setSearchValue] = useState("");
-    async function fetchMessages() {
+    const [conversas, setConversas] = useState([]);
+    const [selectedChatId, setSelectedChatId] = useState(null); // ID do chat selecionado
+
+    const fetchMessages = async (idChat) => {
         setLoading(true);
         try {
-            const response = await Axios.get(`http://localhost:3001/mensagens`);
-            if (Array.isArray(response.data)) {
-                setMessages(response.data);
-                console.log(messages)
-            } else {
-                setMessages([]);
-            }
+            const response = await Axios.get(`http://localhost:3001/mensagensfunc/${idChat}`);
+            setMessages(response.data || []);
         } catch (err) {
             setError(`Erro ao buscar mensagens: ${err.message}`);
         } finally {
             setLoading(false);
         }
-    }
+    };
 
-    async function sendMessage(data) {
+    const sendMessage = async (data) => {
+        if (!selectedChatId) {
+            setError("Selecione uma conversa antes de enviar uma mensagem.");
+            return;
+        }
         try {
-            const response = await Axios.post(`http://localhost:3001/enviarmensagem`, {
+            const response = await Axios.post('http://localhost:3001/enviarmensagemfunc', {
                 conteudo: data.message,
                 imagem: null,
                 audio: null,
                 visualizada: 'NL',
-                id: auth.id
+                idChat: selectedChatId
             });
             if (response.status === 200) {
                 reset();
-                fetchMessages();
+                fetchMessages(selectedChatId); // Atualiza mensagens do chat selecionado
             }
         } catch (err) {
             setError(`Erro ao enviar mensagem: ${err.message}`);
         }
-    }
+    };
+
+    const fetchConversas = async () => {
+        try {
+            const response = await Axios.get('http://localhost:3001/conversas');
+            setConversas(response.data || []);
+        } catch (error) {
+            setError('Erro ao carregar as conversas.');
+        }
+    };
 
     useEffect(() => {
-        fetchMessages();
+        fetchConversas();
     }, []);
 
     const filteredMessages = messages.filter((msg) => {
-        if (searchField === 'Conteúdo') {
+        if (searchField === 'conteudo') {
             return msg.conteudo?.includes(searchValue);
         } else if (searchField === 'Data') {
             return new Date(msg.dataHora).toLocaleDateString().includes(searchValue);
         }
         return true;
     });
+
+    const handleChatClick = (idChat) => {
+        setSelectedChatId(idChat); // Define o chat selecionado
+        fetchMessages(idChat); // Busca as mensagens do chat
+    };
+
     return (
         <>
-            <NavbarCliente />
-            <div className={styles.app}>
-                <div className={styles.content}>
-                    <SearchBar
-                        searchField={searchField}
-                        setSearchField={setSearchField}
-                        searchValue={searchValue}
-                        setSearchValue={setSearchValue}
+            <NavbarFunc />
+            <div className={styles.chatfunc}>
+                <div className={styles.searchbar}>
+                    <select
+                        value={searchField}
+                        onChange={(e) => setSearchField(e.target.value)}
+                        className={styles.select_filter}
+                    >
+                        <option value="">Selecione o campo de busca</option>
+                        <option value="conteudo">Conteúdo</option>
+                        <option value="Data">Data</option>
+                    </select>
+                    <input
+                        type="text"
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                        placeholder={`Buscar ${searchField}`}
+                        className={`${styles.input_info} ${styles.input_filter}`}
                     />
-                    {loading ? (
-                        <p>Carregando mensagens...</p>
-                    ) : (
-                        <ChatMessageList messages={filteredMessages} />
-                    )}
-                    <MessageInput
-                        sendMessage={handleSubmit(sendMessage)}
-                        register={register}
-                        errors={errors}
-                    />
-                    {error && <p className={styles.error}>{error}</p>}
                 </div>
+
+                <div className={styles.control}>
+                    <div className={styles.conversas}>
+                        {error && <p className={styles.errorMessage}>{error}</p>}
+                        {conversas.length > 0 ? (
+                            <table className={styles.table}>
+                                <tbody>
+                                    {conversas.map((conversa) => (
+                                        <tr key={conversa.idChat} onClick={() => handleChatClick(conversa.idChat)}>
+                                            <td>{conversa.nome}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            !error && <p>Nenhuma conversa disponível.</p>
+                        )}
+                    </div>
+
+                    <div className={styles.chatmessage}>
+                        {loading ? (
+                            <p>Carregando mensagens...</p>
+                        ) : (
+                            filteredMessages
+                                .sort((a, b) => new Date(a.dataHora) - new Date(b.dataHora))
+                                .map((msg, index) => (
+                                    <div
+                                        key={index}
+                                        className={`${styles.messagecontent} ${msg.remetente === "F"
+                                            ? styles.messageLeft
+                                            : styles.messageRight}`}
+                                    >
+                                        <div className={styles.useravatar}></div>
+                                        <h4>{msg.remetente === "F" ? "Dream Curtains" : msg.nome || 'Usuário Anônimo'}</h4>
+                                        <p>{msg.conteudo}</p>
+                                        {msg.imagem && <img src={msg.imagem} alt="imagem" className={styles.messageImage} />}
+                                        {msg.audio && (
+                                            <audio controls>
+                                                <source src={msg.audio} type="audio/mpeg" />
+                                                Seu navegador não suporta o elemento de áudio.
+                                            </audio>
+                                        )}
+                                        <div className={styles.messageTimestamp}>
+                                            {new Date(msg.dataHora).toLocaleString()}
+                                        </div>
+                                    </div>
+                                ))
+                        )}
+                    </div>
+                </div>
+                <form onSubmit={handleSubmit(sendMessage)} className={styles.messageinputchatfunc}>
+                    <input
+                        type="text"
+                        placeholder="Digite sua mensagem"
+                        {...register("message", { required: true })}
+                    />
+                    <button type="submit">Enviar</button>
+                    {errors.message && <p className={styles.error}>A mensagem é obrigatória</p>}
+                </form>
+
+                {error && <p className={styles.error}>{error}</p>}
             </div>
         </>
-    );
-}
-
-function SearchBar({ searchField, setSearchField, searchValue, setSearchValue }) {
-    return (
-        <>
-            <br />
-            <br />
-            <br />
-
-            <div className={styles.searchbar}>
-                <select
-                    value={searchField}
-                    onChange={(e) => setSearchField(e.target.value)}
-                    className={styles.select_filter}
-                >
-                    <option value="">Selecione o campo de busca</option>
-                    <option value="Conteúdo">Conteúdo</option>
-                    <option value="Data">Data</option>
-                </select>
-                <input
-                    type="text"
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    placeholder={`Buscar ${searchField}`}
-                    className={styles.input_filter}
-                />
-            </div>
-        </>
-    );
-}
-
-function ChatMessageList({ messages }) {
-    function ConteudoPorRemetenteClien(remetente) {
-        const mensagensFiltradas = (Array.isArray(messages) ? messages : []).filter(msg => msg.remetente === remetente);
-
-        return mensagensFiltradas.map((msg, index) => (
-            <div className={styles.messagecontent} key={index}>
-                <div className={styles.useravatar}></div>
-                <h4>{msg.nome || 'Usuário Anônimo'}</h4>
-                <p>{msg.conteudo}</p>
-                {msg.imagem && <img src={msg.imagem} alt="imagem" className={styles.messageImage} />}
-                {msg.audio && (
-                    <audio controls>
-                        <source src={msg.audio} type="audio/mpeg" />
-                        Seu navegador não suporta o elemento de áudio.
-                    </audio>
-                )}
-                <div className={styles.messageTimestamp}>
-                    {new Date(msg.dataHora).toLocaleString()}
-                </div>
-            </div>
-        ));
-    }
-
-    function ConteudoPorRemetenteFunc(remetente) {
-        const mensagensFiltradas = (Array.isArray(messages) ? messages : []).filter(msg => msg.remetente === remetente);
-
-        return mensagensFiltradas.map((msg, index) => (
-            <div className={styles.messagecontentf} key={index}>
-                <div className={styles.useravatar}></div>
-                <h4>{"Dream Curtains"}</h4>
-                <p>{msg.conteudo}</p>
-                {msg.imagem && <img src={msg.imagem} alt="imagem" className={styles.messageImage} />}
-                {msg.audio && (
-                    <audio controls>
-                        <source src={msg.audio} type="audio/mpeg" />
-                        Seu navegador não suporta o elemento de áudio.
-                    </audio>
-                )}
-                <div className={styles.messageTimestamp}>
-                    {new Date(msg.dataHora).toLocaleString()}
-                </div>
-            </div>
-        ));
-    }
-
-    return (
-        <div className={styles.chatmessage}>
-            <div className={styles.message}>
-                {ConteudoPorRemetenteClien("C")}
-                {ConteudoPorRemetenteFunc("F")}
-            </div>
-        </div>
-    );
-}
-
-
-
-function MessageInput({ sendMessage, register, errors }) {
-    return (
-        <form onSubmit={sendMessage} className={styles.messageinput}>
-            <input
-                type="text"
-                placeholder="Digite sua mensagem"
-                {...register("message", { required: true })}
-            />
-            <button type="submit">Enviar</button>
-            {errors.message && <p className={styles.error}>A mensagem é obrigatória</p>}
-        </form>
     );
 }
