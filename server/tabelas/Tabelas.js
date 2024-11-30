@@ -118,6 +118,29 @@ const ChatAoVivo = conexao.define('ChatAoVivo', {
     }
 });
 
+// Modelo de Servico
+const Servico = conexao.define('Servico', {
+    idServico: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+    },
+    servico: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    descricao: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    alternar: {
+        type: DataTypes.ENUM("A", "D"),
+        allowNull: true
+    },
+});
+
+
 // Modelo de AgendamentoDeServico
 const AgendamentoDeServico = conexao.define('AgendamentoDeServico', {
     idAgendamento: {
@@ -142,12 +165,9 @@ const AgendamentoDeServico = conexao.define('AgendamentoDeServico', {
         type: DataTypes.ENUM('EE', 'EA', 'C', 'A'),
         allowNull: false
     },
-    idServico: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'Servico',
-            key: 'idServico'
-        }
+    valor: {
+        type: DataTypes.DECIMAL(6, 2),
+        allowNull: false
     },
     idFuncionario: {
         type: DataTypes.INTEGER,
@@ -162,25 +182,14 @@ const AgendamentoDeServico = conexao.define('AgendamentoDeServico', {
             model: Cliente,
             key: 'idCliente'
         }
-    }
-});
-
-// Modelo de Servico
-const Servico = conexao.define('Servico', {
+    },
     idServico: {
         type: DataTypes.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
-    valor: {
-        type: DataTypes.DECIMAL(6, 2),
-        allowNull: false
-    },
-    servico: {
-        type: DataTypes.ENUM('L', 'R', 'P'),
-        allowNull: false
-    },
+        references: {
+            model: Servico,
+            key: 'idServico'
+        }
+    }
 });
 
 // Modelo de Cortina
@@ -203,8 +212,8 @@ const Cortina = conexao.define('Cortina', {
         type: DataTypes.STRING,
         allowNull: true
     },
-    tipo: {
-        type: DataTypes.CHAR,
+    modelo: {
+        type: DataTypes.STRING,
         allowNull: false
     },
     material: {
@@ -234,7 +243,7 @@ const Mensagem = conexao.define('Mensagem', {
         allowNull: true
     },
     audio: {
-        type: DataTypes.BLOB,
+        type: DataTypes.STRING,
         allowNull: true
     },
     visualizada: {

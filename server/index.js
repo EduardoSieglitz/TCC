@@ -9,16 +9,15 @@ const { json } = require("body-parser"),
   path = require("path"),
   tabelas = require("./tabelas/Tabelas"),
   upload = require("./upload/filecofig"),
+  upload2 = require("./upload/filecofig2"),
   bcrypt = require('bcryptjs'),
   jwt = require('jsonwebtoken'),
   nodemailer = require('nodemailer');
-
 
 app.use(cors());
 app.use(json());
 app.use(compression());
 app.use(express.static(path.join(__dirname, "upload")));
-
 
 const generateResetToken = (email) => {
   return jwt.sign({ email }, 'secret_key', { expiresIn: '1h' });
@@ -44,7 +43,6 @@ app.post('/requestreset', async (req, res) => {
       return res.json('Usuário não encontrado');
     }
     const token = generateResetToken(email);
-
     const mailOptions = {
       from: 'eduardosieglitzdasilveira@gmail.com',
       to: email,
@@ -70,7 +68,7 @@ app.post('/requestreset', async (req, res) => {
 app.post('/resetpassword', async (req, res) => {
   const { token, newPassword } = req.body;
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const decoded = jwt.verify(token, "secret_key");
     const email = decoded.email;
 
     const sqlVerifyUser = `SELECT * FROM usuario WHERE email = ?`;
@@ -99,19 +97,18 @@ app.post('/resetpassword', async (req, res) => {
   }
 });
 
-
 //Login de Usuario
 app.post("/login/auth", async (req, res) => {
   const { email, senha } = req.body;
 
   const sqlFuncionario = `
-    SELECT f.idFuncionario, f.email, f.senha, u.nivelUser
+    SELECT f.idFuncionario, u.idUsuario, f.email, f.senha, u.nivelUser
     FROM funcionario f
     LEFT JOIN usuario u ON f.email = u.email
     WHERE f.email = ?`;
 
   const sqlCliente = `
-    SELECT c.idCliente, c.email, c.senha, u.nivelUser
+    SELECT c.idCliente, u.idUsuario, c.email, c.senha, u.nivelUser
     FROM cliente c
     LEFT JOIN usuario u ON c.email = u.email
     WHERE c.email = ?`;
@@ -139,7 +136,57 @@ app.post("/login/auth", async (req, res) => {
     return res.status(500).json({ token: false, dados: [{ nivelUser: "error" }] });
   }
 });
+//
 
+// Confirma Senha
+app.post("/confirmarsenha", async (req, res) => {
+  const { senha, id, nivel } = req.body;
+  console.log(senha, id, nivel)
+  let sqlUsuario = "";
+  if (nivel == "Clien") {
+    sqlUsuario = `SELECT c.senha FROM cliente c WHERE idCliente;`;
+  } else {
+    sqlUsuario = `SELECT c.senha FROM funcionario c WHERE idFuncionario;`;
+  }
+  try {
+
+    const [result] = await db.query(sqlUsuario, [id]);
+    if (result.length > 0) {
+      const isPasswordMatch = await bcrypt.compare(senha, result[0].senha);
+      if (isPasswordMatch) {
+        return res.json("Liberado");
+      }
+    }
+
+    return res.json("Senha Incorreta");
+  } catch (error) {
+    console.error("Erro ao realizar a consulta no banco de dados:", error);
+    return res.status(500).json("error");
+  }
+});
+//
+
+// Confirma Senha Funcionario
+app.post("/confirmarsenhafunc", async (req, res) => {
+  const { senha, id } = req.body;
+  console.log(senha, id)
+  const sqlUsuario = `SELECT f.senha FROM funcionario f WHERE idFuncionario = ?;`;
+  try {
+
+    const [result] = await db.query(sqlUsuario, [id]);
+    if (result.length > 0) {
+      const isPasswordMatch = await bcrypt.compare(senha, result[0].senha);
+      if (isPasswordMatch) {
+        return res.json("Liberado");
+      }
+    }
+
+    return res.json("Senha Incorreta");
+  } catch (error) {
+    console.error("Erro ao realizar a consulta no banco de dados:", error);
+    return res.status(500).json("error");
+  }
+});
 //
 
 //Cadastro de Cliente
@@ -171,6 +218,42 @@ app.post("/registrar", async (req, res) => {
     const hashedPassword = await bcrypt.hash(senha, 10);
 
     const [result] = await db.query(sqlCliente, [nome, cpf, hashedPassword, email, telefone, rua, estado, cidade, cep, numero, bairro]);
+    const id = result.insertId;
+    await db.query(sqlUsuario, [Usuario, email, hashedPassword]);
+    await db.query(sqlChat, [dataAtual, id]);
+
+    return res.json("Cadastrado");
+  } catch (error) {
+    console.error("Erro ao registrar o cliente:", error);
+    return res.status(500).json("Error");
+  }
+});
+
+//Cadastro de Cliente primeira etapa
+app.post("/registrarprimeira", async (req, res) => {
+  const { nome, email, senha } = req.body;
+  const Usuario = "Clien";
+  const sqlClienteS = `SELECT * FROM cliente WHERE email = ?;`;
+  const sqlFuncionarioS = `SELECT * FROM funcionario WHERE email = ?;`;
+  const sqlCliente = `INSERT INTO cliente(nome, cpfClien, senha, email, telefone, rua, estado, cidade, cep, numero, bairro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+  const sqlUsuario = `INSERT INTO usuario(nivelUser, email, senha) VALUES(?, ?, ?);`;
+  const sqlChat = `INSERT INTO chataovivo (dataInicio, idCliente) VALUES(?, ?);`;
+  const dataAtual = new Date();
+
+  try {
+    const [funcionarioResult] = await db.query(sqlFuncionarioS, [email]);
+    if (funcionarioResult.length > 0) {
+      if (funcionarioResult[0].email === email) return res.json("Email");
+    }
+
+    const [clienteResult] = await db.query(sqlClienteS, [email]);
+    if (clienteResult.length > 0) {
+      if (clienteResult[0].email === email) return res.json("Email");
+    }
+
+    const hashedPassword = await bcrypt.hash(senha, 10);
+
+    const [result] = await db.query(sqlCliente, [nome, "", hashedPassword, email, "", "", "", "", "", "", ""]);
     const id = result.insertId;
     await db.query(sqlUsuario, [Usuario, email, hashedPassword]);
     await db.query(sqlChat, [dataAtual, id]);
@@ -225,30 +308,31 @@ app.post("/registraragendamento", async (req, res) => {
   const hora = dataAtual.getHours();
   const minutos = dataAtual.getMinutes();
   const segundos = dataAtual.getSeconds();
-  const { solicitacao, dataAgendada, descricao, servico, cpfFunc, cpfClien, status, valor } = req.body;
-
-  const sqlsAgendamento = "INSERT INTO agendamentodeservico(solicitacao, dataAgendada, descricao, status, idServico, idFuncionario, idCliente) VALUES(?, ?, ?, ?, ?, ?, ?)";
-  const sqlServico = "INSERT INTO servico(valor, servico) VALUES(?, ?)";
-  const sqlPesquisaClien = "SELECT * FROM cliente WHERE cpfclien = ?";
-  const sqlPesquisaFunc = "SELECT * FROM funcionario WHERE cpfFunc = ?";
+  const { solicitacao, valor, dataAgendada, descricao, servico, emailf, emailc, status } = req.body;
+  console.log(solicitacao, valor, dataAgendada, descricao, servico, emailf, emailc, status);
+  const sqlsAgendamento = "INSERT INTO agendamentodeservico(valor, solicitacao, dataAgendada, descricao, status, idServico, idFuncionario, idCliente) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+  const sqlPesquisaClien = "SELECT * FROM cliente WHERE email = ?";
+  const sqlPesquisaFunc = "SELECT * FROM funcionario WHERE email = ?";
+  const sqlUpdateServico = `SELECT * FROM servico WHERE servico = ?;`;
 
   try {
-    const [clienteResults] = await db.query(sqlPesquisaClien, [cpfClien]);
-    if (clienteResults.length === 0) {
-      return res.status(404).json("Cliente não encontrado.");
+    const [clienteResults] = await db.query(sqlPesquisaClien, [emailc]);
+    if (clienteResults.length <= 0) {
+      return res.json("Cliente não encontrado.");
     }
     const idCliente = clienteResults[0].idCliente;
 
-    const [funcionarioResults] = await db.query(sqlPesquisaFunc, [cpfFunc]);
-    if (funcionarioResults.length === 0) {
-      return res.status(404).json("Funcionário não encontrado.");
+    const [funcionarioResults] = await db.query(sqlPesquisaFunc, [emailf]);
+    if (funcionarioResults.length <= 0) {
+      return res.json("Funcionário não encontrado.");
     }
     const idFuncionario = funcionarioResults[0].idFuncionario;
 
-    const [servicoInsertResult] = await db.query(sqlServico, [valor, servico]);
-    const idServico = servicoInsertResult.insertId;
+    const [result] = await db.query(sqlUpdateServico, [servico]);
+    const idServico = result[0].idServico;
 
     await db.query(sqlsAgendamento, [
+      valor,
       `${solicitacao} ${hora}:${minutos}:${segundos}`,
       `${dataAgendada} ${hora}:${minutos}:${segundos}`,
       descricao,
@@ -267,16 +351,16 @@ app.post("/registraragendamento", async (req, res) => {
 //
 
 //Cadastro Cortina
-app.post('/registrarcortina', upload.single("image"), async (req, res) => {
-  const { nome, descricao, tipo, material } = req.body;
+app.post('/registrarcortina', upload2.single("image"), async (req, res) => {
+  const { nome, descricao, modelo, material } = req.body;
   const image = req.file;
-
+  console.log(nome, descricao, modelo, material, image)
   if (!req.file) {
     return res.json({ error: 'Imagem é obrigatória.' });
   }
-  const sql = `INSERT INTO cortina (nome, descricao, imagem, tipo, material) VALUES (?, ?, ?, ?, ?);`;
+  const sql = `INSERT INTO cortina (nome, descricao, imagem, modelo, material) VALUES (?, ?, ?, ?, ?);`;
   try {
-    await db.query(sql, [nome, descricao, image.filename, tipo, material]);
+    await db.query(sql, [nome, descricao, image.filename, modelo, material]);
     return res.json('Cadastrado');
   } catch (error) {
     console.error('Erro ao registrar a cortina:', error);
@@ -285,12 +369,38 @@ app.post('/registrarcortina', upload.single("image"), async (req, res) => {
 });
 //
 
+//Cadastro Serviço
+app.post('/registrarservico', async (req, res) => {
+  const { descricao, servico } = req.body;
+  const upperServico = servico.toUpperCase();
+
+  const sqlSelect = "SELECT * FROM servico WHERE servico = ?";
+  const sqlUpdate = `
+    UPDATE servico SET alternar = ? WHERE idServico = ?`;
+  const sqlServico = `INSERT INTO servico (descricao, servico, alternar) VALUES (?, ?, ?);`;
+
+  try {
+    const [result] = await db.query(sqlSelect, [upperServico]);
+
+    if (result.length === 0) {
+      await db.query(sqlServico, [descricao, upperServico, "A"]);
+      return res.status(200).json('Cadastrado');
+    }
+
+    const id = result[0].idServico;
+    await db.query(sqlUpdate, ["A", id]);
+    res.status(200).json('Cadastrado');
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro ao enviar serviço' });
+  }
+});
+
 //Tabela Agendamento 
 app.post("/tabelaagendamentos", async (req, res) => {
-  const sql = `SELECT a.idAgendamento, a.solicitacao, a.dataAgendada, a.descricao,
-   a.status, s.valor, s.servico, c.cpfClien, f.cpfFunc FROM agendamentodeservico a LEFT 
-  JOIN servico s ON a.idAgendamento = s.idServico LEFT JOIN cliente c ON a.idCliente = 
-  c.idCliente LEFT JOIN funcionario f ON a.idFuncionario = f.idFuncionario;`;
+  const sql = `SELECT a.idAgendamento, a.idServico, a.solicitacao, a.descricao, a.dataAgendada,
+   a.status, a.valor, c.email 'emailc', f.email 'emailf', s.alternar, s.servico FROM agendamentodeservico a LEFT JOIN cliente c ON a.idCliente = 
+  c.idCliente LEFT JOIN funcionario f ON a.idFuncionario = f.idFuncionario LEFT JOIN servico s ON s.idServico = a.idServico;`;
   try {
     const [result] = await db.query(sql);
     return res.json(result);
@@ -300,30 +410,17 @@ app.post("/tabelaagendamentos", async (req, res) => {
 });
 //
 
-//Tabelas Funcionario
-app.post("/tabelafuncionario", async (req, res) => {
-  const sql = `SELECT f.idFuncionario, u.idUsuario, f.nome, f.descricao, f.cpfFunc, f.telefone,
-   f.email, f.senha FROM funcionario f LEFT JOIN usuario u on f.email = u.email;`;
+//Tabelas Usuario
+app.get("/tabelausuario", async (req, res) => {
+  const sql = `SELECT f.idFuncionario, c.idCliente, u.idUsuario, c.nome 'nomec', c.email 'emailc', c.cpfClien, c.telefone 'telefonec', c.rua, c.bairro, c.cidade,
+   c.cep, c.estado, c.numero, c.imagem, f.nome 'nomef', f.descricao, f.cpfFunc, f.telefone 'telefonef', f.email 'emailf', u.nivelUser, c.senha "senhac", f.senha "senhaf" FROM usuario u LEFT JOIN
+    funcionario f on f.email = u.email LEFT JOIN cliente c ON c.email = u.email;`;
   try {
     const [result] = await db.query(sql);
     return res.json(result);
   } catch (error) {
-    console.error("Erro ao buscar funcionários:", error);
-    return res.status(500).json({ message: "Erro ao buscar funcionários." });
-  }
-});
-//
-
-//Tabelas Cliente
-app.post("/tabelacliente", async (req, res) => {
-  const sql = `SELECT c.idCliente, u.idUsuario, c.nome, c.cpfClien, c.telefone, c.email,
-   c.senha, c.rua, c.estado, c.cidade, c.cep, c.numero, c.bairro FROM cliente c LEFT JOIN usuario u on c.email = u.email;`;
-  try {
-    const [result] = await db.query(sql);
-    return res.json(result);
-  } catch (error) {
-    console.error("Erro ao buscar clientes:", error);
-    return res.status(500).json({ message: "Erro ao buscar clientes." });
+    console.error("Erro ao buscar usuario:", error);
+    return res.status(500).json({ message: "Erro ao buscar usuario." });
   }
 });
 //
@@ -341,56 +438,186 @@ app.post("/tabelacortinas", async (req, res) => {
 });
 //
 
-//Delete Agendamento
-app.delete("/deleteagendamento/:id", async (req, res) => {
-  const { id } = req.params;
-  const sqlDeleteAgendamento = "DELETE FROM agendamentodeservico WHERE idAgendamento = ?;";
-  const sqlDeleteServico = "DELETE FROM servico WHERE idServico = ?;";
+//Tabelas Serviço
+app.post("/tabelaservico", async (req, res) => {
+  const sql = `SELECT * FROM servico;`;
   try {
-    await db.query(sqlDeleteAgendamento, [id]);
-    await db.query(sqlDeleteServico, [id]);
-    return res.json({ message: "Agendamento deletado com sucesso." });
+    const [result] = await db.query(sql);
+    return res.json(result);
   } catch (error) {
-    console.error("Erro ao deletar Agendamento:", error);
-    return res.status(500).json({ message: "Erro ao deletar funcionário.", error });
+    console.error("Erro ao buscar serviço:", error);
+    return res.json("Erro");
   }
 });
 
+//Deletar Mensagem
+app.delete("/deletemessagem/:id", async (req, res) => {
+  const { id } = req.params;
+  console.log(id)
+  const sql = "DELETE FROM mensagem WHERE id = ?";
+  try {
+    await db.query(sql, [id]);
+
+    return res.json("Deletado");
+  } catch (error) {
+    console.error("Erro ao deletar:", error);
+    return res.status(500).json({ message: "Erro ao deletar.", error });
+  }
+});
+//
+
+//Deletar Conta
+app.post("/deleteconta", async (req, res) => {
+  const { id, idUsuario, nivel, senha, email } = req.body;
+  console.log(id, idUsuario, nivel, senha, email);
+
+  const sqlSelect = `
+    SELECT 
+      c.senha AS senhac, 
+      f.senha AS senhaf 
+    FROM 
+      usuario u 
+    LEFT JOIN 
+      cliente c ON u.email = c.email 
+    LEFT JOIN 
+      funcionario f ON u.email = f.email 
+    WHERE 
+      u.email = ?;
+  `;
+  const sqlUsuario = "DELETE FROM usuario WHERE idUsuario = ?";
+  const sqlCliente = "DELETE FROM cliente WHERE idCliente = ?";
+  const sqlFuncionario = "DELETE FROM funcionario WHERE idFuncionario = ?";
+  const sqlMens = "DELETE FROM mensagem WHERE idMensagem = ?;";
+  const sqlChat = "DELETE FROM chataovivo WHERE idCliente = ?;";
+  const sqlChatSelect = "SELECT * FROM chataovivo WHERE idCliente = ?;";
+  try {
+    const [result] = await db.query(sqlSelect, [email]);
+
+    if (result.length === 0) {
+      return res.json("Credenciais Inválidas");
+    }
+
+    if (nivel === "Clien") {
+      const isPasswordMatch = await bcrypt.compare(senha, result[0].senhac);
+      if (!isPasswordMatch) {
+        return res.json("Credenciais Inválidas");
+      }
+      
+      const [result] = await db.query(sqlChatSelect, [id]);
+      const idChat = result[0].idChat;
+  
+      await db.query(sqlMens, [idChat]);
+      await db.query(sqlChat, [id]);
+      await db.query(sqlCliente, [id]);
+      await db.query(sqlUsuario, [idUsuario]);
+      return res.json("Deletado");
+    } else if (nivel === "Func") {
+      const isPasswordMatch = await bcrypt.compare(senha, result[0].senhaf);
+      if (!isPasswordMatch) {
+        return res.json("Credenciais Inválidas");
+      }
+
+      await db.query(sqlUsuario, [idUsuario]);
+      await db.query(sqlFuncionario, [id]);
+      return res.json("Deletado");
+    } else {
+      return res.json("Nível de usuário inválido");
+    }
+  } catch (error) {
+    console.error("Erro ao deletar:", error);
+    return res.status(500).json({ message: "Erro ao deletar.", error });
+  }
+});
 //
 
 //Delete Cliente
-app.delete("/delete/:id/:idusuario", async (req, res) => {
+app.post("/delete/:id/:idusuario", async (req, res) => {
   const { id, idusuario } = req.params;
+  const { email, senha } = req.body;
+
+  const sqlUsuarioValidar = "SELECT * FROM cliente WHERE idCliente = ? AND email = ?;";
   const sqlChatSelect = "SELECT * FROM chataovivo WHERE idCliente = ?;";
   const sqlUsuario = "DELETE FROM usuario WHERE idUsuario = ?;";
   const sqlChat = "DELETE FROM chataovivo WHERE idCliente = ?;";
   const sqlCliente = "DELETE FROM cliente WHERE idCliente = ?;";
   const sqlMens = "DELETE FROM mensagem WHERE idMensagem = ?;";
+
+  if (senha !== "12345678") {
+    return res.json("Credenciais inválidas");
+  }
+
+  const connection = await db.getConnection();
   try {
-    const [result] = await db.query(sqlChatSelect, [id]);
+    // Validação inicial
+    const [resultUsuario] = await connection.query(sqlUsuarioValidar, [id, email]);
+    if (resultUsuario.length === 0) {
+      return res.json("Credenciais inválidas");
+    }
+
+    // Obter idChat
+    const [result] = await connection.query(sqlChatSelect, [id]);
     const idChat = result[0].idChat;
-    await db.query(sqlMens, [idChat]);
-    await db.query(sqlChat, [id]);
-    await db.query(sqlCliente, [id]);
-    await db.query(sqlUsuario, [idusuario]);
-    return res.json({ message: "Cliente deletado com sucesso." });
+
+    // Iniciar transação
+    await connection.beginTransaction();
+    await connection.query(sqlMens, [idChat]);
+    await connection.query(sqlChat, [id]);
+    await connection.query(sqlCliente, [id]);
+    await connection.query(sqlUsuario, [idusuario]);
+    await connection.commit();
+
+    return res.json("Deletado com sucesso.");
   } catch (error) {
+    await connection.rollback();
     console.error("Erro ao deletar cliente:", error);
-    return res.status(500).json({ message: "Erro ao deletar cliente.", error });
+    return res.status(500).json("Erro ao deletar cliente");
+  } finally {
+    connection.release();
+  }
+});
+//
+
+//Delete Agendamento
+app.post("/deleteagendamento/:id", async (req, res) => {
+  const { id } = req.params;
+  const { email, senha } = req.body;
+  const sqlUsuarioValidar = "SELECT * FROM cliente c LEFT JOIN agendamentodeservico a ON c.idCliente = a.idCliente WHERE c.email = ? AND a.idAgendamento = ?;";
+  const sqlDeleteAgendamento = "DELETE FROM agendamentodeservico WHERE idAgendamento = ?;";
+  if (senha !== "12345678") {
+    return res.json("Credenciais inválidas");
+  }
+  try {
+    const [resultUsuario] = await db.query(sqlUsuarioValidar, [email, id]);
+    if (resultUsuario.length <= 0) {
+      return res.json("Credenciais inválidas");
+    }
+    await db.query(sqlDeleteAgendamento, [id]);
+    return res.json("Deletado com sucesso.");
+  } catch (error) {
+    console.error("Erro ao deletar Agendamento:", error);
+    return res.status(500).json({ message: "Erro ao deletar funcionário.", error });
   }
 });
 //
 
 //Delete Funcionario
-app.delete("/deletefunc/:id/:idusuario", async (req, res) => {
+app.post("/deletefuncionario/:id/:idusuario", async (req, res) => {
   const { id, idusuario } = req.params;
+  const { email, senha } = req.body;
+  const sqlUsuarioValidar = "SELECT * FROM funcionario WHERE idFuncionario = ? AND email = ?;";
   const sqlDeleteUsuario = "DELETE FROM usuario WHERE idUsuario = ?;";
   const sqlDeleteFuncionario = "DELETE FROM funcionario WHERE idFuncionario = ?;";
-  console.log(id, idusuario)
   try {
+    if (senha !== "12345678") {
+      return res.json("Credenciais inválidas");
+    }
+    const [resultUsuario] = await db.query(sqlUsuarioValidar, [id, email]);
+    if (resultUsuario.length === 0) {
+      return res.json("Credenciais inválidas");
+    }
     await db.query(sqlDeleteFuncionario, [id]);
     await db.query(sqlDeleteUsuario, [idusuario]);
-    return res.json({ message: "Funcionário deletado com sucesso." });
+    return res.json("Deletado com sucesso.");
   } catch (error) {
     console.error("Erro ao deletar funcionário:", error);
     return res.status(500).json({ message: "Erro ao deletar funcionário.", error });
@@ -430,13 +657,39 @@ app.delete("/deletecortina/:id", async (req, res) => {
 });
 //
 
-// Editar Cliente
-app.put("/editar/:id", async (req, res) => {
+//Delete Serviço
+app.post("/deleteservico/:id", async (req, res) => {
   const { id } = req.params;
-  const { nome, email, senha, telefone, cpf, rua, estado, cidade, cep, numero, bairro, idUsuario } = req.body;
-  
-  const sqlUpdateCliente = `UPDATE cliente SET nome = ?, email = ?, senha = ?, telefone = ?, cpfClien = ?, rua = ?, estado = ?, cidade = ?, cep = ?, numero = ?, bairro = ? WHERE idCliente = ?;`;
-  const sqlUpdateUsuario = `UPDATE usuario SET email = ?, senha = ? WHERE idUsuario = ?;`;
+  const { servico, senha } = req.body;
+  console.log(servico, senha, id);
+  const servicocase = servico.toUpperCase();
+  const sqlSelect = "SELECT * FROM servico WHERE idServico = ? AND servico = ?";
+  const sqlUpdateServico = `UPDATE servico SET alternar = ?, descricao = ? WHERE idServico = ? AND servico = ?`;
+  if (senha !== "12345678") {
+    return res.json("Credenciais inválidas");
+  }
+  try {
+    const [result] = await db.query(sqlSelect, [id, servicocase]);
+    if (result.length <= 0) {
+      return res.json("Credenciais inválidas");
+    }
+
+    await db.query(sqlUpdateServico, ["D", "", id, servicocase]);
+    return res.json("Deletado com sucesso.");
+  } catch (error) {
+    console.error("Erro ao deletar serviço:", error);
+    return res.status(500).json({ message: "Erro ao deletar serviço.", error });
+  }
+});
+//
+
+// Editar Cliente
+app.put("/editar/:id", upload2.single("image"), async (req, res) => {
+  const { id } = req.params;
+  const image = req.file;
+  const { nome, email, telefone, cpf, rua, estado, cidade, cep, numero, bairro, idUsuario } = req.body;
+  const sqlUpdateCliente = `UPDATE cliente SET imagem = ?, nome = ?, email = ?, telefone = ?, cpfClien = ?, rua = ?, estado = ?, cidade = ?, cep = ?, numero = ?, bairro = ? WHERE idCliente = ?;`;
+  const sqlUpdateUsuario = `UPDATE usuario SET email = ? WHERE idUsuario = ?;`;
   const sqlCheckDuplicatesClien = `SELECT * FROM cliente WHERE (email = ? OR cpfClien = ? OR telefone = ?) AND idCliente != ?;`;
   const sqlCheckDuplicatesFunc = `SELECT * FROM funcionario WHERE (email = ? OR cpfFunc = ? OR telefone = ?);`;
 
@@ -453,13 +706,8 @@ app.put("/editar/:id", async (req, res) => {
       if (existingUser && existingUser.telefone === telefone || existingUserFunc && existingUserFunc.telefone === telefone) return res.json("Telefone");
     }
 
-    let hashedPassword;
-    if (senha) {
-      hashedPassword = await bcrypt.hash(senha, 10);
-    }
-
-    await db.query(sqlUpdateCliente, [nome, email, hashedPassword || result[0].senha, telefone, cpf, rua, estado, cidade, cep, numero, bairro, id]);
-    await db.query(sqlUpdateUsuario, [email, hashedPassword || result[0].senha, idUsuario]);
+    await db.query(sqlUpdateCliente, [image ? image.filename : null, nome, email, telefone, cpf, rua, estado, cidade, cep, numero, bairro, id]);
+    await db.query(sqlUpdateUsuario, [email, idUsuario]);
 
     return res.json("Atualizado");
 
@@ -469,16 +717,78 @@ app.put("/editar/:id", async (req, res) => {
   }
 });
 
-// Editar Funcionário
-app.put("/editarfunc/:id", async (req, res) => {
-  const { id } = req.params;
-  const { nome, email, senha, telefone, cpf, descricao, idUsuario } = req.body;
+//Editar Usuario
+app.put("/editarusuario/:id", async (req, res) => {
+  const { id } = req.params; // ID do cliente ou funcionário
+  const { nome, telefone, email, idUsuario, nivelUser } = req.body;
 
-  const sqlUpdateFuncionario = `UPDATE funcionario SET nome = ?, email = ?, senha = ?, telefone = ?, cpfFunc = ?, descricao = ? WHERE idFuncionario = ?`;
-  const sqlUpdateUsuario = `UPDATE usuario SET email = ?, senha = ? WHERE idUsuario = ?;`;
+  // Queries SQL
+  const sqlUpdateCliente = `UPDATE cliente SET nome = ?, telefone = ?, email = ? WHERE idCliente = ?;`;
+  const sqlUpdateFuncionario = `UPDATE funcionario SET nome = ?, telefone = ?, email = ? WHERE idFuncionario = ?;`;
+  const sqlUpdateUsuario = `UPDATE usuario SET email = ? WHERE idUsuario = ?;`;
+
+  const sqlCheckDuplicates = `
+    SELECT idCliente AS id, email, telefone, 'cliente' AS tipo
+    FROM cliente
+    WHERE (email = ? OR telefone = ?) AND idCliente != ?
+    UNION
+    SELECT idFuncionario AS id, email, telefone, 'funcionario' AS tipo
+    FROM funcionario
+    WHERE (email = ? OR telefone = ?) AND idFuncionario != ?;
+  `;
+
+  try {
+    // Validação inicial dos dados
+    if (!nome || !telefone || !email || !idUsuario || !nivelUser) {
+      return res.status(400).json({ message: "Todos os campos são obrigatórios." });
+    }
+
+    // Verifica duplicidade de email ou telefone
+    const [duplicates] = await db.query(sqlCheckDuplicates, [
+      email, telefone, id, // para cliente
+      email, telefone, id  // para funcionário
+    ]);
+
+    if (duplicates.length > 0) {
+      const existingUser = duplicates[0];
+
+      if (existingUser.email === email) {
+        return res.json("Email");
+      }
+      if (existingUser.telefone === telefone) {
+        return res.json("Telefone");
+      }
+    }
+
+    // Atualiza a tabela correspondente com base no nível do usuário
+    if (nivelUser === "Clien") {
+      await db.query(sqlUpdateCliente, [nome, telefone, email, id]);
+    } else if (nivelUser === "Func") {
+      await db.query(sqlUpdateFuncionario, [nome, telefone, email, id]);
+    } else {
+      return res.status(400).json({ message: "Nível de usuário inválido." });
+    }
+
+    // Atualiza a tabela de usuário
+    await db.query(sqlUpdateUsuario, [email, idUsuario]);
+
+    return res.json("Atualizado");
+  } catch (error) {
+    console.error("Erro ao atualizar usuário:", error);
+    return res.status(500).json({ message: "Erro ao atualizar usuário.", error });
+  }
+})
+//
+
+// Editar Funcionário
+app.put("/editarfuncionario/:id", upload2.single("image"), async (req, res) => {
+  const { id } = req.params;
+  const image = req.file;
+  const { nome, email, telefone, cpf, descricao, idUsuario } = req.body;
+  const sqlUpdateFuncionario = `UPDATE funcionario SET nome = ?, email = ?, telefone = ?, imagem = ?, cpfFunc = ?, descricao = ? WHERE idFuncionario = ?`;
+  const sqlUpdateUsuario = `UPDATE usuario SET email = ? WHERE idUsuario = ?;`;
   const sqlCheckDuplicatesClien = `SELECT * FROM cliente WHERE (email = ? OR cpfClien = ? OR telefone = ?)`;
   const sqlCheckDuplicatesFunc = `SELECT * FROM funcionario WHERE (email = ? OR cpfFunc = ? OR telefone = ?) AND idFuncionario != ?;`;
-
   try {
     const [result] = await db.query(sqlCheckDuplicatesClien, [email, cpf, telefone]);
     const [resultFunc] = await db.query(sqlCheckDuplicatesFunc, [email, cpf, telefone, id]);
@@ -492,16 +802,10 @@ app.put("/editarfunc/:id", async (req, res) => {
       if (existingUser && existingUser.telefone === telefone || existingUserFunc && existingUserFunc.telefone === telefone) return res.json("Telefone");
     }
 
-    let hashedPassword;
-    if (senha) {
-      hashedPassword = await bcrypt.hash(senha, 10);
-    }
-
-    await db.query(sqlUpdateFuncionario, [nome, email, hashedPassword || resultFunc[0].senha, telefone, cpf, descricao, id]);
-    await db.query(sqlUpdateUsuario, [email, hashedPassword || resultFunc[0].senha, idUsuario]);
+    await db.query(sqlUpdateFuncionario, [nome, email, telefone, image ? image.filename : null, cpf, descricao, id]);
+    await db.query(sqlUpdateUsuario, [email, idUsuario]);
 
     return res.json("Atualizado");
-
   } catch (error) {
     console.error("Erro ao atualizar funcionário:", error);
     return res.status(500).json({ message: "Erro ao atualizar funcionário.", error });
@@ -512,15 +816,15 @@ app.put("/editarfunc/:id", async (req, res) => {
 //Editar Agendamento
 app.put("/editaragendamento/:id", async (req, res) => {
   const { id } = req.params;
-  const { dataAgendada, descricao, status, valor, servico } = req.body;
-  console.log(dataAgendada, descricao, status, valor, servico)
+  const { dataAgendada, status, servico, valor, descricao } = req.body;
   const sqlUpdateAgendamento = `
-    UPDATE agendamentodeservico SET dataAgendada = ?, descricao = ?, status = ? WHERE idAgendamento = ?`;
-  const sqlUpdateServico = `
-    UPDATE servico SET valor = ?, servico = ? WHERE idServico = ?`;
+    UPDATE agendamentodeservico SET dataAgendada = ?, status = ?, descricao = ?, valor = ?, idServico = ? WHERE idAgendamento = ?`;
+  const sqlUpdateServico = `SELECT * FROM servico WHERE servico = ?;`;
+
   try {
-    await db.query(sqlUpdateAgendamento, [dataAgendada, descricao, status, id]);
-    await db.query(sqlUpdateServico, [valor, servico, id]);
+    const [result] = await db.query(sqlUpdateServico, [servico]);
+    const idServico = result[0].idServico;
+    await db.query(sqlUpdateAgendamento, [dataAgendada, status, descricao, valor, idServico, id]);
     return res.json("Atualizado");
   } catch (error) {
     console.error("Erro ao atualizar agendamento:", error);
@@ -528,14 +832,31 @@ app.put("/editaragendamento/:id", async (req, res) => {
   }
 });
 
-//Editar Cortina
-app.put("/editarcortina/:id", upload.single('image'), async (req, res) => {
+//Editar Serviço
+app.put("/editarservico/:id", async (req, res) => {
   const { id } = req.params;
-  const { nome, descricao, tipo, material } = req.body;
+  const { servico, descricao } = req.body;
+
+  const sqlUpdateServico = `
+    UPDATE servico SET descricao = ?, servico = ? WHERE idServico = ?`;
+
+  try {
+    await db.query(sqlUpdateServico, [descricao, servico, id]);
+    return res.json("Atualizado");
+  } catch (error) {
+    console.error("Erro ao atualizar serviço:", error);
+    return res.status(500).json({ message: "Erro ao atualizar serviço.", error });
+  }
+});
+//
+
+//Editar Cortina
+app.put("/editarcortina/:id", upload2.single("image"), async (req, res) => {
+  const { id } = req.params;
+  const { nome, descricao, modelo, material } = req.body;
   const imagemdapasta = path.join(__dirname, './upload/img');
-  console.log(req.file);
   const sqlSelectImage = "SELECT imagem FROM cortina WHERE idCortina = ?;";
-  const sqlUpdateImage = "UPDATE cortina SET imagem = ?, nome = ?, descricao = ?, tipo = ?, material = ? WHERE idCortina = ?;";
+  const sqlUpdateImage = "UPDATE cortina SET imagem = ?, nome = ?, descricao = ?, modelo = ?, material = ? WHERE idCortina = ?;";
 
   try {
     const [rows] = await db.query(sqlSelectImage, [id]);
@@ -560,7 +881,7 @@ app.put("/editarcortina/:id", upload.single('image'), async (req, res) => {
       }
     }
     const newImageFile = req.file.filename;
-    await db.query(sqlUpdateImage, [newImageFile, nome, descricao, tipo, material, id]);
+    await db.query(sqlUpdateImage, [newImageFile, nome, descricao, modelo, material, id]);
 
     return res.json("Atualizado");
   } catch (error) {
@@ -569,13 +890,49 @@ app.put("/editarcortina/:id", upload.single('image'), async (req, res) => {
   }
 });
 
-// Rota para buscar todas as mensagens
-app.get("/mensagens", async (req, res) => {
-  const sql = `SELECT m.remetente, u.nivelUser, c.idCliente, m.idMensagem, m.dataHora, m.conteudo, m.imagem, m.audio, m.visualizada,
-   cl.nome FROM cliente cl LEFT JOIN chataovivo c ON cl.idCliente = c.idCliente 
-   LEFT JOIN mensagem m ON c.idChat = m.idMensagem LEFT JOIN usuario u ON u.nivelUser = c.idCliente;`;
+// Produto Solo
+app.get('/cortina/:idCortina', async (req, res) => {
+  const { idCortina } = req.params;
+  const sql = `SELECT * FROM cortina WHERE idCortina = ?;`;
   try {
-    const [result] = await db.query(sql);
+    const [result] = await db.query(sql, [idCortina]);
+    return res.json(result);
+  } catch (error) {
+    console.error("Erro ao buscar cortinas:", error);
+    return res.json("Erro");
+  }
+});
+//
+
+// Dados cliente
+app.post('/userprofile', async (req, res) => {
+  const { id, niveluser } = req.body;
+  let sql;
+  if (niveluser === "Clien") {
+    sql = `SELECT c.idCliente "id", c.nome, c.cpfClien "cpf", c.telefone, c.rua, c.bairro, c.cidade, c.cep, c.estado, 
+           c.numero, c.imagem, c.email, u.idUsuario FROM cliente c LEFT JOIN usuario u ON c.email = u.email WHERE c.idCliente = ?;`;
+  } else if (niveluser === "Func") {
+    sql = `SELECT f.idFuncionario "id", f.nome, f.cpfFunc "cpf", f.descricao, f.telefone, f.imagem, f.email, u.idUsuario
+           FROM funcionario f LEFT JOIN usuario u ON f.email = u.email WHERE f.idFuncionario = ?;`;
+  }
+
+  try {
+    const [result] = await db.query(sql, [id]);
+    return res.json(result);
+  } catch (error) {
+    console.error("Erro ao buscar dados do usuário:", error);
+    return res.status(500).json("Erro ao buscar dados do usuário.");
+  }
+});
+//
+
+// Rota para buscar todas as mensagens
+app.get("/mensagens/:id", async (req, res) => {
+  const id = req.params;
+  const sql = `SELECT m.idMensagem, m.conteudo, m.dataHora, m.id, m.imagem, m.audio, m.visualizada,
+   m.remetente FROM chataovivo c LEFT JOIN mensagem m ON c.idChat = m.idMensagem WHERE c.idCliente = ?;`;
+  try {
+    const [result] = await db.query(sql, [id.id]);
     return res.json(result);
   } catch {
     res.json("Erro ao buscar mensagens");
@@ -583,28 +940,98 @@ app.get("/mensagens", async (req, res) => {
 });
 
 // Rota para enviar uma nova mensagem com validação
-app.post('/enviarmensagem', async (req, res) => {
-  const { conteudo, imagem, audio, visualizada, id } = req.body;
-  const dataAtual = new Date();
+app.post("/enviarmensagem", upload.fields([{ name: "image", maxCount: 1 },
+{ name: "audio", maxCount: 1 },
+]),
+  async (req, res) => {
+    const { text, visualizada, idChat } = req.body;
+    const image = req.files?.image?.[0];
+    const audio = req.files?.audio?.[0];
+    const dataAtual = new Date();
+    const sqlMensagem = `
+              INSERT INTO mensagem 
+              (remetente, dataHora, conteudo, imagem, audio, visualizada, idmensagem) 
+              VALUES (?, ?, ?, ?, ?, ?, ?);
+          `;
 
-  const sqlMensagem = `INSERT INTO mensagem (remetente, dataHora, conteudo, imagem, audio, visualizada, idmensagem) VALUES (?, ?, ?, ?, ?, ?, ?);`;
-  const sqlChat = "SELECT * FROM chataovivo WHERE idCliente = ?;";
-  try {
-    const [result] = await db.query(sqlChat, [id]);
-    const idChat = result[0].idChat;
-    await db.query(sqlMensagem, ["C", dataAtual, conteudo, imagem, audio, visualizada, idChat]);
-    res.status(200).json('Cadastrado');
-  } catch (err) {
-    res.status(500).json({ error: 'Erro ao enviar mensagem' });
+    try {
+      await db.query(sqlMensagem, [
+        "C",
+        dataAtual,
+        text || "",
+        image ? image.filename : null,
+        audio ? audio.filename : null,
+        visualizada || "NL",
+        idChat,
+      ]);
+
+      res.status(200).json({ message: "Mensagem cadastrada com sucesso!" });
+    } catch (err) {
+      console.error("Erro ao enviar mensagem:", err);
+      res.status(500).json({ error: "Erro ao enviar mensagem." });
+    }
   }
-});
+);
 //
 
 // Rota para buscar todas as mensagen para o FUCIONARIO
-app.get("/mensagensfunc", async (req, res) => {
-  const sql = `SELECT m.remetente, u.nivelUser, c.idCliente, m.idMensagem, m.dataHora, m.conteudo, m.imagem, m.audio, m.visualizada,
+app.get("/mensagensfunc/:id", async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  if (id > 0) {
+    const sql = `SELECT m.id, m.remetente, u.nivelUser, c.idCliente, m.idMensagem, m.dataHora, m.conteudo, m.imagem, m.audio, m.visualizada,
    cl.nome FROM cliente cl LEFT JOIN chataovivo c ON cl.idCliente = c.idCliente 
-   LEFT JOIN mensagem m ON c.idChat = m.idMensagem LEFT JOIN usuario u ON u.nivelUser = c.idCliente;`;
+   LEFT JOIN mensagem m ON c.idChat = m.idMensagem LEFT JOIN usuario u ON u.nivelUser = c.idCliente WHERE m.idMensagem = ?;`;
+    try {
+      const [result] = await db.query(sql, [id]);
+      return res.json(result);
+    } catch {
+      res.json("Erro ao buscar mensagens");
+    }
+  } else {
+    return res.json("Nenhuma mensagem enviada");
+  }
+});
+
+// Rota para enviar uma nova mensagem com validação FUNCIONARIO
+app.post("/enviarmensagemfunc", upload.fields([{ name: "image", maxCount: 1 },
+{ name: "audio", maxCount: 1 },
+]),
+  async (req, res) => {
+    const { text, visualizada, idChat } = req.body;
+    const image = req.files?.image?.[0];
+    const audio = req.files?.audio?.[0];
+    const dataAtual = new Date();
+
+    const sqlMensagem = `
+          INSERT INTO mensagem 
+          (remetente, dataHora, conteudo, imagem, audio, visualizada, idmensagem) 
+          VALUES (?, ?, ?, ?, ?, ?, ?);
+      `;
+
+    try {
+      await db.query(sqlMensagem, [
+        "F",
+        dataAtual,
+        text || "",
+        image ? image.filename : null,
+        audio ? audio.filename : null,
+        visualizada || "NL",
+        idChat,
+      ]);
+
+      res.status(200).json({ message: "Mensagem cadastrada com sucesso!" });
+    } catch (err) {
+      console.error("Erro ao enviar mensagem:", err);
+      res.status(500).json({ error: "Erro ao enviar mensagem." });
+    }
+  }
+);
+//
+
+// Conversas
+app.get("/conversas", async (req, res) => {
+  const sql = `SELECT c.idChat, c.idCliente, cl.nome FROM chataovivo c LEFT JOIN cliente cl ON c.idCliente = cl.idCliente;`;
   try {
     const [result] = await db.query(sql);
     return res.json(result);
@@ -612,21 +1039,25 @@ app.get("/mensagensfunc", async (req, res) => {
     res.json("Erro ao buscar mensagens");
   }
 });
+//
 
-// Rota para enviar uma nova mensagem com validação para o FUNCIONARIO
-app.post('/enviarmensagemfunc', async (req, res) => {
-  const { conteudo, imagem, audio, visualizada } = req.body;
-  const dataAtual = new Date();
+//Editar Mensagem
+app.post("/editarmensagem", async (req, res) => {
+  const { conteudo, id } = req.body;
+  console.log(conteudo, id);
+  const sqlUpdateServico = `
+    UPDATE mensagem SET conteudo = ? WHERE id = ?`;
 
-  const sqlMensagem = `INSERT INTO mensagem (remetente, dataHora, conteudo, imagem, audio, visualizada, idmensagem) VALUES (?, ?, ?, ?, ?, ?, ?);`;
   try {
-    await db.query(sqlMensagem, ["F", dataAtual, conteudo, imagem, audio, visualizada, 1]);
-    res.status(200).json('Cadastrado');
-  } catch (err) {
-    res.status(500).json({ error: 'Erro ao enviar mensagem' });
+    await db.query(sqlUpdateServico, [conteudo.mensagem, id]);
+    return res.json("Atualizado");
+  } catch (error) {
+    console.error("Erro ao atualizar serviço:", error);
+    return res.status(500).json({ message: "Erro ao atualizar serviço.", error });
   }
 });
 //
+
 
 app.listen(3001, () => {
   console.log("Servidor rodando...");
