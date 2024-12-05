@@ -33,10 +33,6 @@ const Funcionario = conexao.define('Funcionario', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    senha: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
 });
 
 // Modelo de Cliente
@@ -91,10 +87,6 @@ const Cliente = conexao.define('Cliente', {
         type: DataTypes.STRING,
         allowNull: false,
     }, 
-    senha: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
 });
 
 // Modelo de ChatAoVivo
@@ -139,7 +131,6 @@ const Servico = conexao.define('Servico', {
         allowNull: true
     },
 });
-
 
 // Modelo de AgendamentoDeServico
 const AgendamentoDeServico = conexao.define('AgendamentoDeServico', {

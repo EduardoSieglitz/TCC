@@ -81,9 +81,7 @@ app.post('/resetpassword', async (req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     const sqlUpdatePassword = `UPDATE usuario SET senha = ? WHERE email = ?`;
-    const sqlUpdatePasswordCliente = `UPDATE cliente SET senha = ? WHERE email = ?`;
     await db.query(sqlUpdatePassword, [hashedPassword, email]);
-    await db.query(sqlUpdatePasswordCliente, [hashedPassword, email]);
 
     res.json('Senha alterada com sucesso!');
   } catch (error) {
@@ -102,13 +100,13 @@ app.post("/login/auth", async (req, res) => {
   const { email, senha } = req.body;
 
   const sqlFuncionario = `
-    SELECT f.idFuncionario, u.idUsuario, f.email, f.senha, u.nivelUser
+    SELECT f.idFuncionario, u.idUsuario, f.email, u.senha, u.nivelUser
     FROM funcionario f
     LEFT JOIN usuario u ON f.email = u.email
     WHERE f.email = ?`;
 
   const sqlCliente = `
-    SELECT c.idCliente, u.idUsuario, c.email, c.senha, u.nivelUser
+    SELECT c.idCliente, u.idUsuario, c.email, u.senha, u.nivelUser
     FROM cliente c
     LEFT JOIN usuario u ON c.email = u.email
     WHERE c.email = ?`;
@@ -144,9 +142,9 @@ app.post("/confirmarsenha", async (req, res) => {
   console.log(senha, id, nivel)
   let sqlUsuario = "";
   if (nivel == "Clien") {
-    sqlUsuario = `SELECT c.senha FROM cliente c WHERE idCliente;`;
+    sqlUsuario = `SELECT u.senha FROM cliente c LEFT JOIN usuario u ON u.email = c.email WHERE idCliente = ?;`;
   } else {
-    sqlUsuario = `SELECT c.senha FROM funcionario c WHERE idFuncionario;`;
+    sqlUsuario = `SELECT u.senha FROM funcionario LEFT JOIN usuario u ON u.email = f.email WHERE idFuncionario = ?;`;
   }
   try {
 
@@ -170,9 +168,8 @@ app.post("/confirmarsenha", async (req, res) => {
 app.post("/confirmarsenhafunc", async (req, res) => {
   const { senha, id } = req.body;
   console.log(senha, id)
-  const sqlUsuario = `SELECT f.senha FROM funcionario f WHERE idFuncionario = ?;`;
+  const sqlUsuario = `SELECT u.senha FROM funcionario LEFT JOIN usuario u ON u.email = f.email WHERE idFuncionario = ?;`;
   try {
-
     const [result] = await db.query(sqlUsuario, [id]);
     if (result.length > 0) {
       const isPasswordMatch = await bcrypt.compare(senha, result[0].senha);
@@ -195,7 +192,7 @@ app.post("/registrar", async (req, res) => {
   const Usuario = "Clien";
   const sqlClienteS = `SELECT * FROM cliente WHERE email = ? OR cpfClien = ? OR telefone = ?;`;
   const sqlFuncionarioS = `SELECT * FROM funcionario WHERE email = ? OR cpfFunc = ? OR telefone = ?;`;
-  const sqlCliente = `INSERT INTO cliente(nome, cpfClien, senha, email, telefone, rua, estado, cidade, cep, numero, bairro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+  const sqlCliente = `INSERT INTO cliente(nome, cpfClien, email, telefone, rua, estado, cidade, cep, numero, bairro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
   const sqlUsuario = `INSERT INTO usuario(nivelUser, email, senha) VALUES(?, ?, ?);`;
   const sqlChat = `INSERT INTO chataovivo (dataInicio, idCliente) VALUES(?, ?);`;
   const dataAtual = new Date();
@@ -217,7 +214,7 @@ app.post("/registrar", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(senha, 10);
 
-    const [result] = await db.query(sqlCliente, [nome, cpf, hashedPassword, email, telefone, rua, estado, cidade, cep, numero, bairro]);
+    const [result] = await db.query(sqlCliente, [nome, cpf, email, telefone, rua, estado, cidade, cep, numero, bairro]);
     const id = result.insertId;
     await db.query(sqlUsuario, [Usuario, email, hashedPassword]);
     await db.query(sqlChat, [dataAtual, id]);
@@ -235,7 +232,7 @@ app.post("/registrarprimeira", async (req, res) => {
   const Usuario = "Clien";
   const sqlClienteS = `SELECT * FROM cliente WHERE email = ?;`;
   const sqlFuncionarioS = `SELECT * FROM funcionario WHERE email = ?;`;
-  const sqlCliente = `INSERT INTO cliente(nome, cpfClien, senha, email, telefone, rua, estado, cidade, cep, numero, bairro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+  const sqlCliente = `INSERT INTO cliente(nome, cpfClien, email, telefone, rua, estado, cidade, cep, numero, bairro) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
   const sqlUsuario = `INSERT INTO usuario(nivelUser, email, senha) VALUES(?, ?, ?);`;
   const sqlChat = `INSERT INTO chataovivo (dataInicio, idCliente) VALUES(?, ?);`;
   const dataAtual = new Date();
@@ -253,7 +250,7 @@ app.post("/registrarprimeira", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(senha, 10);
 
-    const [result] = await db.query(sqlCliente, [nome, "", hashedPassword, email, "", "", "", "", "", "", ""]);
+    const [result] = await db.query(sqlCliente, [nome, "", email, "", "", "", "", "", "", ""]);
     const id = result.insertId;
     await db.query(sqlUsuario, [Usuario, email, hashedPassword]);
     await db.query(sqlChat, [dataAtual, id]);
@@ -271,7 +268,7 @@ app.post("/registrarfunc", async (req, res) => {
   const Usuario = "Func";
   const sqlFuncionarioS = `SELECT * FROM funcionario WHERE email = ? OR cpffunc = ? OR telefone = ?;`;
   const sqlClienteS = `SELECT * FROM cliente WHERE email = ? OR cpfclien = ? OR telefone = ?;`;
-  const sqlFuncionario = `INSERT INTO funcionario(nome, cpffunc, senha, email, telefone, descricao) VALUES(?, ?, ?, ?, ?, ?);`;
+  const sqlFuncionario = `INSERT INTO funcionario(nome, cpffunc, email, telefone, descricao) VALUES(?, ?, ?, ?, ?);`;
   const sqlUsuario = `INSERT INTO usuario(nivelUser, email, senha) VALUES(?, ?, ?);`;
 
   try {
@@ -291,7 +288,7 @@ app.post("/registrarfunc", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(senha, 10);
 
-    await db.query(sqlFuncionario, [nome, cpf, hashedPassword, email, telefone, descricao]);
+    await db.query(sqlFuncionario, [nome, cpf, email, telefone, descricao]);
     await db.query(sqlUsuario, [Usuario, email, hashedPassword]);
 
     return res.json("Cadastrado");
@@ -413,7 +410,7 @@ app.post("/tabelaagendamentos", async (req, res) => {
 //Tabelas Usuario
 app.get("/tabelausuario", async (req, res) => {
   const sql = `SELECT f.idFuncionario, c.idCliente, u.idUsuario, c.nome 'nomec', c.email 'emailc', c.cpfClien, c.telefone 'telefonec', c.rua, c.bairro, c.cidade,
-   c.cep, c.estado, c.numero, c.imagem, f.nome 'nomef', f.descricao, f.cpfFunc, f.telefone 'telefonef', f.email 'emailf', u.nivelUser, c.senha "senhac", f.senha "senhaf" FROM usuario u LEFT JOIN
+   c.cep, c.estado, c.numero, c.imagem, f.nome 'nomef', f.descricao, f.cpfFunc, f.telefone 'telefonef', f.email 'emailf', u.nivelUser, u.senha FROM usuario u LEFT JOIN
     funcionario f on f.email = u.email LEFT JOIN cliente c ON c.email = u.email;`;
   try {
     const [result] = await db.query(sql);
@@ -473,9 +470,7 @@ app.post("/deleteconta", async (req, res) => {
 
   const sqlSelect = `
     SELECT 
-      c.senha AS senhac, 
-      f.senha AS senhaf 
-    FROM 
+      u.senha FROM 
       usuario u 
     LEFT JOIN 
       cliente c ON u.email = c.email 
@@ -498,21 +493,21 @@ app.post("/deleteconta", async (req, res) => {
     }
 
     if (nivel === "Clien") {
-      const isPasswordMatch = await bcrypt.compare(senha, result[0].senhac);
+      const isPasswordMatch = await bcrypt.compare(senha, result[0].senha);
       if (!isPasswordMatch) {
         return res.json("Credenciais Inválidas");
       }
-      
+
       const [result] = await db.query(sqlChatSelect, [id]);
       const idChat = result[0].idChat;
-  
+
       await db.query(sqlMens, [idChat]);
       await db.query(sqlChat, [id]);
       await db.query(sqlCliente, [id]);
       await db.query(sqlUsuario, [idUsuario]);
       return res.json("Deletado");
     } else if (nivel === "Func") {
-      const isPasswordMatch = await bcrypt.compare(senha, result[0].senhaf);
+      const isPasswordMatch = await bcrypt.compare(senha, result[0].senha);
       if (!isPasswordMatch) {
         return res.json("Credenciais Inválidas");
       }
@@ -909,11 +904,12 @@ app.post('/userprofile', async (req, res) => {
   const { id, niveluser } = req.body;
   let sql;
   if (niveluser === "Clien") {
-    sql = `SELECT c.idCliente "id", c.nome, c.cpfClien "cpf", c.telefone, c.rua, c.bairro, c.cidade, c.cep, c.estado, 
-           c.numero, c.imagem, c.email, u.idUsuario FROM cliente c LEFT JOIN usuario u ON c.email = u.email WHERE c.idCliente = ?;`;
+    sql = `SELECT ct.idChat, c.idCliente "id", c.nome, c.cpfClien "cpf", c.telefone, c.rua, c.bairro, c.cidade, c.cep, c.estado, 
+           c.numero, c.imagem, c.email, u.idUsuario FROM cliente c LEFT JOIN usuario u ON c.email = u.email 
+           LEFT JOIN chataovivo ct ON ct.idCliente = c.idCliente WHERE c.idCliente = ?;`;
   } else if (niveluser === "Func") {
     sql = `SELECT f.idFuncionario "id", f.nome, f.cpfFunc "cpf", f.descricao, f.telefone, f.imagem, f.email, u.idUsuario
-           FROM funcionario f LEFT JOIN usuario u ON f.email = u.email WHERE f.idFuncionario = ?;`;
+           FROM funcionario f LEFT JOIN usuario u ON f.email = u.email LEFT JOIN cliente c ON c.email = u.email WHERE f.idFuncionario = ?;`;
   }
 
   try {
@@ -930,9 +926,12 @@ app.post('/userprofile', async (req, res) => {
 app.get("/mensagens/:id", async (req, res) => {
   const id = req.params;
   const sql = `SELECT m.idMensagem, m.conteudo, m.dataHora, m.id, m.imagem, m.audio, m.visualizada,
-   m.remetente FROM chataovivo c LEFT JOIN mensagem m ON c.idChat = m.idMensagem WHERE c.idCliente = ?;`;
+   m.remetente, cl.nome FROM chataovivo c LEFT JOIN mensagem m ON c.idChat = m.idMensagem LEFT JOIN cliente cl ON cl.idCliente = c.idCliente WHERE c.idCliente = ?;`;
   try {
     const [result] = await db.query(sql, [id.id]);
+    if (result[0].conteudo == null && result[0].audio == null && result[0].imagem == null) {
+      return res.json(["Vazios"]);
+    }
     return res.json(result);
   } catch {
     res.json("Erro ao buscar mensagens");
@@ -947,6 +946,9 @@ app.post("/enviarmensagem", upload.fields([{ name: "image", maxCount: 1 },
     const { text, visualizada, idChat } = req.body;
     const image = req.files?.image?.[0];
     const audio = req.files?.audio?.[0];
+    console.log("Tudo: " + text, visualizada, idChat)
+    console.log("Imagem: " + image)
+    console.log("Audio: " + audio)
     const dataAtual = new Date();
     const sqlMensagem = `
               INSERT INTO mensagem 
@@ -984,6 +986,7 @@ app.get("/mensagensfunc/:id", async (req, res) => {
    LEFT JOIN mensagem m ON c.idChat = m.idMensagem LEFT JOIN usuario u ON u.nivelUser = c.idCliente WHERE m.idMensagem = ?;`;
     try {
       const [result] = await db.query(sql, [id]);
+    
       return res.json(result);
     } catch {
       res.json("Erro ao buscar mensagens");
@@ -1031,7 +1034,7 @@ app.post("/enviarmensagemfunc", upload.fields([{ name: "image", maxCount: 1 },
 
 // Conversas
 app.get("/conversas", async (req, res) => {
-  const sql = `SELECT c.idChat, c.idCliente, cl.nome FROM chataovivo c LEFT JOIN cliente cl ON c.idCliente = cl.idCliente;`;
+  const sql = `SELECT c.idChat, c.idCliente, cl.nome, cl.imagem FROM chataovivo c LEFT JOIN cliente cl ON c.idCliente = cl.idCliente;`;
   try {
     const [result] = await db.query(sql);
     return res.json(result);
