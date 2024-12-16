@@ -144,7 +144,7 @@ app.post("/confirmarsenha", async (req, res) => {
   if (nivel == "Clien") {
     sqlUsuario = `SELECT u.senha FROM cliente c LEFT JOIN usuario u ON u.email = c.email WHERE idCliente = ?;`;
   } else {
-    sqlUsuario = `SELECT u.senha FROM funcionario LEFT JOIN usuario u ON u.email = f.email WHERE idFuncionario = ?;`;
+    sqlUsuario = `SELECT u.senha FROM funcionario f LEFT JOIN usuario u ON u.email = f.email WHERE idFuncionario = ?;`;
   }
   try {
 
@@ -450,10 +450,54 @@ app.post("/tabelaservico", async (req, res) => {
 //Deletar Mensagem
 app.delete("/deletemessagem/:id", async (req, res) => {
   const { id } = req.params;
-  console.log(id)
-  const sql = "DELETE FROM mensagem WHERE id = ?";
+  console.log(id);
+  const imageBasePath = path.join(__dirname, './upload/img'); // Folder for images
+  const audioBasePath = path.join(__dirname, './upload/audio'); // Folder for audio
+  const validImageExtensions = ['.jpg', '.jpeg', '.png']; // Valid image extensions
+  const validAudioExtensions = ['.mp3', '.wav', '.ogg']; // Valid audio extensions
+
+  const sqlSelect = "SELECT conteudo, imagem, audio FROM mensagem WHERE id = ?;";
+  const sqlDelete = "DELETE FROM mensagem WHERE id = ?;";
+
   try {
-    await db.query(sql, [id]);
+    // Fetching the record
+    const [rows] = await db.query(sqlSelect, [id]);
+    if (rows.length === 0) {
+      return res.json( "Mensagem não encontrada");
+    }
+
+    const { conteudo, imagem, audio } = rows[0];
+
+    // Deleting the record from the database
+    await db.query(sqlDelete, [id]);
+
+    // Delete the image file if it exists and is valid
+    if (imagem) {
+      const imagePath = path.join(imageBasePath, imagem);
+      const fileExtension = path.extname(imagem).toLowerCase();
+      if (validImageExtensions.includes(fileExtension)) {
+        try {
+          await fs.promises.unlink(imagePath);
+        } catch (err) {
+          console.error("Erro ao excluir imagem:", err);
+          return res.json("Mensagem deletada, mas houve um erro ao excluir a imagem.");
+        }
+      }
+    }
+
+    // Delete the audio file if it exists and is valid
+    if (audio) {
+      const audioPath = path.join(audioBasePath, audio);
+      const fileExtension = path.extname(audio).toLowerCase();
+      if (validAudioExtensions.includes(fileExtension)) {
+        try {
+          await fs.promises.unlink(audioPath);
+        } catch (err) {
+          console.error("Erro ao excluir áudio:", err);
+          return res.json("Mensagem deletada, mas houve um erro ao excluir o áudio.");
+        }
+      }
+    }
 
     return res.json("Deletado");
   } catch (error) {
@@ -682,9 +726,9 @@ app.post("/deleteservico/:id", async (req, res) => {
 app.put("/editar/:id", upload2.single("image"), async (req, res) => {
   const { id } = req.params;
   const image = req.file;
-  const { nome, email, telefone, cpf, rua, estado, cidade, cep, numero, bairro, idUsuario } = req.body;
+  const { nome, email, telefone, cpf, rua, estado, cidade, cep, senha, numero, bairro, idUsuario } = req.body;
   const sqlUpdateCliente = `UPDATE cliente SET imagem = ?, nome = ?, email = ?, telefone = ?, cpfClien = ?, rua = ?, estado = ?, cidade = ?, cep = ?, numero = ?, bairro = ? WHERE idCliente = ?;`;
-  const sqlUpdateUsuario = `UPDATE usuario SET email = ? WHERE idUsuario = ?;`;
+  const sqlUpdateUsuario = `UPDATE usuario SET email = ?, senha = ? WHERE idUsuario = ?;`;
   const sqlCheckDuplicatesClien = `SELECT * FROM cliente WHERE (email = ? OR cpfClien = ? OR telefone = ?) AND idCliente != ?;`;
   const sqlCheckDuplicatesFunc = `SELECT * FROM funcionario WHERE (email = ? OR cpfFunc = ? OR telefone = ?);`;
 
@@ -700,9 +744,9 @@ app.put("/editar/:id", upload2.single("image"), async (req, res) => {
       if (existingUser && existingUser.cpfClien === cpf || existingUserFunc && existingUserFunc.cpfFunc === cpf) return res.json("CPF");
       if (existingUser && existingUser.telefone === telefone || existingUserFunc && existingUserFunc.telefone === telefone) return res.json("Telefone");
     }
-
+    const hashedPassword = await bcrypt.hash(senha, 10);
     await db.query(sqlUpdateCliente, [image ? image.filename : null, nome, email, telefone, cpf, rua, estado, cidade, cep, numero, bairro, id]);
-    await db.query(sqlUpdateUsuario, [email, idUsuario]);
+    await db.query(sqlUpdateUsuario, [email, hashedPassword, idUsuario]);
 
     return res.json("Atualizado");
 
@@ -779,9 +823,9 @@ app.put("/editarusuario/:id", async (req, res) => {
 app.put("/editarfuncionario/:id", upload2.single("image"), async (req, res) => {
   const { id } = req.params;
   const image = req.file;
-  const { nome, email, telefone, cpf, descricao, idUsuario } = req.body;
+  const { nome, email, telefone, cpf, descricao, senha, idUsuario } = req.body;
   const sqlUpdateFuncionario = `UPDATE funcionario SET nome = ?, email = ?, telefone = ?, imagem = ?, cpfFunc = ?, descricao = ? WHERE idFuncionario = ?`;
-  const sqlUpdateUsuario = `UPDATE usuario SET email = ? WHERE idUsuario = ?;`;
+  const sqlUpdateUsuario = `UPDATE usuario SET email = ?, senha = ? WHERE idUsuario = ?;`;
   const sqlCheckDuplicatesClien = `SELECT * FROM cliente WHERE (email = ? OR cpfClien = ? OR telefone = ?)`;
   const sqlCheckDuplicatesFunc = `SELECT * FROM funcionario WHERE (email = ? OR cpfFunc = ? OR telefone = ?) AND idFuncionario != ?;`;
   try {
@@ -796,9 +840,10 @@ app.put("/editarfuncionario/:id", upload2.single("image"), async (req, res) => {
       if (existingUser && existingUser.cpfClien === cpf || existingUserFunc && existingUserFunc.cpfFunc === cpf) return res.json("CPF");
       if (existingUser && existingUser.telefone === telefone || existingUserFunc && existingUserFunc.telefone === telefone) return res.json("Telefone");
     }
+    const hashedPassword = await bcrypt.hash(senha, 10);
 
     await db.query(sqlUpdateFuncionario, [nome, email, telefone, image ? image.filename : null, cpf, descricao, id]);
-    await db.query(sqlUpdateUsuario, [email, idUsuario]);
+    await db.query(sqlUpdateUsuario, [email, hashedPassword, idUsuario]);
 
     return res.json("Atualizado");
   } catch (error) {
@@ -850,6 +895,7 @@ app.put("/editarcortina/:id", upload2.single("image"), async (req, res) => {
   const { id } = req.params;
   const { nome, descricao, modelo, material } = req.body;
   const imagemdapasta = path.join(__dirname, './upload/img');
+  console.log(nome, descricao, modelo, material, id)
   const sqlSelectImage = "SELECT imagem FROM cortina WHERE idCortina = ?;";
   const sqlUpdateImage = "UPDATE cortina SET imagem = ?, nome = ?, descricao = ?, modelo = ?, material = ? WHERE idCortina = ?;";
 
@@ -986,7 +1032,7 @@ app.get("/mensagensfunc/:id", async (req, res) => {
    LEFT JOIN mensagem m ON c.idChat = m.idMensagem LEFT JOIN usuario u ON u.nivelUser = c.idCliente WHERE m.idMensagem = ?;`;
     try {
       const [result] = await db.query(sql, [id]);
-    
+
       return res.json(result);
     } catch {
       res.json("Erro ao buscar mensagens");
